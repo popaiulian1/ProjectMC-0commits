@@ -3,12 +3,13 @@
 
 Eter::Board::Board(const GameType& gameType)
 {
+	Tile defaultTile;
 	if (gameType == Eter::GameType::Duel)
 	{
 		m_board.resize(BOARD_SIZE_DUEL);
 		for (auto& row : m_board)
 		{
-			row.resize(BOARD_SIZE_DUEL, '_');
+			row.resize(BOARD_SIZE_DUEL, defaultTile);
 		}
 	}
 	else if (gameType == Eter::GameType::Practice)
@@ -16,7 +17,7 @@ Eter::Board::Board(const GameType& gameType)
 		m_board.resize(BOARD_SIZE_PRACTICE);
 		for (auto& row : m_board)
 		{
-			row.resize(BOARD_SIZE_PRACTICE,'_');
+			row.resize(BOARD_SIZE_PRACTICE, defaultTile);
 		}
 	}
 	else
@@ -25,12 +26,12 @@ Eter::Board::Board(const GameType& gameType)
 	}
 }
 
-std::vector<std::vector<char>> Eter::Board::getBoard() const
+std::vector<std::vector<Tile>> Eter::Board::getBoard() const
 {
 	return m_board;
 }
 
-void Eter::Board::setBoard(const std::vector<std::vector<char>>& board)
+void Eter::Board::setBoard(const std::vector<std::vector<Tile>>& board)
 {
 	m_board = board;
 }
@@ -41,7 +42,7 @@ std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 	{
 		for (auto& line : row)
 		{
-			os << line << " ";
+			os << line.getValue() << " ";
 		}
 		os << std::endl;
 	}

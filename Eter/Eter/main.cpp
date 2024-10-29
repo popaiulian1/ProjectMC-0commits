@@ -13,7 +13,5 @@ int main(){
 	Eter::Board board4(board);
 	std::cout << board4 << std::endl;
 
-	//std::cout<<static_cast<int>(board4.getType()); de verificat dupa implementarea constructorilor
-
 	return 0;
 }

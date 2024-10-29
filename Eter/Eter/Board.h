@@ -3,6 +3,7 @@
 #include <vector>;
 #include <string>;
 #include <ostream>
+#include "Tile.h"
 
 namespace Eter {
 	constexpr uint8_t BOARD_SIZE_DUEL = 4; // constexpr pentru a defini dimensiunea tablei 4x4
@@ -22,12 +23,10 @@ namespace Eter {
 		Board(const GameType& gameType);
 		Board& operator=(const Board&) = default;
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
-		std::vector<std::vector<char>> getBoard() const;
-		void setBoard(const std::vector<std::vector<char>>& board);
-		//GameType getType() const { return m_type; } dupa implementarea constructorilor;
+		std::vector<std::vector<Tile>> getBoard() const;
+		void setBoard(const std::vector<std::vector<Tile>>& board);
 	private:
-		std::vector<std::vector<char>> m_board;
-		//GameType m_type; de implementat in constructori;
+		std::vector<std::vector<Tile>> m_board;
 	};
 }
 

@@ -5,8 +5,8 @@
 #include <ostream>
 
 namespace Eter {
-	constexpr uint8_t BOARD_SIZE_DUEL = 4;;
-	constexpr uint8_t BOARD_SIZE_PRACTICE = 3;
+	constexpr uint8_t BOARD_SIZE_DUEL = 4; // constexpr pentru a defini dimensiunea tablei 4x4
+	constexpr uint8_t BOARD_SIZE_PRACTICE = 3; // constexpr pentru a defini dimensiunea tablei 3x3
 
 	enum class GameType {
 		Practice,
@@ -21,9 +21,13 @@ namespace Eter {
 		Board(const Board&) = default;
 		Board(const GameType& gameType);
 		Board& operator=(const Board&) = default;
-		
+		friend std::ostream& operator<<(std::ostream& os, const Board& board);
+		std::vector<std::vector<char>> getBoard() const;
+		void setBoard(const std::vector<std::vector<char>>& board);
+		//GameType getType() const { return m_type; } dupa implementarea constructorilor;
 	private:
 		std::vector<std::vector<char>> m_board;
+		//GameType m_type; de implementat in constructori;
 	};
 }
 

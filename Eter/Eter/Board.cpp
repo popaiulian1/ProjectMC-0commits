@@ -25,4 +25,25 @@ Eter::Board::Board(const GameType& gameType)
 	}
 }
 
+std::vector<std::vector<char>> Eter::Board::getBoard() const
+{
+	return m_board;
+}
 
+void Eter::Board::setBoard(const std::vector<std::vector<char>>& board)
+{
+	m_board = board;
+}
+
+std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
+{
+	for (auto& row : board.m_board)
+	{
+		for (auto& line : row)
+		{
+			os << line << " ";
+		}
+		os << std::endl;
+	}
+	return os;
+}

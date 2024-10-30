@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Board.h"
-
+//test
 int main(){
 
 	Eter::Board board(Eter::GameType::Duel);

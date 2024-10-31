@@ -1,4 +1,4 @@
-#include "Wizards.h"
+﻿#include "Wizards.h"
 #include "Board.h"
 #include <iostream>
  
@@ -55,17 +55,72 @@ void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int
 	
 }
 
+
+
 // Methods for powers
 /*
-void Eter::Wizards::eliminateOpponentCard(int row, int col)
+
+void Eter::Wizards::eliminateRow(int row)
 {
-	if (board->isOpponentCard(row, col) && board->)
+	// Verify if the row is valid
+	if (row < 0 || row >= board->getNumRows()) {  // i need getNumRows()
+		std::cout << "Invalid row index.\n";
+		return;
+	}
+
+	// Verify if the row has at least 3 positions 
+	if (board->getNumRows() < 3) {
+		std::cout << "Row must have at least 3 positions.\n";
+		return;
+	}
+
+	bool hasOwnCard = false;
+
+	// Verify every column of the row
+	for (int col = 0; col < board->getNumRows(); ++col) {
+		if (board->isOwnCard(row, col)) { // Verificăm dacă există o carte proprie vizibilă
+			hasOwnCard = true;
+			break;
+		}
+	}
+
+	// When the power can not be applied
+	if (!hasOwnCard) {
+		std::cout << "No own card found in row " << row << ". Cannot eliminate the row.\n";
+		return;
+	}
+
+	// Applied power
+	for (int col = 0; col < board->getNumRows(); ++col) {
+		board->removeStack(row, col); 
+	}
+
+	std::cout << "Row " << row << " has been eliminated.\n";
+}
+
+void Eter::Wizards::eliminateOpponentCard(int row, int col)
+
+
+
+
+
+
+
+
+
+
+{
+	if (board->isOpponentCard(row, col) && board->top-1 is our card)
 	{ // We verify if the card at (row, col) is the opponent's card & the card under it is ours
 		board->removeCard(row, col);       // We eliminate the card that is at (row, col) on the board
 		std::cout << "The opponent's card at (" << row << ", " << col << ") has been removed.\n";
-	}
+	}	
+		else 
+		std::cout << "No opponent's card found at (" << row << ", " << col << ").\n";
 }
 */
+
+
 
 
 

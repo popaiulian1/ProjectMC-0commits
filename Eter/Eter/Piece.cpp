@@ -1,9 +1,7 @@
 #include "Piece.h"
 
-Eter::Piece::Piece()
+Eter::Piece::Piece() : m_value{ 0 }, m_isPlaced{false}
 {
-	m_value = 0;
-	m_isPlaced = false;
 }
 
 Eter::Piece::Piece(const int& value,const bool& isPlaced) : m_value{ value }, m_isPlaced { isPlaced } 

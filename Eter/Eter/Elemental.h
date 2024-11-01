@@ -1,5 +1,6 @@
 #pragma once
 #include "Board.h"
+#include "Tile.h"
 namespace Eter {
 
 	enum class ElementalCardName {
@@ -38,6 +39,9 @@ namespace Eter {
 		Elemental(const Elemental& other);
 		~Elemental() = default;
 
+		void Storm(int row, int column);
+		void Tide(int row1, int column1, int row2, int column2);
+	
 
 	private:
 		const Board* m_board;

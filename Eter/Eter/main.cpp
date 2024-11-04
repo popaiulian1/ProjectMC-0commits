@@ -3,15 +3,26 @@
 
 int main(){
 
-	Eter::Board board(Eter::GameType::Duel);
+	Eter::Board board(Eter::GameType::Practice);
 	std::cout << board << std::endl;
-	Eter::Board board2(Eter::GameType::Practice);
-	std::cout << board2 << std::endl;
-	Eter::Board board3 = board2;
-	std::cout << board3 << std::endl;
-
-	Eter::Board board4(board);
-	std::cout << board4 << std::endl;
+	board.setTileValue(0, 0, 'a');
+	std::cout << board << std::endl;
+	board.setTileValue(0, 1, 'b');
+	std::cout << board << std::endl;
+	board.setTileValue(1, 0, 'c');
+	std::cout << board << std::endl;
+	board.setTileValue(1, 1, 'd');
+	std::cout << board << std::endl;
+	board.setTileValue(2, 0, 'e');
+	std::cout << board << std::endl;
+	board.setTileValue(2, 1, 'f');
+	std::cout << board << std::endl;
+	board.setTileValue(0, 2, 'g');
+	std::cout << board << std::endl;
+	board.setTileValue(1, 2, 'h');
+	std::cout << board << std::endl;
+	board.setTileValue(2, 2, 'i');
+	std::cout << board << std::endl;
 
 	return 0;
-}
+} 

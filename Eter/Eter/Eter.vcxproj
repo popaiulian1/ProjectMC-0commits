@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Piece.h" />
     <ClInclude Include="Elemental.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />

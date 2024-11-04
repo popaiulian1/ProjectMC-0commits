@@ -141,7 +141,6 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Elemental.h" />
-    <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Wizards.h" />

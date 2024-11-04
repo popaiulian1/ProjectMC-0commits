@@ -2,19 +2,24 @@
 
 Tile::Tile()
 {
-	m_value = '_';
+	m_value.emplace('_');
 	m_isEmpty = true;
 
 }
 
-char Tile::getValue() const
+std::stack<char> Tile::getValue() const
 {
 	return m_value;
 }
 
+char Tile::getTopValue() const
+{
+	return m_value.top();
+}
+
 void Tile::setValue(char value)
 {
-	m_value = value;
+	m_value.emplace(value);
 }
 
 bool Tile::isEmpty() const
@@ -25,4 +30,10 @@ bool Tile::isEmpty() const
 void Tile::setIsEmpty(bool isEmpty)
 {
 	m_isEmpty = isEmpty;
+}
+
+std::ostream& operator<<(std::ostream& os, const Tile& tile)
+{
+	os << tile.getTopValue();
+	return os;
 }

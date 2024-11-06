@@ -17,13 +17,16 @@ namespace Eter {
 		const int& GetScore() const;
 		const std::vector<Piece>& GetCards() const;
 		bool GetFaceDownCardPlayed() const;
-		const int& GetRemainingTime() const;
+		const uint8_t& GetRemainingTime() const;
 
 		void setUserName(const std::string& username);
 		void setScore(const int& score);
 		void setCards(const std::vector<Piece>& cards);
 		void SetFaceDownCardPlayed(const bool& faceDownCardPlayed);
-		void setRemainingTime(const int& remainingTime);
+		void setRemainingTime(const uint8_t& remainingTime);
+
+		Piece RemovePiece(const Piece& removePiece);
+		void PrintCards(const std::vector<Piece>& cards);
 
 	private:
 		std::string m_username;
@@ -34,3 +37,6 @@ namespace Eter {
 		uint8_t m_remainingTime;
 	};
 }
+
+
+

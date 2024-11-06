@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Piece.h"
+#include <iostream>
 
 Eter::Player::Player()
 {
@@ -43,7 +44,7 @@ bool Eter::Player::GetFaceDownCardPlayed() const
 	return m_faceDownCardPlayed;
 }
 
-const int& Eter::Player::GetRemainingTime() const
+const uint8_t& Eter::Player::GetRemainingTime() const
 {
 	return m_remainingTime;
 }
@@ -68,7 +69,21 @@ void Eter::Player::SetFaceDownCardPlayed(const bool& faceDownCardPlayed)
 	m_faceDownCardPlayed = faceDownCardPlayed;
 }
 
-void Eter::Player::setRemainingTime(const int& remainingTime)
+void Eter::Player::setRemainingTime(const uint8_t& remainingTime)
 {
 	m_remainingTime = remainingTime;
+}
+
+Eter::Piece Eter::Player::RemovePiece(const Piece& removePiece)
+{
+	std::cout << "Piesa aleasa din deck este: " << removePiece.GetValue();
+	return removePiece;
+}
+
+void Eter::Player::PrintCards(const std::vector<Piece>& cards)
+{
+	for (int i = 0; i < cards.size(); i++) {
+		std::cout << "Piesa " << i + 1 << ': ' << cards[i].GetValue();
+	}
+	std::cout << '\n';
 }

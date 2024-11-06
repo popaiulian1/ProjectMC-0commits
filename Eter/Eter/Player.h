@@ -8,7 +8,7 @@ namespace Eter {
 	class Player {
 	public:
 		Player();
-		Player(std::string username, const int& score, const std::vector<Piece>& cards);
+		Player(std::string username, const int& score, const std::vector<Piece>& cards, bool faceDownCardPlayed);
 		Player(std::string username, const int& score, const std::vector<Piece>& cards, Wizards wizard);
 		Player(const Player& other);
 		~Player() = default;
@@ -16,18 +16,21 @@ namespace Eter {
 		const std::string& GetUserName() const;
 		const int& GetScore() const;
 		const std::vector<Piece>& GetCards() const;
+		bool GetFaceDownCardPlayed() const;
 		const int& GetRemainingTime() const;
 
 		void setUserName(const std::string& username);
 		void setScore(const int& score);
 		void setCards(const std::vector<Piece>& cards);
+		void SetFaceDownCardPlayed(const bool& faceDownCardPlayed);
 		void setRemainingTime(const int& remainingTime);
 
 	private:
 		std::string m_username;
 		int m_score;
 		std::vector<Piece> m_cards;
+		bool m_faceDownCardPlayed;
 		Wizards m_wizard;
-		int m_remainingTime;
+		uint8_t m_remainingTime;
 	};
 }

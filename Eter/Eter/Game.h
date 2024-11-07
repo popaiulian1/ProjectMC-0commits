@@ -26,6 +26,7 @@ namespace Eter
 		Player GetPlayer2() const;
 		Board GetBoard() const;
 	private:
+		static const size_t kDECK_SIZE_PRACTICE{ 7 }; //define the size of the practice deck
 		Player m_player1, m_player2;
 		Board m_board;
 		GameType m_gameType;

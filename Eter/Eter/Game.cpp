@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <iostream>
 
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType)
 {
@@ -10,6 +11,31 @@ Eter::Game::Game(const Player& player1, const Player& player2, const Board& boar
 
 void Eter::Game::StartGame()
 {
+	if (m_gameType == GameType::Practice) {
+		std::vector<int> Values = { 1, 1, 2, 2, 3, 3, 4 };
+		std::vector<Eter::Piece> CardsPractice;
+
+		CardsPractice.resize(kDECK_SIZE_PRACTICE);
+
+		int index = 0;
+		for (auto& card : CardsPractice) 
+			card.SetValue(Values[index++]);
+		
+		m_player1.setCards(CardsPractice);
+		m_player2.setCards(CardsPractice);
+
+		std::cout << "The initial board is: " << m_board << "\n";
+
+		std::cout << m_player1.GetUserName() << " has the following deck: ";
+		for (const auto& values : m_player1.GetCards())
+			std::cout << values.GetValue() << " ";
+		std::cout << "\n";
+
+		std::cout << m_player2.GetUserName() << " has the following deck: ";
+		for (const auto& values : m_player1.GetCards())
+			std::cout << values.GetValue() << " ";
+		std::cout << "\n";
+	}
 }
 
 void Eter::Game::PrintBoard() const
@@ -83,6 +109,7 @@ bool Eter::Game::CheckDraw() const
 			}
 		}
 	}
+	return true;
 
 }
 

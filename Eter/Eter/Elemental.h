@@ -35,7 +35,7 @@ namespace Eter {
 	{
 	public:
 		Elemental();
-		Elemental(const Board* board, bool ElementalCardUsed, ElementalCardName nameCard);
+		Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard);
 		Elemental(const Elemental& other);
 		~Elemental() = default;
 
@@ -44,7 +44,7 @@ namespace Eter {
 	
 
 	private:
-		const Board* m_board;
+		Board m_board;
 		bool m_ElementalCardUsed;
 		ElementalCardName m_nameCard;
 	};

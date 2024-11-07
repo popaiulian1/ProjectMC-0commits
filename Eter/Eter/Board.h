@@ -11,6 +11,7 @@ namespace Eter {
 	constexpr size_t kBOARD_SIZE_PRACTICE{ 3 }; // constexpr to define the size of the 3x3 board
 	constexpr char kEMPTY_BOARD_CELL{ '_' }; // constexpr to define the empty cell of the board
 
+
 	enum class GameType {
 		Practice,
 		Duel
@@ -19,6 +20,7 @@ namespace Eter {
 	class Board
 	{
 	public:
+		using Position = std::pair<size_t, size_t>;
 		Board() = default;
 		~Board() = default;
 		Board(const Board&) = default;
@@ -30,6 +32,8 @@ namespace Eter {
 		size_t GetCurrentSize() const;
 		void SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board);
 		void SetTileValue(uint8_t x, uint8_t y, char value);
+		std::optional<Tile>& operator[](const Position& pos);
+		const std::optional<Tile>& operator[](const Position& pos) const;
 
 	private:
 		void IncreaseBoardSize();

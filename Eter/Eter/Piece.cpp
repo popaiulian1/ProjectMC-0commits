@@ -1,9 +1,9 @@
 #include "Piece.h"
 
-Eter::Piece::Piece() : m_value{ 0 }, m_isPlaced{false}
+Eter::Piece::Piece() : m_value{ 0 }, m_isPlaced{ false }, m_username{""}
 {}
 
-Eter::Piece::Piece(const int& value,const bool& isPlaced) : m_value{ value }, m_isPlaced { isPlaced } 
+Eter::Piece::Piece(const int& value, const bool& isPlaced, const std::string& username) : m_value{ value }, m_isPlaced{ isPlaced }, m_username{username}
 {}
 
 int Eter::Piece::GetValue() const
@@ -16,6 +16,11 @@ bool Eter::Piece::GetIsPlaced() const
 	return m_isPlaced;
 }
 
+const std::string& Eter::Piece::GetUserName() const
+{
+	return m_username;
+}
+
 void Eter::Piece::SetValue(const int& value)
 {
 	m_value = value;
@@ -24,6 +29,11 @@ void Eter::Piece::SetValue(const int& value)
 void Eter::Piece::SetIsPlaced(const bool& isPlaced)
 {
 	m_isPlaced = isPlaced;
+}
+
+void Eter::Piece::SetUserName(const std::string& username)
+{
+	m_username = username;
 }
 
 

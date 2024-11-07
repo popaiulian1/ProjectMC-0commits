@@ -53,6 +53,20 @@ void Eter::Board::SetTileValue(uint8_t x, uint8_t y, char value)
 	IncreaseBoardSize();
 }
 
+std::optional<Tile>& Eter::Board::operator[](const Position& pos)
+{
+	return const_cast<std::optional<Tile>&>(std::as_const(*this)[pos]);
+}
+
+const std::optional<Tile>& Eter::Board::operator[](const Position& pos) const
+{
+	const auto& [line, column] = pos;
+	if (line < m_board.size() && column < m_board[line].size()) {
+		return m_board[line][column];
+	}
+	throw std::out_of_range("Invalid position");
+}
+
 void Eter::Board::IncreaseBoardSize()
 {
 	if (m_board.size() < m_maxSize && !CheckEmptyTiles())

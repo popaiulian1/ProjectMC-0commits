@@ -1,39 +1,27 @@
 #include "Tile.h"
 
-Tile::Tile()
-{
-	m_value.emplace('_');
-	m_isEmpty = true;
-
-}
-
-std::stack<char> Tile::getValue() const
-{
-	return m_value;
-}
-
-char Tile::getTopValue() const
-{
-	return m_value.top();
-}
-
-void Tile::setValue(char value)
+Tile::Tile(const char& value)
 {
 	m_value.emplace(value);
 }
 
-bool Tile::isEmpty() const
+std::stack<char> Tile::GetValue() const
 {
-	return m_isEmpty;
+	return m_value;
 }
 
-void Tile::setIsEmpty(bool isEmpty)
+char Tile::GetTopValue() const
 {
-	m_isEmpty = isEmpty;
+	return m_value.top();
+}
+
+void Tile::SetValue(char value)
+{
+	m_value.emplace(value);
 }
 
 std::ostream& operator<<(std::ostream& os, const Tile& tile)
 {
-	os << tile.getTopValue();
+	os << tile.GetTopValue();
 	return os;
 }

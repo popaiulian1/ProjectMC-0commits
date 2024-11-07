@@ -5,23 +5,23 @@ int main(){
 
 	Eter::Board board(Eter::GameType::Practice);
 	std::cout << board << std::endl;
-	board.setTileValue(0, 0, 'a');
+	board.SetTileValue(0, 0, 'a');
 	std::cout << board << std::endl;
-	board.setTileValue(0, 1, 'b');
+	board.SetTileValue(0, 1, 'b');
 	std::cout << board << std::endl;
-	board.setTileValue(1, 0, 'c');
+	board.SetTileValue(1, 0, 'c');
 	std::cout << board << std::endl;
-	board.setTileValue(1, 1, 'd');
+	board.SetTileValue(1, 1, 'd');
 	std::cout << board << std::endl;
-	board.setTileValue(2, 0, 'e');
+	board.SetTileValue(2, 0, 'e');
 	std::cout << board << std::endl;
-	board.setTileValue(2, 1, 'f');
+	board.SetTileValue(2, 1, 'f');
 	std::cout << board << std::endl;
-	board.setTileValue(0, 2, 'g');
+	board.SetTileValue(0, 2, 'g');
 	std::cout << board << std::endl;
-	board.setTileValue(1, 2, 'h');
+	board.SetTileValue(1, 2, 'h');
 	std::cout << board << std::endl;
-	board.setTileValue(2, 2, 'i');
+	board.SetTileValue(2, 2, 'i');
 	std::cout << board << std::endl;
 
 	return 0;

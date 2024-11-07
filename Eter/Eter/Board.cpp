@@ -6,11 +6,11 @@ Eter::Board::Board(const GameType& gameType)
 	Tile defaultTile;
 	if (gameType == GameType::Practice)
 	{
-		m_maxSize = BOARD_SIZE_PRACTICE;
+		m_maxSize = kBOARD_SIZE_PRACTICE;
 	}
 	else if (gameType == GameType::Duel)
 	{
-		m_maxSize = BOARD_SIZE_DUEL;
+		m_maxSize = kBOARD_SIZE_DUEL;
 	}
 	else
 	{
@@ -21,32 +21,41 @@ Eter::Board::Board(const GameType& gameType)
 	m_board[0].resize(1);
 }
 
-std::vector<std::vector<Tile>> Eter::Board::getBoard() const
+std::vector<std::vector<std::optional<Tile>>> Eter::Board::GetBoard() const
 {
 	return m_board;
 }
 
-void Eter::Board::setBoard(const std::vector<std::vector<Tile>>& board)
+size_t Eter::Board::GetMaxSize() const
+{
+	return m_maxSize;
+}
+
+size_t Eter::Board::GetCurrentSize() const
+{
+	return m_board.size();
+}
+
+void Eter::Board::SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board)
 {
 	m_board = board;
 }
 
-void Eter::Board::setTileValue(uint8_t x, uint8_t y, char value)
+void Eter::Board::SetTileValue(uint8_t x, uint8_t y, char value)
 {
 	if (x >= m_board.size() || y >= m_board[x].size())
 	{
 		throw std::out_of_range("Invalid position");
 	}
 
-	m_board[x][y].setValue(value);
-	m_board[x][y].setIsEmpty(false);
+	m_board[x][y] = Tile{value};
 
-	increaseBoardSize();
+	IncreaseBoardSize();
 }
 
-void Eter::Board::increaseBoardSize()
+void Eter::Board::IncreaseBoardSize()
 {
-	if (m_board.size() < m_maxSize && !checkEmptyTiles())
+	if (m_board.size() < m_maxSize && !CheckEmptyTiles())
 	{
 		m_board.resize(m_board.size() + 1);
 		for (auto& line : m_board) {
@@ -56,13 +65,13 @@ void Eter::Board::increaseBoardSize()
 	
 }
 
-bool Eter::Board::checkEmptyTiles()
+bool Eter::Board::CheckEmptyTiles()
 {
 	for (auto& row : m_board)
 	{
 		for (auto& line : row)
 		{
-			if (line.isEmpty())
+			if (!line.has_value())
 			{
 				return true;
 			}
@@ -77,7 +86,13 @@ std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 	{
 		for (auto& line : row)
 		{
-			os << line << " ";
+			if (line.has_value()) {
+				os << line.value() << " ";
+			}
+			else
+			{
+				os << kEMPTY_BOARD_CELL << " ";
+			}
 		}
 		os << std::endl;
 	}

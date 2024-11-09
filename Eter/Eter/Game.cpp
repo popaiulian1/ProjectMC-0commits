@@ -40,10 +40,22 @@ void Eter::Game::StartGame()
 
 void Eter::Game::PrintBoard() const
 {
+	std::cout << "Current Board:\n";
+	std::cout << m_board << std::endl;
 }
 
 void Eter::Game::PrintWinner() const
 {
+	if (CheckWinner()) {
+		const Player& winner = m_player1/*.HasWon() ? m_player1 : m_player2;  // Need HasWon implemented in Player Class*/;
+		std::cout << "Congratulations! The winner is " << winner.GetUserName() << "!\n";
+	}
+	else if (CheckDraw())
+		std::cout << "The game is a draw.\n";
+
+	else
+		std::cout << "The game is ongoing. No winner yet.\n";
+
 }
 
 void Eter::Game::PlayGame()

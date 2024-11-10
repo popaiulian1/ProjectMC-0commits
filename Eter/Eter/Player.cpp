@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "Piece.h"
+#include "Board.h"
+#include "Tile.h"
 #include <iostream>
 
 Eter::Player::Player()
@@ -87,3 +89,4 @@ void Eter::Player::PrintCards(const std::vector<Piece>& cards)
 	}
 	std::cout << '\n';
 }
+

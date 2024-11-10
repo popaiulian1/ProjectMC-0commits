@@ -27,6 +27,7 @@ namespace Eter {
 
 		Piece RemovePiece(const Piece& removePiece);
 		void PrintCards(const std::vector<Piece>& cards);
+		
 
 	private:
 		std::string m_username;

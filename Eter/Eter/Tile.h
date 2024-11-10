@@ -2,20 +2,24 @@
 #include <stack>
 #include <ostream>
 #include <optional>
-
+#include "Piece.h"
+namespace Eter 
+{
 class Tile
 {
 public:
 	Tile() = default;
 	~Tile() = default;
-	Tile(const Tile& tile) : m_value(tile.m_value){}// copy constructor (used in the board class to copy the tile value from one tile to another
-	Tile(const char& value);
+	Tile(const Tile& tile) : m_value(tile.m_value){} // Copy constructor
+	Tile(const Piece& piece); // // Constructor to initialize with a Piece
 	Tile& operator=(const Tile&) = default;
-	std::stack<char> GetValue() const; // returns the stack of tiles.
-	char GetTopValue() const; // returns the top value of the stack.
-	void SetValue(char value);
-	friend std::ostream& operator<<(std::ostream& os, const Tile& tile); // overloading the << operator to print the top value of the stack.
+	std::stack<Piece> GetValue() const; // Returns the stack of pieces
+	Piece GetTopValue() const; // Returns the top piece of the stack
+	void SetValue(const Piece& piece);
+	friend std::ostream& operator<<(std::ostream& os, const Tile& tile); // Print top piece detailes
 private:
-	std::stack<char> m_value; // tile value transformed into a stack to be able to add more values on top of eachother (ex. piece with value 2 over piece with value 1).
+	std::stack<Piece> m_value; // Stack of pieces on the tile
 };
+
+}
 

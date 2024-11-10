@@ -9,32 +9,51 @@ Eter::Game::Game(const Player& player1, const Player& player2, const Board& boar
 	m_gameType = gameType;
 }
 
-void Eter::Game::StartGame()
+void Eter::Game::StartGame(Player& player1, Player& player2, Board& board)
 {
 	if (m_gameType == GameType::Practice) {
-		std::vector<int> Values = { 1, 1, 2, 2, 3, 3, 4 };
+
+		board = Board(GameType::Practice); // Create a practice board
+		std::vector<char> Values = { '1', '1', '2', '2', '3', '3', '4' }; // Define the values of the cards in the practice deck
 		std::vector<Eter::Piece> CardsPractice;
 
-		CardsPractice.resize(kDECK_SIZE_PRACTICE);
+		std::string UsernamePlayer1; // Define the username of the first player
+		std::string UsernamePlayer2; // Define the username of the second player
+
+		if (player1.GetUserName() == "") { // If the username of the first player is not set, ask the user to set it
+			std::cout << "Username of the first player is: ";
+			std::getline(std::cin, UsernamePlayer1);
+			player1.setUserName(UsernamePlayer1);
+		}
+
+		if (player2.GetUserName() == "") { // If the username of the second player is not set, ask the user to set it
+			std::cout << "Username of the second player is: ";
+			std::getline(std::cin, UsernamePlayer2);
+			player2.setUserName(UsernamePlayer2);
+		}
+
+		CardsPractice.resize(kDECK_SIZE_PRACTICE); // Resize the practice deck to the size of the practice deck
 
 		int index = 0;
 		for (auto& card : CardsPractice) 
-			card.SetValue(Values[index++]);
+			card.SetValue(Values[index++]); // Set the values of the cards in the practice deck
 		
-		m_player1.setCards(CardsPractice);
-		m_player2.setCards(CardsPractice);
+		player1.setCards(CardsPractice); // Set the cards of the first player to the cards in the practice deck
+		player2.setCards(CardsPractice); // Set the cards of the second player to the cards in the practice deck
 
 		std::cout << "The initial board is: " << m_board << "\n";
 
-		std::cout << m_player1.GetUserName() << " has the following deck: ";
-		for (const auto& values : m_player1.GetCards())
+		std::cout << player1.GetUserName() << " has the following deck: ";
+		for (const auto& values : player1.GetCards())
 			std::cout << values.GetValue() << " ";
 		std::cout << "\n";
 
-		std::cout << m_player2.GetUserName() << " has the following deck: ";
-		for (const auto& values : m_player1.GetCards())
+		std::cout << player2.GetUserName() << " has the following deck: ";
+		for (const auto& values : player1.GetCards())
 			std::cout << values.GetValue() << " ";
-		std::cout << "\n";
+
+		Game::SetPlayer1(player1); 
+		Game::SetPlayer2(player2);
 	}
 }
 
@@ -59,8 +78,7 @@ void Eter::Game::PrintWinner() const
 }
 
 void Eter::Game::PlayGame()
-{
-}
+{} 
 
 bool Eter::Game::CheckWinner() const
 {
@@ -123,6 +141,44 @@ bool Eter::Game::CheckDraw() const
 	}
 	return true;
 
+}
+
+void Eter::Game::Illusion(Player& player, Board& board)
+{
+	std::cout << player.GetUserName() << ", please enter the position of the card you want to play:\n"; // Ask the player to enter the position of the card they want to play
+	int row, column;
+	std::cout << "Row: "; std::cin >> row;
+	std::cout << "Column: "; std::cin >> column;
+
+	while (row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) // Check if the position is valid
+	{
+		std::cout << "Invalid position. Please enter a valid position.\n";
+		std::cout << "Row: "; std::cin >> row;
+		std::cout << "Column: "; std::cin >> column;
+	}
+
+	//check if on the position there is already an illusion played (to implement)
+
+	std::cout << player.GetUserName() << ", choose a card to play: "; // Ask the player to choose a card to play
+	char card;
+	std::cin >> card;
+
+	bool valid = false;
+	while (valid == false) { // Check if the card is valid
+		for (int cards = 0; cards < player.GetCards().size(); ++cards)
+			if (player.GetCards()[cards].GetValue() == card)
+			{
+				valid = true;
+				break;
+			}
+		if (valid == false) {
+			std::cout << "Invalid card, please choose a valid card: ";
+			std::cin >> card;
+		}
+	}
+	std::cout << "The card " << card << " has been played at position (" << row << ", " << column << ").\n"; // Print the card that has been played at the position
+	board.SetTileValue(row, column, card); // Set the tile value of the board to the card that has been played
+	player.SetFaceDownCardPlayed(true); // Set the illusion card played to true
 }
 
 void Eter::Game::SetPlayer1(const Player& player)

@@ -90,6 +90,11 @@ void Eter::Player::PrintCards(const std::vector<Piece>& cards)
 	std::cout << '\n';
 }
 
+Eter::Piece Eter::Player::GetLastPlayedCard() const
+{
+    return m_lastPlayedCard;
+}
+
 bool Eter::Player::HasWon(const Board& board) const
 {
     auto gameBoard = board.GetBoard();
@@ -132,4 +137,5 @@ bool Eter::Player::HasWon(const Board& board) const
 
     return false;
 }
+
 

@@ -17,6 +17,7 @@ namespace Eter {
 		const int& GetScore() const;
 		const std::vector<Piece>& GetCards() const;
 		bool GetFaceDownCardPlayed() const;
+		Piece GetLastPlayedCard() const;
 		const uint8_t& GetRemainingTime() const;
 
 		void setUserName(const std::string& username);
@@ -35,6 +36,7 @@ namespace Eter {
 		int m_score;
 		std::vector<Piece> m_cards;
 		bool m_faceDownCardPlayed;
+		Piece m_lastPlayedCard;
 		Wizards m_wizard;
 		uint8_t m_remainingTime;
 	};

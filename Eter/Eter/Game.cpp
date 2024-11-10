@@ -66,7 +66,7 @@ void Eter::Game::PrintBoard() const
 void Eter::Game::PrintWinner() const
 {
 	if (CheckWinner()) {
-		const Player& winner = m_player1/*.HasWon() ? m_player1 : m_player2;*/;
+		const Player& winner = m_player1.HasWon(m_board) ? m_player1 : m_player2;
 	    std::cout << "Congratulations! The winner is " << winner.GetUserName() << "!\n";
 	}
 	else if (CheckDraw())

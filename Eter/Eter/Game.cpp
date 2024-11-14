@@ -78,7 +78,7 @@ bool Eter::Game::CheckWinner() const
 		return false;
 	}
 	else {
-		std::vector<std::vector<std::optional<Tile>>> board = m_board.GetBoard();
+		BoardMatrix board = m_board.GetBoard();
 
 		//To edit to add check based on username.
 		for (size_t i = 0; i < m_board.GetMaxSize(); i++)
@@ -119,7 +119,7 @@ bool Eter::Game::CheckWinner() const
 
 bool Eter::Game::CheckDraw() const
 {
-	std::vector<std::vector<std::optional<Tile>>> board = m_board.GetBoard();
+	BoardMatrix board = m_board.GetBoard();
 
 	for (auto& row : board)
 	{
@@ -169,7 +169,7 @@ void Eter::Game::Illusion(Player& player, Board& board)
 		}
 	}
 	std::cout << "The card " << card << " has been played at position (" << row << ", " << column << ").\n"; // Print the card that has been played at the position
-	board.SetTileValue(row, column, card); // Set the tile value of the board to the card that has been played
+	board.SetTileValue({ row, column }, card, player); // Set the tile value of the board to the card that has been played
 	player.SetFaceDownCardPlayed(true); // Set the illusion card played to true
 }
 

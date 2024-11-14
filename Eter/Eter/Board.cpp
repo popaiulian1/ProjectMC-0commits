@@ -49,6 +49,19 @@ void Eter::Board::SetBoard(const BoardMatrix& board)
 void Eter::Board::SetTileValue(const Position& pos, const char& value, const Player& player)
 {
 	IncreaseBoardSize(pos);
+
+	const auto& [line, column] = pos;
+	line < 0 ? line + 1 : line;
+	column < 0 ? column + 1 : column;
+
+	if (line >= m_board.size() || column >= m_board[line].size())
+	{
+		throw std::out_of_range("Invalid position");
+	}
+	else {
+		m_board[line][column].value().SetValue(Piece(value, true, player.GetUserName()));
+	}
+	
 }
 
 std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos)
@@ -86,6 +99,7 @@ void Eter::Board::IncreaseBoardSize(const Position& pos)
 			row.insert(row.begin(), std::optional<Tile>());
 		}
 	}
+
 }
 
 bool Eter::Board::CheckEmptyTiles()

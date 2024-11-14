@@ -7,6 +7,7 @@
 
 Eter::Player::Player()
 {
+	m_username = "";
 	m_score = 0;
 	m_faceDownCardPlayed = false;
 	m_remainingTime = 0;

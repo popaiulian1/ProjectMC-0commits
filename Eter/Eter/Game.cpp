@@ -63,17 +63,9 @@ void Eter::Game::PrintBoard() const
 	std::cout << m_board << std::endl;
 }
 
-void Eter::Game::PrintWinner() const
+void Eter::Game::PrintWinner( const Player &player) const
 {
-	if (CheckWinner()) {
-		const Player& winner = m_player1.HasWon(m_board) ? m_player1 : m_player2;
-	    std::cout << "Congratulations! The winner is " << winner.GetUserName() << "!\n";
-	}
-	else if (CheckDraw())
-		std::cout << "The game is a draw.\n";
-
-	else
-		std::cout << "The game is ongoing. No winner yet.\n";
+	    std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
 
 }
 

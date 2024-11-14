@@ -15,7 +15,7 @@ namespace Eter
 
 		void StartGame(Player& player1, Player& player2, Board& board);
 		void PrintBoard() const;
-		void PrintWinner() const;
+		void PrintWinner(const Player &player) const;
 		void PlayGame();
 		bool CheckWinner() const;
 		bool CheckDraw() const;

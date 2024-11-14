@@ -17,6 +17,7 @@ public:
 	Piece GetTopValue() const; // Returns the top piece of the stack
 	void SetValue(const Piece& piece);
 	friend std::ostream& operator<<(std::ostream& os, const Tile& tile); // Print top piece detailes
+	void RemoveStack();
 private:
 	std::stack<Piece> m_value; // Stack of pieces on the tile
 };

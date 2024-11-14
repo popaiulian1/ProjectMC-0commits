@@ -22,6 +22,13 @@ void Eter::Tile::SetValue(const Piece& piece){
 	m_value.push(piece);
 }
 
+void Eter::Tile::RemoveStack()
+{
+	while (!m_value.empty()) {
+		m_value.pop();  
+	}
+}
+
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile){
 	if (!tile.m_value.empty()) {
 		const Piece& topPiece = tile.m_value.top();

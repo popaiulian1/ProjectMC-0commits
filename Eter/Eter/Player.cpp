@@ -2,6 +2,7 @@
 #include "Piece.h"
 #include "Board.h"
 #include "Tile.h"
+#include "Game.h"
 #include <iostream>
 
 Eter::Player::Player()
@@ -92,6 +93,7 @@ void Eter::Player::PrintCards(const std::vector<Piece>& cards)
 
 bool Eter::Player::HasWon(const Board& board) const
 {
+   
     auto gameBoard = board.GetBoard();
     size_t maxSize = board.GetMaxSize();
 

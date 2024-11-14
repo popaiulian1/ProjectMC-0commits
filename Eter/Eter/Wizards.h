@@ -16,9 +16,10 @@ namespace Eter {
     class Wizards {
     public:
         Wizards();
-        Wizards(std::string wizardName, MageType type, const Board* gameBoard);
+        Wizards(std::string wizardName, MageType type, const Board* gameBoard, std::string m_username);
         Wizards(const Wizards& other);
         ~Wizards()= default;
+        const std::string& GetUserName() const;
 
        // Methods for each MageType, every MageType has two powers, the power will be determined by powerindex
         void fireMasterPower(int powerIndex, int row, int col);
@@ -28,7 +29,7 @@ namespace Eter {
 
         //Methods for Powers determined by powerIndex
         void eliminateOpponentCard(int row, int col);
-        void eliminateRow(int row);
+        void eliminateRow(int row)const;
         void coverOpponentCard();
         void createPit();
         void moveOwnStack();
@@ -43,6 +44,7 @@ namespace Eter {
         bool magicPowerUsed;
         int etherCards;
         const Board* board;
+        std::string username;
 
     };
 }

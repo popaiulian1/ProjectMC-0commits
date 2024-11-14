@@ -5,12 +5,15 @@
 #include <ostream>
 #include <optional>
 #include "Tile.h"
+#include "Player.h"
 
 namespace Eter {
 	constexpr size_t kBOARD_SIZE_DUEL{ 4 }; // constexpr to define the size of the 4x4 board
 	constexpr size_t kBOARD_SIZE_PRACTICE{ 3 }; // constexpr to define the size of the 3x3 board
 	constexpr char kEMPTY_BOARD_CELL{ '_' }; // constexpr to define the empty cell of the board
 
+	using BoardVector = std::vector<std::optional<Tile>>;
+	using BoardMatrix = std::vector<BoardVector>;
 
 	enum class GameType {
 		Practice,
@@ -21,25 +24,26 @@ namespace Eter {
 	{
 	public:
 		using Position = std::pair<size_t, size_t>;
+
 		Board() = default;
 		~Board() = default;
 		Board(const Board&) = default;
 		Board(const GameType& gameType);
 		Board& operator=(const Board&) = default;
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
-		std::vector<std::vector<std::optional<Tile>>> GetBoard() const;
-		std::vector<std::vector<std::optional<Tile>>>& GetBoardReference();
+		BoardMatrix GetBoard() const;
+		BoardMatrix& GetBoardReference();
 		size_t GetMaxSize() const;
 		size_t GetCurrentSize() const;
-		void SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board);
-		void SetTileValue(uint8_t x, uint8_t y, char value);
+		void SetBoard(const BoardMatrix& board);
+		void SetTileValue(const Position& pos, const char& value, const Player& player);
 		std::optional<Tile>& operator[](const Position& pos);
 		const std::optional<Tile>& operator[](const Position& pos) const;
 
 	private:
-		void IncreaseBoardSize();
+		void IncreaseBoardSize(const Position& pos);
 		bool CheckEmptyTiles(); // returns true if there are empty tiles on the board.
-		std::vector<std::vector<std::optional<Tile>>> m_board;
+		BoardMatrix m_board;
 		size_t m_maxSize;
 	};
 }

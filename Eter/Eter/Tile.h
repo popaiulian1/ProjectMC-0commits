@@ -12,6 +12,7 @@ public:
 	~Tile() = default;
 	Tile(const Tile& tile) : m_value(tile.m_value){} // Copy constructor
 	Tile(const Piece& piece); // // Constructor to initialize with a Piece
+	Tile(const char& value); // Constructor to initialize with a char
 	Tile& operator=(const Tile&) = default;
 	std::stack<Piece> GetValue() const; // Returns the stack of pieces
 	Piece GetTopValue() const; // Returns the top piece of the stack

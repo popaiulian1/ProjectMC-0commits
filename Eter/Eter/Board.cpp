@@ -26,6 +26,11 @@ std::vector<std::vector<std::optional<Tile>>> Eter::Board::GetBoard() const
 	return m_board;
 }
 
+std::vector<std::vector<std::optional<Tile>>>& Eter::Board::GetBoardReference()
+{
+	return m_board;  // Return a reference to the actual board
+}
+
 size_t Eter::Board::GetMaxSize() const
 {
 	return m_maxSize;

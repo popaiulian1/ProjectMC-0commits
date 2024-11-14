@@ -28,8 +28,8 @@ namespace Eter {
 
 		Piece RemovePiece(const Piece& removePiece);
 		void PrintCards(const std::vector<Piece>& cards);
-		
 		bool HasWon(const Board& board) const; // Returns true if the player has won
+		friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 	private:
 		std::string m_username;

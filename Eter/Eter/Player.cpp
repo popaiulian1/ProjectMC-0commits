@@ -98,8 +98,7 @@ Eter::Piece Eter::Player::GetLastPlayedCard() const
 }
 
 bool Eter::Player::HasWon(const Board& board) const
-{
-   
+{ 
     auto gameBoard = board.GetBoard();
     size_t maxSize = board.GetMaxSize();
 
@@ -141,4 +140,16 @@ bool Eter::Player::HasWon(const Board& board) const
     return false;
 }
 
+std::ostream& Eter::operator<<(std::ostream& os, const Player& player)
+{
+    os << player.GetUserName() << " data:\n-------------------------------\n";
+    os << "Username: " << player.m_username << '\n';
+    os << "Cards {";
+    for (const Piece& piece : player.m_cards) {
+        os << piece.GetValue() << " ";
+    }
+    os << "}\n";
+    os << "Score: " << player.m_score;
 
+    return os;
+}

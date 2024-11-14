@@ -109,16 +109,42 @@ void Eter::Wizards::eliminateRow(int row) const
 	std::cout << "Row " << row << " has been eliminated.\n";
 }
 
-/*void Eter::Wizards::eliminateOpponentCard(int row, int col)
+void Eter::Wizards::eliminateOpponentCard(int row, int col)
 {
-	if (board->isOpponentCard(row, col) && board->top-1 is our card)
-	{ // We verify if the card at (row, col) is the opponent's card & the card under it is ours
-		board->removeCard(row, col);       // We eliminate the card that is at (row, col) on the board
-		std::cout << "The opponent's card at (" << row << ", " << col << ") has been removed.\n";
-	}	
-		else 
+	auto gameBoard = board->GetBoard();
+	Tile& tile = gameBoard[row][col].value();
+
+	// Check if the specified position contains a tile
+	if (!gameBoard[row][col].has_value()) {
+		std::cout << "No tile found at (" << row << ", " << col << ").\n";
+		return;
+	}
+
+	if (tile.GetTopValue().GetUserName() != this->GetUserName()) { // Verify if the top card is not ours
+
+		if (tile.GetValue().size() > 1) { //Check to see if there are any cards below
+
+			// Temporarily store the opponent's card to verify the card underneath
+			Piece opponentCard = tile.GetTopValue();
+			tile.GetValue().pop(); // Remove the opponent's top card
+
+			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
+				std::cout << "The opponent's card at (" << row << ", " << col << ") has been removed.\n";
+				return;
+			}
+			else {
+				// Restore the opponent's card since the underlying card isn't the player's
+				tile.GetValue().push(opponentCard);
+				std::cout << "The card underneath is not owned by you. Cannot remove the opponent's card.\n";
+			}
+		}	
+
+		else
+			std::cout << "No card underneath to verify ownership. Cannot remove the opponent's card.\n";
+	}
+	else 
 		std::cout << "No opponent's card found at (" << row << ", " << col << ").\n";
-}*/
+}
 
 
 

@@ -28,6 +28,7 @@ namespace Eter {
 		Board& operator=(const Board&) = default;
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
 		std::vector<std::vector<std::optional<Tile>>> GetBoard() const;
+		std::vector<std::vector<std::optional<Tile>>>& GetBoardReference();
 		size_t GetMaxSize() const;
 		size_t GetCurrentSize() const;
 		void SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board);

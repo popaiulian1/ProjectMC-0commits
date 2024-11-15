@@ -1,4 +1,7 @@
 #include "Board.h"
+#include "Tile.h"
+#include "Piece.h"
+
 #include <stdexcept>;
 
 Eter::Board::Board(const GameType& gameType)
@@ -21,12 +24,12 @@ Eter::Board::Board(const GameType& gameType)
 	m_board[0].resize(1);
 }
 
-std::vector<std::vector<std::optional<Tile>>> Eter::Board::GetBoard() const
+std::vector<std::vector<std::optional<Eter::Tile>>> Eter::Board::GetBoard() const
 {
 	return m_board;
 }
 
-std::vector<std::vector<std::optional<Tile>>>& Eter::Board::GetBoardReference()
+std::vector<std::vector<std::optional<Eter::Tile>>>& Eter::Board::GetBoardReference()
 {
 	return m_board;  // Return a reference to the actual board
 }
@@ -46,24 +49,24 @@ void Eter::Board::SetBoard(const std::vector<std::vector<std::optional<Tile>>>& 
 	m_board = board;
 }
 
-void Eter::Board::SetTileValue(uint8_t x, uint8_t y, char value)
+void Eter::Board::SetTileValue(uint8_t x, uint8_t y, Piece &piece)
 {
 	if (x >= m_board.size() || y >= m_board[x].size())
 	{
 		throw std::out_of_range("Invalid position");
 	}
 
-	m_board[x][y] = Tile{value};
+	m_board[x][y] = Tile{piece};
 
 	IncreaseBoardSize();
 }
 
-std::optional<Tile>& Eter::Board::operator[](const Position& pos)
+std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos)
 {
 	return const_cast<std::optional<Tile>&>(std::as_const(*this)[pos]);
 }
 
-const std::optional<Tile>& Eter::Board::operator[](const Position& pos) const
+const std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos) const
 {
 	const auto& [line, column] = pos;
 	if (line < m_board.size() && column < m_board[line].size()) {

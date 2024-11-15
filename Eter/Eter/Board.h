@@ -32,7 +32,7 @@ namespace Eter {
 		size_t GetMaxSize() const;
 		size_t GetCurrentSize() const;
 		void SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board);
-		void SetTileValue(uint8_t x, uint8_t y, char value);
+		void SetTileValue(uint8_t x, uint8_t y, Piece &piece);
 		std::optional<Tile>& operator[](const Position& pos);
 		const std::optional<Tile>& operator[](const Position& pos) const;
 

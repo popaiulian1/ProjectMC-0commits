@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <vector>;
-#include <string>;
+#include <vector>
+#include <string>
 #include <ostream>
 #include <optional>
 #include "Tile.h"

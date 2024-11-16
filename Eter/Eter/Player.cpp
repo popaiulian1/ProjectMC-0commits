@@ -60,7 +60,7 @@ void Eter::Player::setUserName(const std::string& username)
 
 void Eter::Player::setScore(const int& score)
 {
-	m_score = score;
+	m_score += score;
 }
 
 void Eter::Player::setCards(const std::vector<Piece>& cards)

@@ -74,7 +74,29 @@ void Eter::Game::PlayGame()
 
 bool Eter::Game::CheckWinner()
 {
-	
+	if (CheckDraw() == false) {
+		if (m_player1.HasWon(m_board) == true) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else if (m_player2.HasWon(m_board) == true) {
+			PrintWinner(m_player2);
+			return true;
+		}
+	}
+	else if (CheckDraw() == true) {
+		TotalScore(m_player1, m_board);
+		TotalScore(m_player2, m_board);
+		if (m_player1.GetScore() > m_player2.GetScore()) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else {
+			PrintWinner(m_player2);
+			return true;
+		}
+	}
+	return false;
 }
 
 int Eter::Game::TotalScore(Player& player, const Board& board) 

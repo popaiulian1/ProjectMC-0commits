@@ -23,7 +23,7 @@ namespace Eter {
 	class Board
 	{
 	public:
-		using Position = std::pair<size_t, size_t>;
+		using Position = std::pair<int8_t, int8_t>;
 
 		Board() = default;
 		~Board() = default;

@@ -46,10 +46,17 @@ void Eter::Elemental::Earthquake(const Board& board)
 	
 }
 
-void Eter::Elemental::Destruction(const Player& opponent)
+void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
-	Piece lastCardPlayed = opponent.GetLastPlayedCard();
+	const Piece lastPlayedCard = opponent.GetLastPlayedCard();
+	auto GameBoard = board.GetBoard();
 
+	for (auto& row : GameBoard){
+		for (auto& tile : row){
+			if (tile.value().GetTopValue().GetValue() == lastPlayedCard.GetValue())
+				tile.value().GetValue().pop();
+		}
+	}
 }
 
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards

@@ -1,7 +1,4 @@
 #include "Board.h"
-#include "Tile.h"
-#include "Piece.h"
-
 #include <stdexcept>;
 
 Eter::Board::Board(const GameType& gameType)
@@ -19,17 +16,17 @@ Eter::Board::Board(const GameType& gameType)
 	{
 		throw std::invalid_argument("Invalid game type");
 	}
-	
+
 	m_board.resize(1);
 	m_board[0].resize(1);
 }
 
-std::vector<std::vector<std::optional<Eter::Tile>>> Eter::Board::GetBoard() const
+Eter::BoardMatrix Eter::Board::GetBoard() const
 {
 	return m_board;
 }
 
-std::vector<std::vector<std::optional<Eter::Tile>>>& Eter::Board::GetBoardReference()
+Eter::BoardMatrix& Eter::Board::GetBoardReference()
 {
 	return m_board;  // Return a reference to the actual board
 }
@@ -44,21 +41,27 @@ size_t Eter::Board::GetCurrentSize() const
 	return m_board.size();
 }
 
-void Eter::Board::SetBoard(const std::vector<std::vector<std::optional<Tile>>>& board)
+void Eter::Board::SetBoard(const BoardMatrix& board)
 {
 	m_board = board;
 }
 
-void Eter::Board::SetTileValue(uint8_t x, uint8_t y, Piece &piece)
+void Eter::Board::SetTileValue(const Position& pos, const char& value, const Player& player)
 {
-	if (x >= m_board.size() || y >= m_board[x].size())
+	IncreaseBoardSize(pos);
+
+	const auto& [line, column] = pos;
+	line < 0 ? line + 1 : line;
+	column < 0 ? column + 1 : column;
+
+	if (line >= m_board.size() || column >= m_board[line].size())
 	{
 		throw std::out_of_range("Invalid position");
 	}
+	else {
+		m_board[line][column].value().SetValue(Piece(value, true, player.GetUserName()));
+	}
 
-	m_board[x][y] = Tile{piece};
-
-	IncreaseBoardSize();
 }
 
 std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos)
@@ -75,16 +78,28 @@ const std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos) co
 	throw std::out_of_range("Invalid position");
 }
 
-void Eter::Board::IncreaseBoardSize()
+void Eter::Board::IncreaseBoardSize(const Position& pos)
 {
-	if (m_board.size() < m_maxSize && !CheckEmptyTiles())
+	const auto& [line, column] = pos;
+	if (line >= m_board.size() && m_board.size() < m_maxSize)
 	{
-		m_board.resize(m_board.size() + 1);
-		for (auto& line : m_board) {
-			line.resize(m_board.size());
+		m_board.resize(line + 1);
+	}
+	if (column >= m_board[line].size())
+	{
+		m_board[line].resize(column + 1);
+	}
+	if (line < 0 && m_board.size() < m_maxSize) {
+		m_board.insert(m_board.begin(), std::vector<std::optional<Tile>>());
+	}
+	if (column < 0)
+	{
+		for (auto& row : m_board)
+		{
+			row.insert(row.begin(), std::optional<Tile>());
 		}
 	}
-	
+
 }
 
 bool Eter::Board::CheckEmptyTiles()

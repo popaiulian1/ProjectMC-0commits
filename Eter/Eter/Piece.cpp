@@ -1,12 +1,12 @@
 #include "Piece.h"
 
-Eter::Piece::Piece() : m_value{ 0 }, m_isPlaced{ false }, m_username{""}
+Eter::Piece::Piece() : m_value{ '\0'}, m_isPlaced{false}, m_username{""}
 {}
 
-Eter::Piece::Piece(const int& value, const bool& isPlaced, const std::string& username) : m_value{ value }, m_isPlaced{ isPlaced }, m_username{username}
+Eter::Piece::Piece(const char& value, const bool& isPlaced, const std::string& username) : m_value{ value }, m_isPlaced{ isPlaced }, m_username{username}
 {}
 
-int Eter::Piece::GetValue() const
+char Eter::Piece::GetValue() const
 {
 	return m_value;
 }
@@ -21,7 +21,7 @@ const std::string& Eter::Piece::GetUserName() const
 	return m_username;
 }
 
-void Eter::Piece::SetValue(const int& value)
+void Eter::Piece::SetValue(const char& value)
 {
 	m_value = value;
 }

@@ -32,6 +32,12 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 	std::swap(m_board[{row1, column1}], m_board[{row2, column2}]);
 }
 
+void Eter::Elemental::Destruction(const Player& opponent)
+{
+	Piece lastCardPlayed = opponent.GetLastPlayedCard();
+
+}
+
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards
 { 
 	uint8_t StackSize = m_board[{row, column}].value().GetValue().size();

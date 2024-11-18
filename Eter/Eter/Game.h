@@ -13,12 +13,13 @@ namespace Eter
 		Game& operator=(const Game&) = default;
 		Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType);
 
-		void StartGame();
+		void StartGame(Player& player1, Player& player2, Board& board);
 		void PrintBoard() const;
 		void PrintWinner(const Player &player) const;
 		void PlayGame();
 		bool CheckWinner() const;
 		bool CheckDraw() const;
+		void Illusion(Player& player, Board& board);
 		void SetPlayer1(const Player& player);
 		void SetPlayer2(const Player& player);
 		void SetBoard(const Board& board);

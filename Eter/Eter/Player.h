@@ -26,10 +26,11 @@ namespace Eter {
 		void SetFaceDownCardPlayed(const bool& faceDownCardPlayed);
 		void setRemainingTime(const uint8_t& remainingTime);
 
-		Piece RemovePiece(const Piece& removePiece);
 		void PrintCards(const std::vector<Piece>& cards);
 		bool HasWon(const Board& board) const; // Returns true if the player has won
 		friend std::ostream& operator<<(std::ostream& os, const Player& player);
+		void AddPiece(const Piece& piece);
+		void ClearPieces();
 
 	private:
 		std::string m_username;

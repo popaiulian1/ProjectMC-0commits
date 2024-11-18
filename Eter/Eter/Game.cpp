@@ -72,48 +72,48 @@ void Eter::Game::PrintWinner( const Player &player) const
 void Eter::Game::PlayGame()
 {} 
 
-bool Eter::Game::CheckWinner() const
+bool Eter::Game::CheckWinner()
 {
-	if (m_board.GetCurrentSize() < m_board.GetMaxSize()) {
-		return false;
+	if (CheckDraw() == false) {
+		if (m_player1.HasWon(m_board) == true) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else if (m_player2.HasWon(m_board) == true) {
+			PrintWinner(m_player2);
+			return true;
+		}
 	}
-	else {
-		BoardMatrix board = m_board.GetBoard();
+	else if (CheckDraw() == true) {
+		TotalScore(m_player1, m_board);
+		TotalScore(m_player2, m_board);
+		if (m_player1.GetScore() > m_player2.GetScore()) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else {
+			PrintWinner(m_player2);
+			return true;
+		}
+	}
+	return false;
+}
 
-		//To edit to add check based on username.
-		for (size_t i = 0; i < m_board.GetMaxSize(); i++)
+int Eter::Game::TotalScore(Player& player, const Board& board) 
+{
+	auto GameBoard = board.GetBoard();
+	for (auto& row : GameBoard)
+	{
+		for (auto& tile : row)
 		{
-			if (board[i][0].has_value() && board[i][1].has_value() && board[i][2].has_value())
-			{
-				if (board[i][0].value().GetValue() == board[i][1].value().GetValue() && board[i][1].value().GetValue() == board[i][2].value().GetValue())
-				{
-					return true;
+			while (!tile.value().GetValue().empty()) {
+				if (tile.value().GetTopValue().GetUserName() == player.GetUserName()) {
+					int score = tile.value().GetTopValue().GetValue() - '0';
+					player.setScore(score);
 				}
-			}
-			if (board[0][i].has_value() && board[1][i].has_value() && board[2][i].has_value())
-			{
-				if (board[0][i].value().GetValue() == board[1][i].value().GetValue() && board[1][i].value().GetValue() == board[2][i].value().GetValue())
-				{
-					return true;
-				}
+				tile.value().GetValue().pop();
 			}
 		}
-		if (board[0][0].has_value() && board[1][1].has_value() && board[2][2].has_value())
-		{
-			if (board[0][0].value().GetValue() == board[1][1].value().GetValue() && board[1][1].value().GetValue() == board[2][2].value().GetValue())
-			{
-				return true;
-			}
-		}
-		if (board[0][2].has_value() && board[1][1].has_value() && board[2][0].has_value())
-		{
-			if (board[0][2].value().GetValue() == board[1][1].value().GetValue() && board[1][1].value().GetValue() == board[2][0].value().GetValue())
-			{
-				return true;
-			}
-		}
-		return false;
-
 	}
 }
 
@@ -142,14 +142,13 @@ void Eter::Game::Illusion(Player& player, Board& board)
 	std::cout << "Row: "; std::cin >> row;
 	std::cout << "Column: "; std::cin >> column;
 
-	while (row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) // Check if the position is valid
+	while ((row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) && 
+	!board.GetBoard()[row][column].has_value()) // Check if the position is valid
 	{
 		std::cout << "Invalid position. Please enter a valid position.\n";
 		std::cout << "Row: "; std::cin >> row;
 		std::cout << "Column: "; std::cin >> column;
 	}
-
-	//check if on the position there is already an illusion played (to implement)
 
 	std::cout << player.GetUserName() << ", choose a card to play: "; // Ask the player to choose a card to play
 	char card;

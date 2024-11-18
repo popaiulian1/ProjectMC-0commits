@@ -41,9 +41,10 @@ namespace Eter {
 		Elemental(const Elemental& other);
 		~Elemental() = default;
 
-		void Destruction(const Player& opponent);
+		void Destruction(const Player& opponent, const Board& board);
 		void Storm(int row, int column);
 		void Tide(int row1, int column1, int row2, int column2);
+		void Earthquake(const Board& board);
 	
 
 	private:

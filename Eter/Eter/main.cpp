@@ -5,8 +5,8 @@
 
 int main(){
 
-	Eter::Board board;
-	std::vector<Eter::Piece> Cards;
+	Eter::Board board(Eter::GameType::Practice);
+	/*std::vector<Eter::Piece> Cards;
 	Eter::Player Player1("Fluviu", 0, Cards, false);
 	Eter::Player Player2("Mama", 0, Cards, false);
 	Eter::Game game(Player1, Player2, board, Eter::GameType::Practice);
@@ -23,7 +23,7 @@ int main(){
 		game.Illusion(Player2, board);
 		std::cout << board << std::endl;
 		Player2.SetFaceDownCardPlayed(true);
-	}
+	}*/
 
 	/*game.Illusion(Player1, board);
 	std::cout << board << std::endl;
@@ -31,25 +31,16 @@ int main(){
 	game.Illusion(Player2, board);
 	std::cout << board << std::endl;
 	std::cout << Player2.GetFaceDownCardPlayed() << std::endl;*/
-	/*std::cout << board << std::endl;
-	board.SetTileValue(0, 0, 'a');
-	std::cout << board << std::endl;
-	board.SetTileValue(0, 1, 'b');
-	std::cout << board << std::endl;
-	board.SetTileValue(1, 0, 'c');
-	std::cout << board << std::endl;
-	board.SetTileValue(1, 1, 'd');
-	std::cout << board << std::endl;
-	board.SetTileValue(2, 0, 'e');
-	std::cout << board << std::endl;
-	board.SetTileValue(2, 1, 'f');
-	std::cout << board << std::endl;
-	board.SetTileValue(0, 2, 'g');
-	std::cout << board << std::endl;
-	board.SetTileValue(1, 2, 'h');
-	std::cout << board << std::endl;
-	board.SetTileValue(2, 2, 'i');
-	std::cout << board << std::endl;*/
+	
+	std::cout << board;
+	board.SetTileValue({ 0, 0 }, 'A', Eter::Player("Player1", 0, std::vector<Eter::Piece>(), false));
+	std::cout << board;
+	board.SetTileValue({ -1, 0 }, 'B', Eter::Player("Player2", 0, std::vector<Eter::Piece>(), false));
+	std::cout << board;
+	board.SetTileValue({ -1, -1 }, 'C', Eter::Player("Player1", 0, std::vector<Eter::Piece>(), false));
+	std::cout << board;
+	board.SetTileValue({ 2, 2 }, 'D', Eter::Player("Player2", 0, std::vector<Eter::Piece>(), false));
+	std::cout << "\n" << board;
 
 	return 0;
 } 

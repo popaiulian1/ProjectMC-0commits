@@ -32,10 +32,31 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 	std::swap(m_board[{row1, column1}], m_board[{row2, column2}]);
 }
 
-void Eter::Elemental::Destruction(const Player& opponent)
+void Eter::Elemental::Earthquake(const Board& board)
 {
-	Piece lastCardPlayed = opponent.GetLastPlayedCard();
+	auto GameBoard = board.GetBoard();
+	for (auto& row : GameBoard)
+	{
+		for (auto& tile : row)
+		{
+			if (tile.value().GetTopValue().GetValue() == '1')
+				tile.value().GetValue().pop();
+		}
+	}
+	
+}
 
+void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
+{
+	const Piece lastPlayedCard = opponent.GetLastPlayedCard();
+	auto GameBoard = board.GetBoard();
+
+	for (auto& row : GameBoard){
+		for (auto& tile : row){
+			if (tile.value().GetTopValue().GetValue() == lastPlayedCard.GetValue())
+				tile.value().GetValue().pop();
+		}
+	}
 }
 
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards

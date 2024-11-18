@@ -78,12 +78,6 @@ void Eter::Player::setRemainingTime(const uint8_t& remainingTime)
 	m_remainingTime = remainingTime;
 }
 
-Eter::Piece Eter::Player::RemovePiece(const Piece& removePiece)
-{
-	std::cout << "Piesa aleasa din deck este: " << removePiece.GetValue();
-	return removePiece;
-}
-
 void Eter::Player::PrintCards(const std::vector<Piece>& cards)
 {
 	for (int i = 0; i < cards.size(); i++) {
@@ -138,6 +132,16 @@ bool Eter::Player::HasWon(const Board& board) const
     }
 
     return false;
+}
+
+void Eter::Player::AddPiece(const Piece& piece)
+{
+    this->m_cards.push_back(piece);
+}
+
+void Eter::Player::ClearPieces()
+{
+    this->m_cards.clear();
 }
 
 std::ostream& Eter::operator<<(std::ostream& os, const Player& player)

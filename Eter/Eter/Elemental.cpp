@@ -48,12 +48,11 @@ void Eter::Elemental::Earthquake(const Board& board)
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
-	const Piece lastPlayedCard = opponent.GetLastPlayedCard();
 	auto GameBoard = board.GetBoard();
 
 	for (auto& row : GameBoard){
 		for (auto& tile : row){
-			if (tile.value().GetTopValue().GetValue() == lastPlayedCard.GetValue())
+			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedCard().GetValue())
 				tile.value().GetValue().pop();
 		}
 	}

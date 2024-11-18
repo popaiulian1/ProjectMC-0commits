@@ -47,10 +47,10 @@ void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 	}
 }
 
-void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vector<int>& playerHand)
+void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vector<Piece>& playerHand)
 {
 	if (powerIndex == 1) 
-		coverOpponentCard();
+		coverOpponentCard(row,col,playerHand);
 	
 	else if (powerIndex == 2) 
 		createPit();
@@ -77,7 +77,7 @@ void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int
 	
 }
 
-// Methods for powers
+// Methods for Masters of fire
 void Eter::Wizards::eliminateRow(int row) 
 {
 	// Verify if the row is valid
@@ -205,6 +205,54 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 	}
 	else 
 		std::cout << "No opponent's card found at (" << row << ", " << col << ").\n";
+}
+
+
+// Methods for Masters of earth
+void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& playerHand)
+{
+	auto& gameBoard = board->GetBoardReference();
+
+	if (row < 0 || row >= board->GetCurrentSize() || col < 0 || col >= board->GetCurrentSize() ||
+		!gameBoard[row][col].has_value())
+	{
+		std::cout << "Invalid position or no tile found at (" << row << ", " << col << ").\n";
+		return;
+	}
+
+	Tile& tile = gameBoard[row][col].value();
+
+	if (tile.GetTopValue().GetUserName() == this->GetUserName()) // If the top card is ours
+	{
+		std::cout << "You cannot cover your own card at (" << row << ", " << col << ").\n";
+		return;
+
+	}
+
+	char opponentCardValue = tile.GetTopValue().GetValue();
+	auto smallestCardIt = playerHand.end();
+
+	for (auto it = playerHand.begin(); it != playerHand.end(); ++it) {
+		if (it->GetValue() < opponentCardValue) {
+			if (smallestCardIt == playerHand.end() || it->GetValue() < smallestCardIt->GetValue()) //Finding the smallest value that is in our hand and < opponent's card
+				smallestCardIt = it;
+		}
+	}
+	if (smallestCardIt != playerHand.end()) {
+		// Place the player's card on top of the opponent's card
+		tile.GetValue().push(*smallestCardIt);
+
+		// Remove the card from the player's hand
+		char placedCardValue = smallestCardIt->GetValue();
+		playerHand.erase(smallestCardIt);
+
+		std::cout << "You have successfully covered the opponent's card at (" << row << ", " << col
+			<< ") with your card of value " << placedCardValue << ".\n";
+	}
+	else 
+		std::cout << "No suitable card of lower value was found in your hand.\n";
+	
+
 }
 
 

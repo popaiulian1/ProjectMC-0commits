@@ -47,7 +47,3 @@ namespace Eter {
 		size_t m_maxSize;
 	};
 }
-
-
-
-

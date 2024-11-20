@@ -32,7 +32,7 @@ namespace Eter {
         void eliminateRow(int row);
         void eliminateCol(int col);
         void coverOpponentCard(int row, int col, std::vector<Piece>& playerHand);
-        void createPit();
+        void createPit(int row, int col);
         void moveOwnStack();
         void gainExtraEtherCard();
         void moveOpponentStack();

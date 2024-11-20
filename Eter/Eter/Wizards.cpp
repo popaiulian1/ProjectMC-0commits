@@ -53,7 +53,7 @@ void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vect
 		coverOpponentCard(row,col,playerHand);
 	
 	else if (powerIndex == 2) 
-		createPit();
+		createPit(row,col);
 	
 }
 
@@ -251,7 +251,27 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 	}
 	else 
 		std::cout << "No suitable card of lower value was found in your hand.\n";
-	
+}
+
+void Eter::Wizards::createPit(int row, int col)
+{
+	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid position for creating a pit.\n";
+		return;
+	}
+
+	auto& gameBoard = m_board->GetBoardReference();
+
+	if (gameBoard[row][col].has_value()) {
+		std::cout << "The position (" << row << ", " << col << ") is already occupied. Cannot create a pit here.\n";
+		return;
+	}
+
+	Tile pitTile; // Creates a Tile as a pit
+	//pitTile.SetAsPit(); // Need SetAsPit() implemented in Tile
+	gameBoard[row][col] = pitTile;
+
+	std::cout << "A pit has been created at position (" << row << ", " << col << ").\n";
 
 }
 

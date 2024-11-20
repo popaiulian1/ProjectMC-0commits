@@ -32,7 +32,7 @@ namespace Eter {
         void eliminateRow(int row);
         void eliminateCol(int col);
         void coverOpponentCard(int row, int col, std::vector<Piece>& playerHand);
-        void createPit();
+        void createPit(int row, int col);
         void moveOwnStack();
         void gainExtraEtherCard();
         void moveOpponentStack();
@@ -40,12 +40,12 @@ namespace Eter {
 
 
     private:
-        std::string name;
-        MageType mageType;
-        bool magicPowerUsed;
-        int etherCards;
-        Board* board;
-        std::string username;
+        std::string m_name;
+        MageType m_mageType;
+        bool m_magicPowerUsed;
+        int m_etherCards;
+        Board* m_board;
+        std::string m_username;
 
     };
 }

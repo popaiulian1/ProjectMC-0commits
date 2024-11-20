@@ -65,8 +65,7 @@ void Eter::Game::PrintBoard() const
 
 void Eter::Game::PrintWinner( const Player &player) const
 {
-	    std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
-
+    std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
 }
 
 void Eter::Game::PlayGame()

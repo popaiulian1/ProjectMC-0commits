@@ -7,19 +7,19 @@
  
 //Constructors & Destructor
 Eter::Wizards::Wizards() :
-	name("Unknown"), mageType(MageType::FIRE), magicPowerUsed(false), etherCards(1), board(nullptr), username("Unknown") {}
+	m_name("Unknown"), m_mageType(MageType::FIRE),m_magicPowerUsed(false), m_etherCards(1), m_board(nullptr), m_username("Unknown") {}
 
 
 Eter::Wizards::Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string username) :
-	name(wizardName), mageType(type), magicPowerUsed(false), etherCards(1), board(gameBoard), username(username) {}
+	m_name(wizardName), m_mageType(type), m_magicPowerUsed(false), m_etherCards(1), m_board(gameBoard), m_username(username) {}
 
 
 Eter::Wizards::Wizards(const Wizards& other) :
-	name(other.name), mageType(other.mageType), magicPowerUsed(other.magicPowerUsed), etherCards(other.etherCards), board(other.board) {}
+	m_name(other.m_name), m_mageType(other.m_mageType), m_magicPowerUsed(other.m_magicPowerUsed), m_etherCards(other.m_etherCards), m_board(other.m_board) {}
 
 const std::string& Eter::Wizards::GetUserName() const
 {
-	return username;
+	return m_username;
 }
 
 // Determination of Power 
@@ -53,7 +53,7 @@ void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vect
 		coverOpponentCard(row,col,playerHand);
 	
 	else if (powerIndex == 2) 
-		createPit();
+		createPit(row,col);
 	
 }
 
@@ -81,22 +81,22 @@ void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int
 void Eter::Wizards::eliminateRow(int row) 
 {
 	// Verify if the row is valid
-	if (row < 0 || row >= board->GetCurrentSize()) {
+	if (row < 0 || row >= m_board->GetCurrentSize()) {
 		std::cout << "Invalid row index.\n";
 		return;
 	}
 
 	// Verify if the row has at least 3 positions 
-	if (board->GetCurrentSize() < 3) {
+	if (m_board->GetCurrentSize() < 3) {
 		std::cout << "Row must have at least 3 positions.\n";
 		return;
 	}
 
 	bool hasOwnCard = false;
-	auto &gameBoard = board->GetBoardReference();
+	auto &gameBoard = m_board->GetBoardReference();
 
 	// Verify every column of the row
-	for (int col = 0; col < board->GetCurrentSize(); ++col) {
+	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
 		if (gameBoard[row][col].has_value()) { // Verify if we have at least one of our own card visibile in the row
 			const Tile& tile = gameBoard[row][col].value();
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
@@ -113,7 +113,7 @@ void Eter::Wizards::eliminateRow(int row)
 	}
 
 	// Applied power
-	for (int col = 0; col < board->GetCurrentSize(); ++col) {
+	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
 		if (gameBoard[row][col].has_value()){
 
 		    Tile& tile = gameBoard[row][col].value();
@@ -127,22 +127,22 @@ void Eter::Wizards::eliminateRow(int row)
 void Eter::Wizards::eliminateCol(int col)
 {
 	// Verify if the col is valid
-	if (col < 0 || col >= board->GetCurrentSize()) {
+	if (col < 0 || col >= m_board->GetCurrentSize()) {
 		std::cout << "Invalid col index.\n";
 		return;
 	}
 
 	// Verify if the col has at least 3 positions 
-	if (board->GetCurrentSize() < 3) {
+	if (m_board->GetCurrentSize() < 3) {
 		std::cout << "Col must have at least 3 positions.\n";
 		return;
 	}
 
 	bool hasOwnCard = false;
-	auto& gameBoard = board->GetBoardReference();
+	auto& gameBoard = m_board->GetBoardReference();
 
 	// Verify every row of the column
-	for (int row = 0; row < board->GetCurrentSize(); ++row) {
+	for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
 		if (gameBoard[row][col].has_value()) { // Verify if we have at least one of our own card visibile in the col
 			const Tile& tile = gameBoard[row][col].value();
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
@@ -159,7 +159,7 @@ void Eter::Wizards::eliminateCol(int col)
 	}
 
 	// Applied power
-	for (int row = 0; row < board->GetCurrentSize(); ++row) {
+	for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
 		if (gameBoard[row][col].has_value()) {
 
 			Tile& tile = gameBoard[row][col].value();
@@ -172,7 +172,7 @@ void Eter::Wizards::eliminateCol(int col)
 
 void Eter::Wizards::eliminateOpponentCard(int row, int col)
 {
-	auto &gameBoard = board->GetBoardReference();
+	auto &gameBoard = m_board->GetBoardReference();
 	Tile& tile = gameBoard[row][col].value();
 
 	// Check if the specified position contains a tile
@@ -211,9 +211,9 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 // Methods for Masters of earth
 void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& playerHand)
 {
-	auto& gameBoard = board->GetBoardReference();
+	auto& gameBoard = m_board->GetBoardReference();
 
-	if (row < 0 || row >= board->GetCurrentSize() || col < 0 || col >= board->GetCurrentSize() ||
+	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize() ||
 		!gameBoard[row][col].has_value())
 	{
 		std::cout << "Invalid position or no tile found at (" << row << ", " << col << ").\n";
@@ -251,9 +251,32 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 	}
 	else 
 		std::cout << "No suitable card of lower value was found in your hand.\n";
-	
+}
+
+void Eter::Wizards::createPit(int row, int col)
+{
+	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid position for creating a pit.\n";
+		return;
+	}
+
+	auto& gameBoard = m_board->GetBoardReference();
+
+	if (gameBoard[row][col].has_value()) {
+		std::cout << "The position (" << row << ", " << col << ") is already occupied. Cannot create a pit here.\n";
+		return;
+	}
+
+	Tile pitTile; // Creates a Tile as a pit
+	//pitTile.SetAsPit(); // Need SetAsPit() implemented in Tile
+	gameBoard[row][col] = pitTile;
+
+	std::cout << "A pit has been created at position (" << row << ", " << col << ").\n";
 
 }
+
+
+// Methods for Masters of air
 
 
 

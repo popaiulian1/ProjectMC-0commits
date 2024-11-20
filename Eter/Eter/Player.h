@@ -20,11 +20,11 @@ namespace Eter {
 		Piece GetLastPlayedCard() const;
 		const uint8_t& GetRemainingTime() const;
 
-		void setUserName(const std::string& username);
-		void setScore(const int& score);
-		void setCards(const std::vector<Piece>& cards);
+		void SetUserName(const std::string& username);
+		void SetScore(const int& score);
+		void SetCards(const std::vector<Piece>& cards);
 		void SetFaceDownCardPlayed(const bool& faceDownCardPlayed);
-		void setRemainingTime(const uint8_t& remainingTime);
+		void SetRemainingTime(const uint8_t& remainingTime);
 
 		void PrintCards(const std::vector<Piece>& cards);
 		bool HasWon(const Board& board) const; // Returns true if the player has won

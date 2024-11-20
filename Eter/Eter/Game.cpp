@@ -23,13 +23,13 @@ void Eter::Game::StartGame(Player& player1, Player& player2, Board& board)
 		if (player1.GetUserName() == "") { // If the username of the first player is not set, ask the user to set it
 			std::cout << "Username of the first player is: ";
 			std::getline(std::cin, UsernamePlayer1);
-			player1.setUserName(UsernamePlayer1);
+			player1.SetUserName(UsernamePlayer1);
 		}
 
 		if (player2.GetUserName() == "") { // If the username of the second player is not set, ask the user to set it
 			std::cout << "Username of the second player is: ";
 			std::getline(std::cin, UsernamePlayer2);
-			player2.setUserName(UsernamePlayer2);
+			player2.SetUserName(UsernamePlayer2);
 		}
 
 		CardsPractice.resize(kDECK_SIZE_PRACTICE); // Resize the practice deck to the size of the practice deck
@@ -38,8 +38,8 @@ void Eter::Game::StartGame(Player& player1, Player& player2, Board& board)
 		for (auto& card : CardsPractice) 
 			card.SetValue(Values[index++]); // Set the values of the cards in the practice deck
 		
-		player1.setCards(CardsPractice); // Set the cards of the first player to the cards in the practice deck
-		player2.setCards(CardsPractice); // Set the cards of the second player to the cards in the practice deck
+		player1.SetCards(CardsPractice); // Set the cards of the first player to the cards in the practice deck
+		player2.SetCards(CardsPractice); // Set the cards of the second player to the cards in the practice deck
 
 		std::cout << "The initial board is: " << m_board << "\n";
 
@@ -108,7 +108,7 @@ int Eter::Game::TotalScore(Player& player, const Board& board)
 			while (!tile.value().GetValue().empty()) {
 				if (tile.value().GetTopValue().GetUserName() == player.GetUserName()) {
 					int score = tile.value().GetTopValue().GetValue() - '0';
-					player.setScore(score);
+					player.SetScore(score);
 				}
 				tile.value().GetValue().pop();
 			}

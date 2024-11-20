@@ -53,17 +53,17 @@ const uint8_t& Eter::Player::GetRemainingTime() const
 	return m_remainingTime;
 }
 
-void Eter::Player::setUserName(const std::string& username)
+void Eter::Player::SetUserName(const std::string& username)
 {
 	m_username = username;
 }
 
-void Eter::Player::setScore(const int& score)
+void Eter::Player::SetScore(const int& score)
 {
 	m_score += score;
 }
 
-void Eter::Player::setCards(const std::vector<Piece>& cards)
+void Eter::Player::SetCards(const std::vector<Piece>& cards)
 {
 	m_cards = cards;
 }
@@ -73,7 +73,7 @@ void Eter::Player::SetFaceDownCardPlayed(const bool& faceDownCardPlayed)
 	m_faceDownCardPlayed = faceDownCardPlayed;
 }
 
-void Eter::Player::setRemainingTime(const uint8_t& remainingTime)
+void Eter::Player::SetRemainingTime(const uint8_t& remainingTime)
 {
 	m_remainingTime = remainingTime;
 }

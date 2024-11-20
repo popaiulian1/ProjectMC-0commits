@@ -24,7 +24,16 @@ Eter::Piece Eter::Tile::GetTopValue() const{
 }
 
 void Eter::Tile::SetValue(const Piece& piece){
+	if (isPit) 
+		throw std::runtime_error("Cannot place a card on a pit.");
 	m_value.push(piece);
+}
+
+void Eter::Tile::SetAsPit()
+{
+	isPit = true; 
+	while (!m_value.empty()) 
+		m_value.pop(); 
 }
 
 void Eter::Tile::RemoveStack()
@@ -32,6 +41,11 @@ void Eter::Tile::RemoveStack()
 	while (!m_value.empty()) {
 		m_value.pop();  
 	}
+}
+
+bool Eter::Tile::IsPit() const
+{
+	return isPit;
 }
 
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile){

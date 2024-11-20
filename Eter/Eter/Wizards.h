@@ -40,12 +40,12 @@ namespace Eter {
 
 
     private:
-        std::string name;
-        MageType mageType;
-        bool magicPowerUsed;
-        int etherCards;
-        Board* board;
-        std::string username;
+        std::string m_name;
+        MageType m_mageType;
+        bool m_magicPowerUsed;
+        int m_etherCards;
+        Board* m_board;
+        std::string m_username;
 
     };
 }

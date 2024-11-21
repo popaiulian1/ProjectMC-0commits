@@ -9,6 +9,8 @@ namespace Eter {
 	class Player
 	{
 	public:
+
+		//Constructors
 		Player() = default;
 		~Player() = default;
 		Player(const Player&) = default;
@@ -36,7 +38,10 @@ namespace Eter {
 		// (ALSO) -> Iulian:  Look over lastPlayedPiece and reimplement it.
 
 		//Methods
-		void PrintPieces(const std::vector<Piece>& pieces) const;
+		std::pair<int8_t, int8_t> Play(); //takes row and column index for piece position to be played 
+		char ChoosePiece();
+		
+		void PrintPieces() const;
 		void AddPiece(const Eter::Piece& piece);
 		void RemovePieces();
 		bool HasWon(const Board& board);

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-
+//Constructors
 Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed):
 	m_username{ username }, 
     m_score{ score }, 
@@ -19,6 +19,8 @@ Eter::Player& Eter::Player::operator=(const Player& other)
 	return *this;
 }
 
+
+//Getters
 const std::string& Eter::Player::GetUserName() const
 {
     return m_username;
@@ -44,6 +46,7 @@ Eter::Piece Eter::Player::GetLastPlayedPiece() const
     return m_lastPlayedPiece;
 }
 
+//Setters
 void Eter::Player::SetUserName(const std::string& username)
 {
 	m_username = username;
@@ -64,10 +67,53 @@ void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 	m_illusionPlayed = illusionPlayed;
 }
 
-void Eter::Player::PrintPieces(const std::vector<Piece>& pieces) const
+
+//Methods
+std::pair<int8_t, int8_t> Eter::Player::Play()
 {
-    for (const auto& piece: pieces) 
-		std::cout << "Piece " << piece.GetValue() << " " << piece.GetUserName() << "\n";
+    int rowIndex, colIndex;
+
+    std::cout << "Enter Row Index: ";
+    std::cin >> rowIndex;
+    std::cout << "Enter Column Index: ";
+    std::cin >> colIndex;
+
+    return { rowIndex, colIndex };
+}
+
+char Eter::Player::ChoosePiece()
+{
+    if (m_pieces.empty()) {
+        throw std::runtime_error("No pieces left to choose!");
+        return;
+    }
+
+    std::cout << "Available pieces:\n-----------------------------\n";
+    PrintPieces();
+
+    char choice;
+    while (true) {
+        std::cout << "\nChoose Piece to be Played by Position in Vector: ";
+        std::cin >> choice;
+
+        if (choice > 0 && choice < m_pieces.size()) {
+            m_pieces.erase(m_pieces.begin() + (choice - 1));
+            break;
+        }
+        else {
+            std::cerr<<("Invalid Choice. Please Choose a Valid Number!");
+            continue;
+        }
+    }
+
+    return choice;
+}
+
+void Eter::Player::PrintPieces() const
+{
+    for (int index = 0; index < m_pieces.size(); index++) {
+        std::cout << index + 1 << ". Piece Value: " << m_pieces[index].GetValue() << "\n";
+    }
 }
 
 void Eter::Player::AddPiece(const Eter::Piece& piece)
@@ -149,7 +195,7 @@ bool Eter::Player::HasWon(const Board& board)
 
 std::ostream& Eter::operator<<(std::ostream& os, const Player& player)
 {
-    os << player.GetUserName() << " data:\n-------------------------------\n";
+    os << '\n' << player.GetUserName() << " -> info:\n-------------------------------\n";
     os << "Username: " << player.m_username << '\n';
     os << "Cards {";
     for (const Piece& piece : player.m_pieces) {

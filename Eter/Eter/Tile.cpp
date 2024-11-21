@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <stack>
 
-Eter::Tile::Tile(const Piece& piece){
+Eter::Tile::Tile(const Piece& piece) {
 	m_value.push(piece);
 }
 
@@ -16,44 +16,51 @@ std::stack<Eter::Piece> Eter::Tile::GetValue() const {
 	return m_value;
 }
 
-Eter::Piece Eter::Tile::GetTopValue() const{
+Eter::Piece Eter::Tile::GetTopValue() const {
 	if (!m_value.empty()) {
 		return m_value.top();
 	}
 	throw std::runtime_error("No piece on tile"); // Handle error if stack is empty
 }
 
-void Eter::Tile::SetValue(const Piece& piece){
-	if (isPit) 
-		throw std::runtime_error("Cannot place a card on a pit.");
+void Eter::Tile::SetValue(const Piece& piece) {
+	if (m_isPit) {
+		throw std::runtime_error("Cannot set value on a pit tile");
+	}
 	m_value.push(piece);
 }
 
 void Eter::Tile::SetAsPit()
 {
-	isPit = true; 
-	while (!m_value.empty()) 
-		m_value.pop(); 
+	m_isPit = true;
+	while (!m_value.empty()) {
+		m_value.pop();
+	}
 }
 
 void Eter::Tile::RemoveStack()
 {
 	while (!m_value.empty()) {
-		m_value.pop();  
+		m_value.pop();
 	}
+}
+
+Eter::Tile& Eter::Tile::operator=(const Piece& piece)
+{
+	m_value.push(piece); return *this;
 }
 
 bool Eter::Tile::IsPit() const
 {
-	return isPit;
+	return m_isPit;
 }
 
-std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile){
+std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {
 	if (!tile.m_value.empty()) {
 		const Piece& topPiece = tile.m_value.top();
-		os << topPiece.GetUserName() << ":" << topPiece.GetValue(); 
+		os << topPiece.GetUserName() << ":" << topPiece.GetValue();
 	}
-	else 
+	else
 		os << "Empty tile\n";
 	return os;
 }

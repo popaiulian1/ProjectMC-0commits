@@ -4,15 +4,27 @@ namespace Eter {
 	class Piece
 	{
 	public:
+
+		//Constructors
 		Piece();
 		Piece(const char& value, const bool& isPlaced, const std::string& username);
+		Piece(Piece&& other) noexcept;
+		Piece(const Piece& other);
+		Piece& operator=(const Piece& other);
 		~Piece() = default;
+
+		//Getters
 		char GetValue() const;
 		bool GetIsPlaced() const;
 		const std::string& GetUserName() const;
+		
+		//Setters
 		void SetValue(const char& value);
 		void SetIsPlaced(const bool& isPlaced);
 		void SetUserName(const std::string& username);
+
+		//Methods
+
 	private:
 		char m_value;
 		bool m_isPlaced;

@@ -1,7 +1,6 @@
 #include "Board.h"
 #include <stdexcept>;
-//#include <iostream> //used this to print for error checking every step, uncomment 
-//if you want to check it yourself along with lines: 52, 62, 68, 106, 113
+#include <iostream>
 
 Eter::Board::Board(const GameType& gameType)
 {
@@ -21,6 +20,16 @@ Eter::Board::Board(const GameType& gameType)
 
 	m_board.resize(1);
 	m_board[0].resize(1);
+}
+
+Eter::Board& Eter::Board::operator=(const Board& other)
+{
+	if (this != &other)
+	{
+		m_board = other.m_board;
+		m_maxSize = other.m_maxSize;
+	}
+	return *this;
 }
 
 Eter::BoardMatrix Eter::Board::GetBoard() const
@@ -48,20 +57,20 @@ void Eter::Board::SetBoard(const BoardMatrix& board)
 	m_board = board;
 }
 
-void Eter::Board::SetTileValue(const Position& pos, const char& value, const Player& player)
+void Eter::Board::SetTileValue(const Position& pos, const char& value, const std::string& playerName)
 {
 
 	const auto& [line, column] = pos;
 
 	if (line < 0 || column < 0) {
-		IncreaseBoardSize({ line, column });
+		IncreaseBoardForNegativeIndexes({line, column});
 		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
-	else if (line > m_board.size() - 1 && m_board.size() < m_maxSize) {
+	else if (line > m_board.size()-1 && m_board.size() < m_maxSize) {
 		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board.size()));
-		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
+		//std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
 	}
-	else if (column > m_board[0].size() - 1 && m_board[0].size() < m_maxSize) {
+	else if (column > m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board) {
 			row.insert(row.end(), std::optional<Tile>());
 		}
@@ -78,26 +87,18 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const Pla
 		throw std::out_of_range("Invalid position");
 	}
 	else {
-		m_board[adjustedLine][adjustedColumn] = Piece(value, true, player.GetUserName());
+		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
+		{
+			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName);
+		}
+		else {
+			std::string border = "=======================================================================";
+			std::cout << "\n" << border << "\nInvalid move->Tile value is bigger than card played | GET DOGGED NOOOOB\n" << border << "\n";
+		}
 	}
-
 }
 
-std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos)
-{
-	return const_cast<std::optional<Tile>&>(std::as_const(*this)[pos]);
-}
-
-const std::optional<Eter::Tile>& Eter::Board::operator[](const Position& pos) const
-{
-	auto& [line, column] = pos;
-	if (line < m_board.size() && column < m_board[line].size()) {
-		return m_board[line][column];
-	}
-	throw std::out_of_range("Invalid position");
-}
-
-void Eter::Board::IncreaseBoardSize(const Position& pos)
+void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)
 {
 	auto& [line, column] = pos;
 

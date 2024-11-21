@@ -1,13 +1,13 @@
-﻿#include "Wizards.h"
+#include "Wizards.h"
 #include "Board.h"
 #include "Tile.h"
 #include "Piece.h"
 #include <iostream>
 #include <string>
- 
+
 //Constructors & Destructor
 Eter::Wizards::Wizards() :
-	m_name("Unknown"), m_mageType(MageType::FIRE),m_magicPowerUsed(false), m_etherCards(1), m_board(nullptr), m_username("Unknown") {}
+	m_name("Unknown"), m_mageType(MageType::FIRE), m_magicPowerUsed(false), m_etherCards(1), m_board(nullptr), m_username("Unknown") {}
 
 
 Eter::Wizards::Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string username) :
@@ -25,9 +25,9 @@ const std::string& Eter::Wizards::GetUserName() const
 // Determination of Power 
 void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 {
-	if (powerIndex == 1) 
+	if (powerIndex == 1)
 		eliminateOpponentCard(row, col);
-	
+
 	else if (powerIndex == 2)
 	{
 		std::cout << "Would you like to eliminate a row or a column?";
@@ -42,43 +42,43 @@ void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 			eliminateCol(col);
 		else
 			std::cout << "Invalid input. Please type 'row' or 'column'.\n";
-		
+
 
 	}
 }
 
 void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vector<Piece>& playerHand)
 {
-	if (powerIndex == 1) 
-		coverOpponentCard(row,col,playerHand);
-	
-	else if (powerIndex == 2) 
-		createPit(row,col);
-	
+	if (powerIndex == 1)
+		coverOpponentCard(row, col, playerHand);
+
+	else if (powerIndex == 2)
+		createPit(row, col);
+
 }
 
 void Eter::Wizards::airMasterPower(int powerIndex, int row, int col)
 {
-	if (powerIndex == 1) 
+	/*if (powerIndex == 1)
 		moveOwnStack();
-	
-	else if (powerIndex == 2) 
-		gainExtraEtherCard();
-	
+
+	else if (powerIndex == 2)
+		gainExtraEtherCard();*/
+
 }
 
 void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int destRow)
 {
-	if (powerIndex == 1) 
+	/*if (powerIndex == 1)
 		moveOpponentStack();
-	
-	else if (powerIndex == 2) 
-		moveEdgeRow();
-	
+
+	else if (powerIndex == 2)
+		moveEdgeRow();*/
+
 }
 
 // Methods for Masters of fire
-void Eter::Wizards::eliminateRow(int row) 
+void Eter::Wizards::eliminateRow(int row)
 {
 	// Verify if the row is valid
 	if (row < 0 || row >= m_board->GetCurrentSize()) {
@@ -93,7 +93,7 @@ void Eter::Wizards::eliminateRow(int row)
 	}
 
 	bool hasOwnCard = false;
-	auto &gameBoard = m_board->GetBoardReference();
+	auto& gameBoard = m_board->GetBoardReference();
 
 	// Verify every column of the row
 	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
@@ -114,9 +114,9 @@ void Eter::Wizards::eliminateRow(int row)
 
 	// Applied power
 	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-		if (gameBoard[row][col].has_value()){
+		if (gameBoard[row][col].has_value()) {
 
-		    Tile& tile = gameBoard[row][col].value();
+			Tile& tile = gameBoard[row][col].value();
 			tile.RemoveStack();
 		}
 	}
@@ -172,7 +172,7 @@ void Eter::Wizards::eliminateCol(int col)
 
 void Eter::Wizards::eliminateOpponentCard(int row, int col)
 {
-	auto &gameBoard = m_board->GetBoardReference();
+	auto& gameBoard = m_board->GetBoardReference();
 	Tile& tile = gameBoard[row][col].value();
 
 	// Check if the specified position contains a tile
@@ -198,12 +198,12 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 				tile.GetValue().push(opponentCard);
 				std::cout << "The card underneath is not owned by you. Cannot remove the opponent's card.\n";
 			}
-		}	
+		}
 
 		else
 			std::cout << "No card underneath to verify ownership. Cannot remove the opponent's card.\n";
 	}
-	else 
+	else
 		std::cout << "No opponent's card found at (" << row << ", " << col << ").\n";
 }
 
@@ -249,7 +249,7 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 		std::cout << "You have successfully covered the opponent's card at (" << row << ", " << col
 			<< ") with your card of value " << placedCardValue << ".\n";
 	}
-	else 
+	else
 		std::cout << "No suitable card of lower value was found in your hand.\n";
 }
 
@@ -277,14 +277,3 @@ void Eter::Wizards::createPit(int row, int col)
 
 
 // Methods for Masters of air
-
-
-
-
-
-
-
-
-
-
-

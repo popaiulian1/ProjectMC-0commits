@@ -6,7 +6,7 @@
 Eter::Elemental::Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard) : m_board{ board }, m_ElementalCardUsed{ ElementalCardUsed }, m_nameCard{ nameCard }
 {}
 
-Eter::Elemental::Elemental(const Elemental & other) : m_board{ other.m_board }, m_ElementalCardUsed{ other.m_ElementalCardUsed }, m_nameCard{ other.m_nameCard }
+Eter::Elemental::Elemental(const Elemental& other) : m_board{ other.m_board }, m_ElementalCardUsed{ other.m_ElementalCardUsed }, m_nameCard{ other.m_nameCard }
 {}
 
 void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Change positions of 2 different cards or stacks of cards.
@@ -29,7 +29,7 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 	}
 
 	//swap between card / stack of cards.
-	std::swap(m_board[{row1, column1}], m_board[{row2, column2}]);
+	std::swap(m_board.GetBoardReference()[row1][column1], m_board.GetBoardReference()[row2][column2]);
 }
 
 void Eter::Elemental::Earthquake(const Board& board)
@@ -43,33 +43,33 @@ void Eter::Elemental::Earthquake(const Board& board)
 				tile.value().GetValue().pop();
 		}
 	}
-	
+
 }
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();
 
-	for (auto& row : GameBoard){
-		for (auto& tile : row){
-			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedCard().GetValue())
+	for (auto& row : GameBoard) {
+		for (auto& tile : row) {
+			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedPiece().GetValue())
 				tile.value().GetValue().pop();
 		}
 	}
 }
 
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards
-{ 
-	uint8_t StackSize = m_board[{row, column}].value().GetValue().size();
+{
+	uint8_t StackSize = m_board.GetBoardReference()[row][column].value().GetValue().size();
 	if (StackSize >= 2)
 	{
 		while (!m_board.GetBoard().empty())
-			m_board.GetBoard().pop_back();
+			m_board.GetBoardReference().pop_back();
 		m_ElementalCardUsed = true;
 	}
 	else
 	{
-		throw std::out_of_range{"The stack has less then 2 cards!"};
+		throw std::out_of_range{ "The stack has less then 2 cards!" };
 	}
 }
 

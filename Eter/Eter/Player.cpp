@@ -87,6 +87,7 @@ char Eter::Player::ChoosePiece()
         throw std::runtime_error("No pieces left to choose!");
         return '\0';
     }
+
     std::cout << "\n<=====================================================================>\n";
     std::cout << "DECK :  \n| ";
 	for (Piece piece : m_pieces)
@@ -105,6 +106,7 @@ char Eter::Player::ChoosePiece()
 	char returnArgument = m_pieces[inputIndex].GetValue();
 	m_lastPlayedPiece = m_pieces[inputIndex];
 	m_pieces.erase(m_pieces.begin() + inputIndex);
+
 	return returnArgument;
 }
 

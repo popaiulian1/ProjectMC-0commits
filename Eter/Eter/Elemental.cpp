@@ -58,6 +58,24 @@ void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 	}
 }
 
+void Eter::Elemental::Squall(Player& opponent, Board& board)
+{
+	auto gameBoard = board.GetBoard();
+
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			if (tile.has_value()) {
+				if (tile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
+					Piece removedPiece(tile.value().GetTopValue()); //add the future removed piece back in the opponents deck
+					opponent.AddPiece(removedPiece);
+
+					tile.value().GetValue().pop(); //remove the piece from the board
+				}
+			}
+		}
+	}
+}
+
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards
 {
 	uint8_t StackSize = m_board.GetBoardReference()[row][column].value().GetValue().size();

@@ -31,15 +31,12 @@ namespace Eter {
 		void SetPieces(const std::vector<Eter::Piece>& pieces);
 		void SetIllusionPlayed(const bool& illusionPlayed);
 		 
-		// (TO DO) -> Iulian: Add two methods called Play() and ChoosePiece() to the Player class
-		//					  first method returns a pair (positions) second returns char as a value 
-		//					  to be placed on the board, it needs to be off the players deck.
 		// ---------------------------------------------------------------------------------------->
 		// (ALSO) -> Iulian:  Look over lastPlayedPiece and reimplement it.
 
 		//Methods
 		std::pair<int, int> Play(); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
-		char ChoosePiece();
+		char ChoosePiece(); //player chooses a piece from his deck; the chosen piece it's removed then from his deck
 		void PrintPieces() const;
 		void AddPiece(const Eter::Piece& piece);
 		void RemovePieces();

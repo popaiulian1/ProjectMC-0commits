@@ -45,12 +45,6 @@ void Eter::Game::StartGame()
 	}
 }
 
-void Eter::Game::PrintBoard() const
-{
-	std::cout << "Current Board:\n";
-	std::cout << m_board << std::endl;
-}
-
 void Eter::Game::PrintWinner(const Player& player) const
 {
 	std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
@@ -59,10 +53,9 @@ void Eter::Game::PrintWinner(const Player& player) const
 void Eter::Game::PlayGame()
 {
 	while (true) {
-		PrintBoard();
+		m_board.PrintBoardForFormatedOutput(); // Print the board
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
-		//m_currentPlayer->PrintPieces();
 
 		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
 	}

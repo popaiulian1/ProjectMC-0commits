@@ -66,11 +66,11 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 		IncreaseBoardForNegativeIndexes({line, column});
 		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
-	else if (line > m_board.size()-1 && m_board.size() < m_maxSize) {
+	if (line > (int)m_board.size()-1 && m_board.size() < m_maxSize) {
 		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board.size()));
 		//std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
 	}
-	else if (column > m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
+	if (column > m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board) {
 			row.insert(row.end(), std::optional<Tile>());
 		}
@@ -93,9 +93,36 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 		}
 		else {
 			std::string border = "=======================================================================";
-			std::cout << "\n" << border << "\nInvalid move->Tile value is bigger than card played | GET DOGGED NOOOOB\n" << border << "\n";
+			std::cout << "\n" << border << "\nInvalid move->Tile value is bigger than card played\n" << border << "\n";
 		}
 	}
+}
+
+void Eter::Board::PrintBoardForFormatedOutput() const
+{
+	std::string border1 = "<=======================================================================>";
+	std::string border2 = "<----------------------------------------------------------------------->";
+
+	std::cout << std::endl << border1 << std::endl;
+	std::cout << "\t\t\tCURRENT BOARD: \n";
+	std::cout << border2 << std::endl;
+
+	for (auto& row : m_board)
+	{
+		std::cout << "\t\t\t";
+		for (auto& line : row)
+		{
+			if (line.has_value()) {
+				std::cout << line.value().GetTopValue().GetValue() << " ";
+			}
+			else
+			{
+				std::cout << kEMPTY_BOARD_CELL << " ";
+			}
+		}
+		std::cout << std::endl;
+	}
+	std::cout << border1 << std::endl;
 }
 
 void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)

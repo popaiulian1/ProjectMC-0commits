@@ -38,7 +38,7 @@ namespace Eter {
 		// (ALSO) -> Iulian:  Look over lastPlayedPiece and reimplement it.
 
 		//Methods
-		std::pair<int8_t, int8_t> Play(); //takes row and column index for piece position to be played 
+		std::pair<int, int> Play(); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
 		char ChoosePiece();
 		void PrintPieces() const;
 		void AddPiece(const Eter::Piece& piece);

@@ -69,7 +69,7 @@ void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 
 
 //Methods
-std::pair<int8_t, int8_t> Eter::Player::Play()
+std::pair<int, int> Eter::Player::Play()
 {
     int rowIndex, colIndex;
 
@@ -154,6 +154,8 @@ bool Eter::Player::HasWon(const Board& board)
 		count != 0 ? count = 0 : count;
     }
 
+    count = 0;
+
     for (size_t i = 0; i < maxSize; i++) {
         for (size_t j = 0; j < maxSize; j++) {
             // Vertical check
@@ -169,6 +171,8 @@ bool Eter::Player::HasWon(const Board& board)
         }
     }
 
+    count = 0;
+
 	for (size_t i = 0; i < maxSize; i++) {
 		// Primary Diagonal check
         if (isTileOwnedByPlayer(gameBoard[i][i])) {
@@ -178,6 +182,8 @@ bool Eter::Player::HasWon(const Board& board)
 
 		count != 0 ? count = 0 : count;
 	}
+
+    count = 0;
     
 	for (size_t i = 0; i < maxSize; i++) {
 		// Secondary Diagonal check

@@ -22,7 +22,7 @@ namespace Eter {
 	class Board
 	{
 	public:
-		using Position = std::pair<int8_t, int8_t>;
+		using Position = std::pair<int8_t, int8_t>; 
 
 		//Constructors
 		Board() = default;
@@ -43,6 +43,7 @@ namespace Eter {
 
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
+		void PrintBoardForFormatedOutput() const;
 
 	private:
 		void IncreaseBoardForNegativeIndexes(const Position& pos);

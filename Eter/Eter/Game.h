@@ -27,7 +27,6 @@ namespace Eter
 
 		//Methods
 		void StartGame();
-		void PrintBoard() const;
 		void PrintWinner(const Player& player) const;
 		void PlayGame();
 		bool CheckWinner();

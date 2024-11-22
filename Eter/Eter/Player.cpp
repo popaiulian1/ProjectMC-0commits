@@ -85,34 +85,33 @@ char Eter::Player::ChoosePiece()
 {
     if (m_pieces.empty()) {
         throw std::runtime_error("No pieces left to choose!");
-        return;
+        return '\0';
     }
+    std::cout << "\n<=====================================================================>\n";
+    std::cout << "DECK :  \n| ";
+	for (Piece piece : m_pieces)
+    {
+		std::cout << piece.GetValue() << " | ";
+	}
+    std::cout << std::endl << "INDEX : \n| ";
+	for (int index = 0; index < m_pieces.size(); index++) {
+        std::cout << index << " | ";
+	}
+    std::cout << "\n<=====================================================================>\n";
 
-    std::cout << "Available pieces:\n-----------------------------\n";
-    PrintPieces();
-
-    char choice;
-    while (true) {
-        std::cout << "\nChoose Piece to be Played by Position in Vector: ";
-        std::cin >> choice;
-
-        if (choice > 0 && choice < m_pieces.size()) {
-            m_pieces.erase(m_pieces.begin() + (choice - 1));
-            break;
-        }
-        else {
-            std::cerr<<("Invalid Choice. Please Choose a Valid Number!");
-            continue;
-        }
-    }
-
-    return choice;
+	std::cout << "Choose by index a piece to play: ";
+    int inputIndex;
+	std::cin >> inputIndex;
+	char returnArgument = m_pieces[inputIndex].GetValue();
+	m_lastPlayedPiece = m_pieces[inputIndex];
+	m_pieces.erase(m_pieces.begin() + inputIndex);
+	return returnArgument;
 }
 
 void Eter::Player::PrintPieces() const
 {
     for (int index = 0; index < m_pieces.size(); index++) {
-        std::cout << index + 1 << ". Piece Value: " << m_pieces[index].GetValue() << "\n";
+        std::cout << "| " << index + 1 << ". Piece Value: " << m_pieces[index].GetValue() << " |\n";
     }
 }
 

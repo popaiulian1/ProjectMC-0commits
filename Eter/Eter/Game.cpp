@@ -58,11 +58,14 @@ void Eter::Game::PrintWinner(const Player& player) const
 
 void Eter::Game::PlayGame()
 {
-	PrintBoard();
+	while (true) {
+		PrintBoard();
+		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
+		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
+		//m_currentPlayer->PrintPieces();
 
-	std::cout << m_player1;
-
-	std::cout << m_player2;
+		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+	}
 }
 
 bool Eter::Game::CheckWinner()

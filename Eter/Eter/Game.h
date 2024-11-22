@@ -39,6 +39,7 @@ namespace Eter
 	private:
 		static const size_t kDECK_SIZE_PRACTICE{ 7 }; //define the size of the practice deck
 		Player m_player1, m_player2;
+		Player* m_currentPlayer = nullptr;
 		Board m_board;
 		GameType m_gameType;
 	};

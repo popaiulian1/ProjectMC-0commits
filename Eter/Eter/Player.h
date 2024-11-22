@@ -40,7 +40,6 @@ namespace Eter {
 		//Methods
 		std::pair<int8_t, int8_t> Play(); //takes row and column index for piece position to be played 
 		char ChoosePiece();
-		
 		void PrintPieces() const;
 		void AddPiece(const Eter::Piece& piece);
 		void RemovePieces();

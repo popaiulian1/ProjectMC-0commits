@@ -11,7 +11,7 @@ namespace Eter {
 	public:
 
 		//Constructors
-		Player() = default;
+		Player();
 		~Player() = default;
 		Player(const Player&) = default;
 		Player& operator=(const Player& other);

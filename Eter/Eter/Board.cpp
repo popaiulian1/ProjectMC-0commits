@@ -70,7 +70,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board.size()));
 		//std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
 	}
-	if (column > m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
+	if (column > (int)m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board) {
 			row.insert(row.end(), std::optional<Tile>());
 		}

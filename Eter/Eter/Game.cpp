@@ -1,11 +1,10 @@
 #include "Game.h"
 #include <iostream>
 
-Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType)
+Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
 	m_player1 = player1;
 	m_player2 = player2;
-	m_board = board;
 	m_gameType = gameType;
 }
 
@@ -110,19 +109,15 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 bool Eter::Game::CheckDraw() const
 {
 	BoardMatrix board = m_board.GetBoard();
-
-	for (auto& row : board)
-	{
-		for (auto& line : row)
-		{
-			if (!line.has_value())
-			{
-				return false;
+	for (int i = 0; i < board.size(); ++i) {
+		if (board.size() == m_board.GetMaxSize()) {
+			for (int j = 0; j < board[i].size(); ++j){
+				if (board[i][j].value().GetValue().empty() && board[i].size() <= m_board.GetMaxSize())
+					return true;
 			}
-		}
+		}	
 	}
-	return true;
-
+	return false;
 }
 
 void Eter::Game::Illusion(Player& player, Board& board)

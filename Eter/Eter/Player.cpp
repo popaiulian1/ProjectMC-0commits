@@ -8,6 +8,13 @@ Eter::Player::Player(const std::string& username, const int& score, const std::v
 	m_illusionPlayed{ illusionPlayed }
 {}
 
+Eter::Player::Player()
+{
+	m_username = "";
+	m_score = 0;
+	m_illusionPlayed = false;
+}
+
 Eter::Player& Eter::Player::operator=(const Player& other)
 {
     if (this != &other) {
@@ -191,7 +198,7 @@ bool Eter::Player::HasWon(const Board& board)
 			count++;
 		}
 		if (count == maxSize) return true;
-
+        
 		count != 0 ? count = 0 : count;
 	}
 

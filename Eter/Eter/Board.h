@@ -22,7 +22,7 @@ namespace Eter {
 	class Board
 	{
 	public:
-		using Position = std::pair<int8_t, int8_t>; 
+		using Position = std::pair<int8_t, int8_t>;
 
 		//Constructors
 		Board() = default;

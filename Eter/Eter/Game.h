@@ -41,6 +41,7 @@ namespace Eter
 		Player* m_currentPlayer = nullptr;
 		Board m_board;
 		GameType m_gameType;
+		size_t m_rounds = 1;
 	};
 }
 

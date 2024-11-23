@@ -12,20 +12,20 @@ void Eter::Game::StartGame()
 {
 	if (m_gameType == GameType::Practice) {
 
-		m_board = Board(GameType::Practice); // Create a practice board
+		m_board = Board(GameType::Practice);
 		std::vector<char> Values = { '1', '1', '2', '2', '3', '3', '4' }; // Define the values of the cards in the practice deck
 		std::vector<Eter::Piece> CardsPractice;
 
-		std::string UsernamePlayer1; // Define the username of the first player
-		std::string UsernamePlayer2; // Define the username of the second player
+		std::string UsernamePlayer1;
+		std::string UsernamePlayer2;
 
-		if (m_player1.GetUserName() == "") { // If the username of the first player is not set, ask the user to set it
+		if (m_player1.GetUserName() == "") {
 			std::cout << "Username of the first player is: ";
 			std::getline(std::cin, UsernamePlayer1);
 			m_player1.SetUserName(UsernamePlayer1);
 		}
 
-		if (m_player2.GetUserName() == "") { // If the username of the second player is not set, ask the user to set it
+		if (m_player2.GetUserName() == "") {
 			std::cout << "Username of the second player is: ";
 			std::getline(std::cin, UsernamePlayer2);
 			m_player2.SetUserName(UsernamePlayer2);
@@ -34,11 +34,20 @@ void Eter::Game::StartGame()
 		CardsPractice.resize(kDECK_SIZE_PRACTICE); // Resize the practice deck to the size of the practice deck
 
 		int index = 0;
-		for (auto& card : CardsPractice)
-			card.SetValue(Values[index++]); // Set the values of the cards in the practice deck
+		for (auto& card : CardsPractice) {
+			card.SetValue(Values[index++]);
+			card.SetIsPlaced(false);
+			card.SetUserName("");
+		}
 
-		m_player1.SetPieces(CardsPractice); // Set the cards of the first player to the cards in the practice deck
-		m_player2.SetPieces(CardsPractice); // Set the cards of the second player to the cards in the practice deck
+		m_player1.SetPieces(CardsPractice);
+		m_player2.SetPieces(CardsPractice);
+		m_player1.SetIllusionPlayed(false);
+		m_player2.SetIllusionPlayed(false);
+		m_player1.SetScore(0);
+		m_player2.SetScore(0);
+		m_player1.SetGamesWon(0);
+		m_player2.SetGamesWon(0);
 
 		PlayGame();
 	}
@@ -51,25 +60,33 @@ void Eter::Game::PrintWinner(const Player& player) const
 
 void Eter::Game::PlayGame()
 {
-	while (true) {
+	while (m_rounds <= 3) {
 		m_board.PrintBoardForFormatedOutput(); // Print the board
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
 		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+
+		if (CheckWinner()) {
+			++m_rounds;
+			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+			StartGame();
+		}
 	}
 }
 
 bool Eter::Game::CheckWinner()
 {
 	if (CheckDraw() == false) {
-		if (m_player1.HasWon(m_board) == true) {
-			PrintWinner(m_player1);
-			return true;
-		}
-		else if (m_player2.HasWon(m_board) == true) {
-			PrintWinner(m_player2);
-			return true;
+		if (m_board.GetCurrentSize() == m_board.GetMaxSize()) {
+			if (m_player1.HasWon(m_board) == true) {
+				PrintWinner(m_player1);
+				return true;
+			}
+			else if (m_player2.HasWon(m_board) == true) {
+				PrintWinner(m_player2);
+				return true;
+			}
 		}
 	}
 	else if (CheckDraw() == true) {
@@ -95,12 +112,12 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 	{
 		for (auto& tile : row)
 		{
-			while (!tile.value().GetValue().empty()) {
-				if (tile.value().GetTopValue().GetUserName() == player.GetUserName()) {
-					 score += tile.value().GetTopValue().GetValue() - '0';
-					player.SetScore(score);
-				}
-				tile.value().GetValue().pop();
+			if (tile.value().GetTopValue().GetUserName() == player.GetUserName())
+				score += tile.value().GetTopValue().GetValue() - '0';
+		}
+	}
+	player.SetScore(score);
+}
 			}
 		}
 	}
@@ -112,7 +129,7 @@ bool Eter::Game::CheckDraw() const
 	for (int i = 0; i < board.size(); ++i) {
 		if (board.size() == m_board.GetMaxSize()) {
 			for (int j = 0; j < board[i].size(); ++j){
-				if (board[i][j].value().GetValue().empty() && board[i].size() <= m_board.GetMaxSize())
+				if (board[i][j].has_value() && board[i].size() <= m_board.GetMaxSize())
 					return true;
 			}
 		}	

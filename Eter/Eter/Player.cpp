@@ -1,11 +1,12 @@
 #include "Player.h"
 
 //Constructors
-Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed):
+Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon):
 	m_username{ username }, 
     m_score{ score }, 
     m_pieces{ pieces },
-	m_illusionPlayed{ illusionPlayed }
+	m_illusionPlayed{ illusionPlayed },
+	m_gamesWon{ gamesWon }
 {}
 
 Eter::Player::Player()
@@ -13,6 +14,7 @@ Eter::Player::Player()
 	m_username = "";
 	m_score = 0;
 	m_illusionPlayed = false;
+	m_gamesWon = 0;
 }
 
 Eter::Player& Eter::Player::operator=(const Player& other)
@@ -22,6 +24,7 @@ Eter::Player& Eter::Player::operator=(const Player& other)
 		m_score = other.m_score;
 		m_pieces = other.m_pieces;
 		m_illusionPlayed = other.m_illusionPlayed;
+		m_gamesWon = other.m_gamesWon;
     }
 	return *this;
 }
@@ -53,6 +56,11 @@ Eter::Piece Eter::Player::GetLastPlayedPiece() const
     return m_lastPlayedPiece;
 }
 
+int Eter::Player::GetGamesWon() const
+{
+	return m_gamesWon;
+}
+
 //Setters
 void Eter::Player::SetUserName(const std::string& username)
 {
@@ -74,6 +82,10 @@ void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 	m_illusionPlayed = illusionPlayed;
 }
 
+void Eter::Player::SetGamesWon(const int& gamesWon)
+{
+	m_gamesWon = gamesWon;
+}
 
 //Methods
 std::pair<int, int> Eter::Player::Play()

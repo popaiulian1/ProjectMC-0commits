@@ -15,7 +15,7 @@ namespace Eter {
 		~Player() = default;
 		Player(const Player&) = default;
 		Player& operator=(const Player& other);
-		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed);
+		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon);
 		//+ player constructor with wizard and element
 		
 		//Getters
@@ -24,12 +24,14 @@ namespace Eter {
 		const std::vector<Eter::Piece>& GetPieces() const;
 		const bool& GetIllusionPlayed() const;
 		Piece GetLastPlayedPiece() const;
+		int GetGamesWon() const;
 
 		//Setters
 		void SetUserName(const std::string& username);
 		void SetScore(const int& score);
 		void SetPieces(const std::vector<Eter::Piece>& pieces);
 		void SetIllusionPlayed(const bool& illusionPlayed);
+		void SetGamesWon(const int& gamesWon);
 		 
 		// ---------------------------------------------------------------------------------------->
 		// (ALSO) -> Iulian:  Look over lastPlayedPiece and reimplement it.
@@ -49,6 +51,7 @@ namespace Eter {
 		std::vector<Eter::Piece> m_pieces;
 		Piece m_lastPlayedPiece;
 		bool m_illusionPlayed; //m_faceDownCardPlayed
+		int m_gamesWon;
 	};
 }
 

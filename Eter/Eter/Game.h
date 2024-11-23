@@ -33,6 +33,7 @@ namespace Eter
 		void TotalScore(Player& player, const Board& board);
 		bool CheckDraw() const;
 		void Illusion(Player& player, Board& board);
+		bool CheckCompleteRowOrColumn() const;
 		
 		
 	private:

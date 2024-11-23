@@ -118,9 +118,40 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 	}
 	player.SetScore(score);
 }
+
+
+bool Eter::Game::CheckCompleteRowOrColumn() const
+{
+	BoardMatrix board = m_board.GetBoard();
+	int maxSize = m_board.GetMaxSize();
+
+	// Check rows
+	for (const auto& row : board) {
+		int filledTiles = 0;
+		for (const auto& tile : row) {
+			if (tile.has_value()) {
+				++filledTiles;
 			}
 		}
+		if (filledTiles == maxSize) {
+			return true;
+		}
 	}
+
+	// Check columns
+	for (int col = 0; col < board[0].size(); ++col) {
+		int filledTiles = 0;
+		for (int row = 0; row < board.size(); ++row) {
+			if (board[row][col].has_value()) {
+				++filledTiles;
+			}
+		}
+		if (filledTiles == maxSize) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool Eter::Game::CheckDraw() const

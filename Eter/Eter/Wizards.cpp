@@ -328,3 +328,26 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
 
 }
+
+void Eter::Wizards::gainExtraEtherCard(int row, int col)
+{
+	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid position (" << row << ", " << col << "). Please choose a valid position.\n";
+		return;
+	}
+	auto& gameBoard = m_board->GetBoardReference();
+
+	if (gameBoard[row][col].has_value()) {
+		std::cout << "Position (" << row << ", " << col << ") is not empty. Please choose an empty position.\n";
+		return;
+	}
+
+	Piece magePowerCard('E', false, this->GetUserName());
+
+	// Placing the Eter card
+	Tile newTile;
+	newTile.SetValue(magePowerCard);
+	gameBoard[row][col] = newTile;
+
+	std::cout << "Mage Power card has been placed as an ETER card at (" << row << ", " << col << ").\n";
+}

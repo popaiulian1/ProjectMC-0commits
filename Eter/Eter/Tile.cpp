@@ -27,6 +27,8 @@ void Eter::Tile::SetValue(const Piece& piece) {
 	if (m_isPit) {
 		throw std::runtime_error("Cannot set value on a pit tile");
 	}
+	Piece updatedPiece = piece;
+    updatedPiece.SetIsPlaced(true);
 	m_value.push(piece);
 }
 

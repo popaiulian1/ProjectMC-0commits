@@ -34,9 +34,9 @@ namespace Eter {
         void coverOpponentCard(int row, int col, std::vector<Piece>& playerHand);
         void createPit(int row, int col);
         void moveOwnStack(int srcRow, int srcCol, int destRow, int destCol);
-		//void gainExtraEtherCard();   | (WHY) -> Iulian : Commented them because they lack implementation, also commented them where they appear to be called.
-		//void moveOpponentStack();    |                   Implement them and uncomment if needed. 
-        //void moveEdgeRow();          |
+		void gainExtraEtherCard(int row, int col); 
+		//void moveOpponentStack();    
+        //void moveEdgeRow();          
 
 
     private:

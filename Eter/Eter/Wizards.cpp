@@ -309,4 +309,22 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 		return;
 	}
 
+	//Moving the stack of cards
+
+	std::stack<Piece> stackToMove = srcTile.GetValue();
+	std::vector<Piece> cardsInOrder;
+
+	while (!stackToMove.empty()) {
+		cardsInOrder.push_back(stackToMove.top());
+		stackToMove.pop();
+	}
+
+	for (auto it = cardsInOrder.rbegin(); it != cardsInOrder.rend(); ++it) {
+		destTile.SetValue(*it);
+	}
+
+	srcTile.RemoveStack();
+
+	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
+
 }

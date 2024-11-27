@@ -1,4 +1,4 @@
-#include "Wizards.h"
+﻿#include "Wizards.h"
 #include "Board.h"
 #include "Tile.h"
 #include "Piece.h"
@@ -268,7 +268,7 @@ void Eter::Wizards::createPit(int row, int col)
 	}
 
 	Tile pitTile; // Creates a Tile as a pit
-	//pitTile.SetAsPit(); // Need SetAsPit() implemented in Tile
+	pitTile.SetAsPit();
 	gameBoard[row][col] = pitTile;
 
 	std::cout << "A pit has been created at position (" << row << ", " << col << ").\n";
@@ -277,3 +277,36 @@ void Eter::Wizards::createPit(int row, int col)
 
 
 // Methods for Masters of air
+
+void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCol)
+{
+	if (srcRow < 0 || srcRow >= m_board->GetCurrentSize() || srcCol < 0 || srcCol >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid source position (" << srcRow << ", " << srcCol << ").\n";
+		return;
+	}
+	if (destRow < 0 || destRow >= m_board->GetCurrentSize() || destCol < 0 || destCol >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid destination position (" << destRow << ", " << destCol << ").\n";
+		return;
+	}
+
+	auto& gameBoard = m_board->GetBoardReference();
+
+	if (!gameBoard[srcRow][srcCol].has_value()) {
+		std::cout << "No stack found at source position (" << srcRow << ", " << srcCol << ").\n";
+		return;
+	}
+
+	Tile& srcTile = gameBoard[srcRow][srcCol].value();
+	Tile& destTile = gameBoard[destRow][destCol].value();
+
+	if (srcTile.GetTopValue().GetUserName() != this->GetUserName()) {
+		std::cout << "The stack at source position (" << srcRow << ", " << srcCol << ") does not belong to you.\n";
+		return;
+	}
+
+	if (destTile.GetValue().size() > 0 || destTile.IsPit()) {
+		std::cout << "The destination position (" << destRow << ", " << destCol << ") is not empty or is a pit.\n";
+		return;
+	}
+
+}

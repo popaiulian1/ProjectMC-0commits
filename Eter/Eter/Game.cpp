@@ -166,6 +166,25 @@ void Eter::Game::addBorderToMatrix(Eter::BoardMatrix& board)
 }
 
 bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded)
+{
+	Eter::BoardMatrix board = m_board.GetBoard();
+
+	auto& [row, col] = pos;
+
+	addBorderToMatrix(board);
+
+	board[row][col].value().SetValue(pieceToBeAdded);
+
+	addBorderToMatrix(board);
+
+	if (board[row - 1][col].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row + 1][col].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row][col - 1].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row][col + 1].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue())
+	{
+		return true;
+	}
+
 	return false;
 }
 

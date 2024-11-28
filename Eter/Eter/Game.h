@@ -37,6 +37,11 @@ namespace Eter
 		
 		
 	private:
+		//Methods
+		void addBorderToMatrix(Eter::BoardMatrix& board);
+		bool checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded);
+
+		//Constants
 		static const size_t kDECK_SIZE_PRACTICE{ 7 }; //define the size of the practice deck
 		Player m_player1, m_player2;
 		Player* m_currentPlayer = nullptr;

@@ -67,11 +67,11 @@ void Eter::Game::PlayGame()
 
 		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
 
-		if (CheckWinner()) {
+		/*if (CheckWinner()) {
 			++m_rounds;
 			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
 			StartGame();
-		}
+		}*/
 	}
 }
 
@@ -151,6 +151,21 @@ bool Eter::Game::CheckCompleteRowOrColumn() const
 		}
 	}
 
+	return false;
+}
+
+void Eter::Game::addBorderToMatrix(Eter::BoardMatrix& board)
+{
+	board.insert(board.begin(), std::vector<std::optional<Tile>>(board[0].size()));
+	board.push_back(std::vector<std::optional<Tile>>(board[0].size()));
+
+	for (auto& row : board) {
+		row.insert(row.begin(), std::optional<Tile>());
+		row.push_back(std::optional<Tile>());
+	}
+}
+
+bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded)
 	return false;
 }
 

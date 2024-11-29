@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <regex>
 
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
@@ -65,12 +66,28 @@ void Eter::Game::PlayGame()
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
-		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		std::string choice;
+		std::cout << m_currentPlayer->GetUserName() << ", do you want to play your illusion card?" << "\n";
+		std::cin >> choice;
 
-		/*if (CheckWinner()) {
-			++m_rounds;
-			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
-			StartGame();
+		std::regex YesPattern("yes|Yes|YES");
+		std::regex NoPattern("no|No|NO");
+
+		if (std::regex_match(choice, YesPattern) == true) {
+			if(!m_currentPlayer->GetIllusionPlayed())
+				Illusion(*m_currentPlayer);
+			else
+				std::cout << "You have already played your illusion card.\n";
+		}
+		else if(std::regex_match(choice, NoPattern) == true)
+			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+
+		/*if (m_board.GetCurrentSize() == m_board.GetMaxSize() || CheckCompleteRowOrColumn()) {
+			if (CheckWinner()) {
+				++m_rounds;
+				m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+				StartGame();
+			}
 		}*/
 	}
 }

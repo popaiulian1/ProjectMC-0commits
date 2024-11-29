@@ -159,39 +159,44 @@ bool Eter::Player::HasWon(const Board& board)
         return tile.has_value() && tile->GetTopValue().GetUserName() == this->GetUserName();
         };
 
+    
     // Check for horizontal, vertical, and diagonal lines
-    for (size_t i = 0; i < maxSize; i++) {
-        for (size_t j = 0; j < maxSize; j++) {
-            // Horizontal check
-            if (!isTileOwnedByPlayer(gameBoard[i][j])) {
-                count = 0;
-            }
-            else {
-                count++;
-            }
-        }
-        if(count == maxSize) return true;
 
-		count != 0 ? count = 0 : count;
+    if (gameBoard[0].size() == maxSize) {
+        for (size_t i = 0; i < maxSize; i++) {
+            for (size_t j = 0; j < maxSize; j++) {
+                // Horizontal check
+                if (!isTileOwnedByPlayer(gameBoard[i][j])) {
+                    count = 0;
+                }
+                else {
+                    count++;
+                }
+            }
+            if (count == maxSize) return true;
+
+            count != 0 ? count = 0 : count;
+        }
+        count = 0;
     }
 
-    count = 0;
-
-    for (size_t i = 0; i < maxSize; i++) {
-        for (size_t j = 0; j < maxSize; j++) {
-            // Vertical check
-            if (!isTileOwnedByPlayer(gameBoard[j][i])) {
-                count = 0;
-            }
-            else {
-                count++;
+    if (gameBoard.size() == maxSize) {
+        for (size_t i = 0; i < maxSize; i++) {
+            for (size_t j = 0; j < maxSize; j++) {
+                // Vertical check
+                if (!isTileOwnedByPlayer(gameBoard[j][i])) {
+                    count = 0;
+                }
+                else {
+                    count++;
+                }
             }
             if (count == maxSize) return true;
 
             count != 0 ? count = 0 : count;
         }
     }
-
+   
     count = 0;
 
 	for (size_t i = 0; i < maxSize; i++) {
@@ -200,8 +205,6 @@ bool Eter::Player::HasWon(const Board& board)
 			count++;
 		}
 		if (count == maxSize) return true;
-
-		count != 0 ? count = 0 : count;
 	}
 
     count = 0;
@@ -212,8 +215,6 @@ bool Eter::Player::HasWon(const Board& board)
 			count++;
 		}
 		if (count == maxSize) return true;
-        
-		count != 0 ? count = 0 : count;
 	}
 
     return false;

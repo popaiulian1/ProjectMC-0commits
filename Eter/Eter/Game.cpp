@@ -94,19 +94,17 @@ void Eter::Game::PlayGame()
 
 bool Eter::Game::CheckWinner()
 {
-	if (CheckDraw() == false) {
-		if (m_board.GetCurrentSize() == m_board.GetMaxSize()) {
-			if (m_player1.HasWon(m_board) == true) {
-				PrintWinner(m_player1);
-				return true;
-			}
-			else if (m_player2.HasWon(m_board) == true) {
-				PrintWinner(m_player2);
-				return true;
-			}
+	if (m_board.CheckEmptyTiles() == true) {
+		if (m_player1.HasWon(m_board) == true) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else if (m_player2.HasWon(m_board) == true) {
+			PrintWinner(m_player2);
+			return true;
 		}
 	}
-	else if (CheckDraw() == true) {
+	else if (m_board.CheckEmptyTiles() == false) {
 		TotalScore(m_player1, m_board);
 		TotalScore(m_player2, m_board);
 		if (m_player1.GetScore() > m_player2.GetScore()) {
@@ -205,7 +203,6 @@ bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Pie
 	return false;
 }
 
-bool Eter::Game::CheckDraw() const
 {
 	BoardMatrix board = m_board.GetBoard();
 	for (int i = 0; i < board.size(); ++i) {

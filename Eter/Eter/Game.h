@@ -31,7 +31,7 @@ namespace Eter
 		void PlayGame();
 		bool CheckWinner();
 		void TotalScore(Player& player, const Board& board);
-		void Illusion(Player& player, Board& board);
+		void Illusion(Player& player);
 		bool CheckCompleteRowOrColumn() const;
 		
 		

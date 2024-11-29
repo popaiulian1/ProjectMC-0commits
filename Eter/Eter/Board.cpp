@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Piece.h"
 #include <stdexcept>;
 #include <iostream>
 
@@ -89,7 +90,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	else {
 		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
 		{
-			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName);
+			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false);
 		}
 		else {
 			std::string border = "=======================================================================";
@@ -113,7 +114,10 @@ void Eter::Board::PrintBoardForFormatedOutput() const
 		for (auto& line : row)
 		{
 			if (line.has_value()) {
-				std::cout << line.value().GetTopValue().GetValue() << " ";
+				if (line.value().GetTopValue().GetIsIllusion() == true)
+					std::cout << "I" << " ";
+				else
+					std::cout << line.value().GetTopValue().GetValue() << " ";
 			}
 			else
 			{
@@ -156,6 +160,7 @@ bool Eter::Board::CheckEmptyTiles()
 	}
 	return false;
 }
+
 
 std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 {

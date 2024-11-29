@@ -39,6 +39,7 @@ void Eter::Game::StartGame()
 			card.SetValue(Values[index++]);
 			card.SetIsPlaced(false);
 			card.SetUserName("");
+			card.SetIsIllusion(false);
 		}
 
 		m_player1.SetPieces(CardsPractice);
@@ -134,7 +135,6 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 	player.SetScore(score);
 }
 
-
 bool Eter::Game::CheckCompleteRowOrColumn() const
 {
 	BoardMatrix board = m_board.GetBoard();
@@ -203,54 +203,17 @@ bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Pie
 	return false;
 }
 
+void Eter::Game::Illusion(Player& player)
 {
-	BoardMatrix board = m_board.GetBoard();
-	for (int i = 0; i < board.size(); ++i) {
-		if (board.size() == m_board.GetMaxSize()) {
-			for (int j = 0; j < board[i].size(); ++j){
-				if (board[i][j].has_value() && board[i].size() <= m_board.GetMaxSize())
-					return true;
-			}
-		}	
+	const std::pair<int, int>& Position = player.Play();
+	int row = Position.first, column = Position.second;
+	if (!m_board.GetBoard()[row][column].has_value()) {
+		player.SetIllusionPlayed(true);
+		m_board.SetTileValue(Position, player.ChoosePiece(), player.GetUserName());
+		m_board.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), true));
 	}
-	return false;
-}
-
-void Eter::Game::Illusion(Player& player, Board& board)
-{
-	std::cout << player.GetUserName() << ", please enter the position of the card you want to play:\n"; // Ask the player to enter the position of the card they want to play
-	int row, column;
-	std::cout << "Row: "; std::cin >> row;
-	std::cout << "Column: "; std::cin >> column;
-
-	while ((row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) &&
-		!board.GetBoard()[row][column].has_value()) // Check if the position is valid
-	{
-		std::cout << "Invalid position. Please enter a valid position.\n";
-		std::cout << "Row: "; std::cin >> row;
-		std::cout << "Column: "; std::cin >> column;
-	}
-
-	std::cout << player.GetUserName() << ", choose a card to play: "; // Ask the player to choose a card to play
-	char card;
-	std::cin >> card;
-
-	bool valid = false;
-	while (valid == false) { // Check if the card is valid
-		for (int cards = 0; cards < player.GetPieces().size(); ++cards)
-			if (player.GetPieces()[cards].GetValue() == card)
-			{
-				valid = true;
-				break;
-			}
-		if (valid == false) {
-			std::cout << "Invalid card, please choose a valid card: ";
-			std::cin >> card;
-		}
-	}
-	std::cout << "The card " << card << " has been played at position (" << row << ", " << column << ").\n"; // Print the card that has been played at the position
-	board.SetTileValue({ row, column }, card, player.GetUserName()); // Set the tile value of the board to the card that has been played
-	player.SetIllusionPlayed(true); // Set the illusion card played to true
+	else
+		std::cout << "The tile is already filled.\n";
 }
 
 void Eter::Game::SetPlayer1(const Player& player)

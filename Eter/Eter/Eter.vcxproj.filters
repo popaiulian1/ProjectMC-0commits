@@ -36,6 +36,9 @@
     <ClInclude Include="Wizards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Libraries\json.hpp">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp">
@@ -62,5 +65,11 @@
     <ClCompile Include="Wizards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="exampleImporting.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="exampleExporting.json" />
   </ItemGroup>
 </Project>

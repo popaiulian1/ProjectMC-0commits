@@ -76,6 +76,41 @@ void Eter::Elemental::Squall(Player& opponent, Board& board)
 	}
 }
 
+void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
+{
+	auto& gameBoard = board.GetBoardReference();
+
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			if (tile.has_value()) {
+				Tile& currentTile = tile.value();
+
+				if (currentTile.GetValue().size() > 1) {
+					std::stack<Piece> pieceStack = currentTile.GetValue();
+					Piece topPiece = pieceStack.top();
+
+					currentTile.RemoveStack();
+					currentTile.SetValue(topPiece);
+
+					//returning the other pieces to their owner
+					while (!pieceStack.empty()) {
+						Piece currentPiece = pieceStack.top();
+						pieceStack.pop();
+						
+						if (currentPiece.GetUserName() == player1.GetUserName()) {
+							player1.AddPiece(currentPiece);
+						}
+						else if (currentPiece.GetUserName() == player2.GetUserName()) {
+							player2.AddPiece(currentPiece);
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards
 {
 	uint8_t StackSize = m_board.GetBoardReference()[row][column].value().GetValue().size();

@@ -46,6 +46,7 @@ namespace Eter {
 		//Methods
 		void Destruction(const Player& opponent, const Board& board);
 		void Squall(Player& opponent, Board& board);
+		void Gale(Board& board, Player& player1, Player& player2);
 		void Storm(int row, int column);
 		void Tide(int row1, int column1, int row2, int column2);
 		void Earthquake(const Board& board);

@@ -33,9 +33,6 @@ namespace Eter {
 		void SetIllusionPlayed(const bool& illusionPlayed);
 		void SetGamesWon(const int& gamesWon);
 		 
-		// ---------------------------------------------------------------------------------------->
-		// (ALSO) -> Iulian:  Look over lastPlayedPiece and reimplement it.
-
 		//Methods
 		std::pair<int, int> Play(); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
 		char ChoosePiece(); //player chooses a piece from his deck; the chosen piece it's removed then from his deck
@@ -43,6 +40,7 @@ namespace Eter {
 		void AddPiece(const Eter::Piece& piece);
 		void RemovePieces();
 		bool HasWon(const Board& board);
+		void ResetPlayer(); //for tournament, resets player 
 		friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 	private:

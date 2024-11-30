@@ -220,6 +220,16 @@ bool Eter::Player::HasWon(const Board& board)
     return false;
 }
 
+void Eter::Player::ResetPlayer()
+{
+    m_score = 0;
+    m_pieces.clear();
+    m_lastPlayedPiece = Piece();
+    m_illusionPlayed = false;
+
+    std::cout << "Player " << m_username << "has been reset for new game!";
+}
+
 std::ostream& Eter::operator<<(std::ostream& os, const Player& player)
 {
     os << '\n' << player.GetUserName() << " -> info:\n-------------------------------\n";

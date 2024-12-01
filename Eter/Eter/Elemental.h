@@ -50,6 +50,7 @@ namespace Eter {
 		void Storm(int row, int column);
 		void Tide(int row1, int column1, int row2, int column2);
 		void Earthquake(const Board& board);
+		void Rock(Board& board, Player& player, Player& opponent);
 
 	private:
 		Board m_board;

@@ -46,6 +46,39 @@ void Eter::Elemental::Earthquake(const Board& board)
 
 }
 
+void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
+{
+	auto gameBoard = board.GetBoardReference();
+
+	if (opponent.GetIllusionPlayed() == NULL) {
+		std::cerr << "ROCK: No illusion to be covered!";
+		return;
+	}
+	else {
+		Piece illusionCheckPiece;
+		
+		int row, column;
+		while (true) {
+			std::cout << "ROCK: Enter row index for illusion to be covered: ";
+			std::cin >> row;
+			std::cout << "ROCK: Enter column index for illusion to be covered: ";
+			std::cin >> column;
+
+			if (row < 0 || column < 0 || row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) {
+				std::cerr << "ROCK: Invalid position! Please enter valid indices." << std::endl;
+				continue;
+			}
+
+			auto& currentTile = gameBoard[row][column];
+			if (currentTile.value().GetTopValue().GetIsIllusion() == true && currentTile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
+				auto& targetTile = gameBoard[row][column].value();
+				//TO DO-> GEORGE: put the chosen piece on board over the illusion one
+
+			}
+		}
+	}
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

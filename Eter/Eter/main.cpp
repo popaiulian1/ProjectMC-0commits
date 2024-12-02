@@ -35,11 +35,11 @@ void jsonTestWrite() {
 
 int main() {
 
-	/*Eter::Game game;
-	game.StartGame();*/
+	Eter::Game game;
+	game.StartGame();
 
-	jsonTestRead();
-	jsonTestWrite();
+	/*jsonTestRead();
+	jsonTestWrite();*/
 
 	return 0;
 }

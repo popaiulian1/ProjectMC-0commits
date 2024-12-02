@@ -163,7 +163,7 @@ bool Eter::Player::HasWon(const Board& board)
     // Check for horizontal, vertical, and diagonal lines
 
     if (gameBoard[0].size() == maxSize) {
-        for (size_t i = 0; i < maxSize; i++) {
+        for (size_t i = 0; i < gameBoard.size(); i++) {
             for (size_t j = 0; j < maxSize; j++) {
                 // Horizontal check
                 if (!isTileOwnedByPlayer(gameBoard[i][j])) {
@@ -177,11 +177,10 @@ bool Eter::Player::HasWon(const Board& board)
 
             count != 0 ? count = 0 : count;
         }
-        count = 0;
     }
 
     if (gameBoard.size() == maxSize) {
-        for (size_t i = 0; i < maxSize; i++) {
+        for (size_t i = 0; i < gameBoard[0].size(); i++) {
             for (size_t j = 0; j < maxSize; j++) {
                 // Vertical check
                 if (!isTileOwnedByPlayer(gameBoard[j][i])) {
@@ -196,10 +195,12 @@ bool Eter::Player::HasWon(const Board& board)
             count != 0 ? count = 0 : count;
         }
     }
-   
-    count = 0;
+ 
+    if (gameBoard.size() != gameBoard[0].size()) {
+        return false;
+    }
 
-	for (size_t i = 0; i < maxSize; i++) {
+	for (size_t i = 0; i < gameBoard.size(); i++) {
 		// Primary Diagonal check
         if (isTileOwnedByPlayer(gameBoard[i][i])) {
 			count++;
@@ -209,15 +210,15 @@ bool Eter::Player::HasWon(const Board& board)
 
     count = 0;
     
-	for (size_t i = 0; i < maxSize; i++) {
-		// Secondary Diagonal check
+    for (size_t i = 0; i < gameBoard.size(); i++) {
+        // Secondary Diagonal check
         if (isTileOwnedByPlayer(gameBoard[i][maxSize - i - 1])) {
-			count++;
-		}
-		if (count == maxSize) return true;
-	}
+            count++;
+        }
+        if (count == maxSize) return true;
+    }
 
-    return false;
+	return false;
 }
 
 void Eter::Player::ResetPlayer()

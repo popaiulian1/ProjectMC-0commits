@@ -65,17 +65,17 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 
 	if (line < 0 || column < 0) {
 		IncreaseBoardForNegativeIndexes({line, column});
-		std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
+		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
 	if (line > (int)m_board.size()-1 && m_board.size() < m_maxSize) {
-		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board.size()));
-		std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
+		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board[0].size()));
+		//std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
 	}
 	if (column > (int)m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board) {
 			row.insert(row.end(), std::optional<Tile>());
 		}
-		std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
+		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
 
 	int8_t adjustedLine = line, adjustedColumn = column;
@@ -85,7 +85,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 
 	if (adjustedLine > m_board.size() || adjustedColumn > m_board[0].size())
 	{
-		throw std::out_of_range("Invalid position");
+		std::cout << "Invalid move->Tile position is bigger than max size\n";
 	}
 	else {
 		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
@@ -135,14 +135,14 @@ void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)
 
 	if (line < 0 && m_board.size() < m_maxSize) {
 		m_board.insert(m_board.begin(), std::vector<std::optional<Tile>>(m_board[0].size()));
-		std::cout << "\n\n\n->->->->->->->->\n" << *this;
+		//std::cout << "\n\n\n->->->->->->->->\n" << *this;
 	}
 	if (column < 0 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board)
 		{
 			row.insert(row.begin(), std::optional<Tile>());
 		}
-		std::cout << "\n\n\n->->->->->->->->\n" << *this;
+		//std::cout << "\n\n\n->->->->->->->->\n" << *this;
 	}
 }
 

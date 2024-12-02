@@ -59,11 +59,20 @@ void Eter::Wizards::earthMasterPower(int powerIndex, int row, int col, std::vect
 
 void Eter::Wizards::airMasterPower(int powerIndex, int row, int col)
 {
-	/*if (powerIndex == 1)
-		moveOwnStack();
+	if (powerIndex == 1) {
 
+		int destrow, destcol;
+		std::cout << "At what row and column would you like to place your card?\n";
+		std::cin >> destrow >> destcol;
+		if (destrow < 0 || destrow >= m_board->GetCurrentSize() || destcol < 0 || destcol >= m_board->GetCurrentSize()) {
+			std::cout << "Invalid destination position (" << destrow << ", " << destcol << ").\n";
+			return;
+		}
+        moveOwnStack(row, col, destrow, destcol);
+	}
+		
 	else if (powerIndex == 2)
-		gainExtraEtherCard();*/
+		gainExtraEtherCard(row,col);
 
 }
 

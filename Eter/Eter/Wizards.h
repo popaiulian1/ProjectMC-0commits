@@ -15,6 +15,8 @@ namespace Eter {
 
     class Wizards {
     public:
+
+        //Constructors
         Wizards();
         Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string m_username);
         Wizards(const Wizards& other);

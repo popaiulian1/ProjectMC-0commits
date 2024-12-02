@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8879feb2-291f-4f5a-bef7-04a7dbeef568}</ProjectGuid>
+    <ProjectGuid>{193DFACC-41F0-4843-875D-E7D3061CDF4F}</ProjectGuid>
     <RootNamespace>Eter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

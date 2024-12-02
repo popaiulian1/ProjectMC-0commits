@@ -99,7 +99,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	}
 }
 
-void Eter::Board::PrintBoardForFormatedOutput() const
+void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName) const
 {
 	std::string border1 = "<=======================================================================>";
 	std::string border2 = "<----------------------------------------------------------------------->";
@@ -114,10 +114,20 @@ void Eter::Board::PrintBoardForFormatedOutput() const
 		for (auto& line : row)
 		{
 			if (line.has_value()) {
-				if (line.value().GetTopValue().GetIsIllusion() == true)
-					std::cout << "I" << " ";
-				else
-					std::cout << line.value().GetTopValue().GetValue() << " ";
+				if (line.value().GetTopValue().GetUserName() == bluePlayerName) {
+					if (line.value().GetTopValue().GetIsIllusion() == true)
+						std::cout << "\033[1;34m" << "I" << "\033[0m ";
+					else {
+						std::cout << "\033[1;34m" << line.value().GetTopValue().GetValue() << "\033[0m ";
+					}
+				}
+				else {
+					if (line.value().GetTopValue().GetIsIllusion() == true)
+						std::cout << "\033[1;31m" << "I" << "\033[0m ";
+					else {
+						std::cout << "\033[1;31m" << line.value().GetTopValue().GetValue() << "\033[0m ";
+					}
+				}
 			}
 			else
 			{

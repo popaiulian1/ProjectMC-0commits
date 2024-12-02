@@ -43,7 +43,7 @@ namespace Eter {
 
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
-		void PrintBoardForFormatedOutput() const;
+		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 
 	private:

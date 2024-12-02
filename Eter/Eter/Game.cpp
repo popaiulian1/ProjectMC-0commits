@@ -2,6 +2,8 @@
 #include <iostream>
 #include <regex>
 
+std::string bluePlayerName;
+
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
 	m_player1 = player1;
@@ -24,6 +26,7 @@ void Eter::Game::StartGame()
 			std::cout << "Username of the first player is: ";
 			std::getline(std::cin, UsernamePlayer1);
 			m_player1.SetUserName(UsernamePlayer1);
+			bluePlayerName = m_player1.GetUserName();
 		}
 
 		if (m_player2.GetUserName() == "") {
@@ -65,8 +68,8 @@ void Eter::Game::PrintWinner(const Player& player) const
 void Eter::Game::PlayGame()
 {
 	while (m_rounds <= 3) {
-		m_board.PrintBoardForFormatedOutput(); // Print the board
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
+		m_board.PrintBoardForFormatedOutput(bluePlayerName); // Print the board
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
 		std::string choice;

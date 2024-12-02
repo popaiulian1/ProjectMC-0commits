@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <regex>
 
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
@@ -38,6 +39,7 @@ void Eter::Game::StartGame()
 			card.SetValue(Values[index++]);
 			card.SetIsPlaced(false);
 			card.SetUserName("");
+			card.SetIsIllusion(false);
 		}
 
 		m_player1.SetPieces(CardsPractice);
@@ -65,31 +67,45 @@ void Eter::Game::PlayGame()
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
-		m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		std::string choice;
+		std::cout << m_currentPlayer->GetUserName() << ", do you want to play your illusion card?" << "\n";
+		std::cin >> choice;
 
-		if (CheckWinner()) {
-			++m_rounds;
-			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
-			StartGame();
+		std::regex YesPattern("yes|Yes|YES");
+		std::regex NoPattern("no|No|NO");
+
+		if (std::regex_match(choice, YesPattern) == true) {
+			if(!m_currentPlayer->GetIllusionPlayed())
+				Illusion(*m_currentPlayer);
+			else
+				std::cout << "You have already played your illusion card.\n";
 		}
+		else if(std::regex_match(choice, NoPattern) == true)
+			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+
+		/*if (m_board.GetCurrentSize() == m_board.GetMaxSize() || CheckCompleteRowOrColumn()) {
+			if (CheckWinner()) {
+				++m_rounds;
+				m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+				StartGame();
+			}
+		}*/
 	}
 }
 
 bool Eter::Game::CheckWinner()
 {
-	if (CheckDraw() == false) {
-		if (m_board.GetCurrentSize() == m_board.GetMaxSize()) {
-			if (m_player1.HasWon(m_board) == true) {
-				PrintWinner(m_player1);
-				return true;
-			}
-			else if (m_player2.HasWon(m_board) == true) {
-				PrintWinner(m_player2);
-				return true;
-			}
+	if (m_board.CheckEmptyTiles() == true) {
+		if (m_player1.HasWon(m_board) == true) {
+			PrintWinner(m_player1);
+			return true;
+		}
+		else if (m_player2.HasWon(m_board) == true) {
+			PrintWinner(m_player2);
+			return true;
 		}
 	}
-	else if (CheckDraw() == true) {
+	else if (m_board.CheckEmptyTiles() == false) {
 		TotalScore(m_player1, m_board);
 		TotalScore(m_player2, m_board);
 		if (m_player1.GetScore() > m_player2.GetScore()) {
@@ -118,7 +134,6 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 	}
 	player.SetScore(score);
 }
-
 
 bool Eter::Game::CheckCompleteRowOrColumn() const
 {
@@ -154,55 +169,51 @@ bool Eter::Game::CheckCompleteRowOrColumn() const
 	return false;
 }
 
-bool Eter::Game::CheckDraw() const
+void Eter::Game::addBorderToMatrix(Eter::BoardMatrix& board)
 {
-	BoardMatrix board = m_board.GetBoard();
-	for (int i = 0; i < board.size(); ++i) {
-		if (board.size() == m_board.GetMaxSize()) {
-			for (int j = 0; j < board[i].size(); ++j){
-				if (board[i][j].has_value() && board[i].size() <= m_board.GetMaxSize())
-					return true;
-			}
-		}	
+	board.insert(board.begin(), std::vector<std::optional<Tile>>(board[0].size()));
+	board.push_back(std::vector<std::optional<Tile>>(board[0].size()));
+
+	for (auto& row : board) {
+		row.insert(row.begin(), std::optional<Tile>());
+		row.push_back(std::optional<Tile>());
 	}
+}
+
+bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded)
+{
+	Eter::BoardMatrix board = m_board.GetBoard();
+
+	auto& [row, col] = pos;
+
+	addBorderToMatrix(board);
+
+	board[row][col].value().SetValue(pieceToBeAdded);
+
+	addBorderToMatrix(board);
+
+	if (board[row - 1][col].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row + 1][col].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row][col - 1].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue() ||
+		board[row][col + 1].value().GetTopValue().GetValue() == pieceToBeAdded.GetValue())
+	{
+		return true;
+	}
+
 	return false;
 }
 
-void Eter::Game::Illusion(Player& player, Board& board)
+void Eter::Game::Illusion(Player& player)
 {
-	std::cout << player.GetUserName() << ", please enter the position of the card you want to play:\n"; // Ask the player to enter the position of the card they want to play
-	int row, column;
-	std::cout << "Row: "; std::cin >> row;
-	std::cout << "Column: "; std::cin >> column;
-
-	while ((row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) &&
-		!board.GetBoard()[row][column].has_value()) // Check if the position is valid
-	{
-		std::cout << "Invalid position. Please enter a valid position.\n";
-		std::cout << "Row: "; std::cin >> row;
-		std::cout << "Column: "; std::cin >> column;
+	const std::pair<int, int>& Position = player.Play();
+	int row = Position.first, column = Position.second;
+	if (!m_board.GetBoard()[row][column].has_value()) {
+		player.SetIllusionPlayed(true);
+		m_board.SetTileValue(Position, player.ChoosePiece(), player.GetUserName());
+		m_board.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), true));
 	}
-
-	std::cout << player.GetUserName() << ", choose a card to play: "; // Ask the player to choose a card to play
-	char card;
-	std::cin >> card;
-
-	bool valid = false;
-	while (valid == false) { // Check if the card is valid
-		for (int cards = 0; cards < player.GetPieces().size(); ++cards)
-			if (player.GetPieces()[cards].GetValue() == card)
-			{
-				valid = true;
-				break;
-			}
-		if (valid == false) {
-			std::cout << "Invalid card, please choose a valid card: ";
-			std::cin >> card;
-		}
-	}
-	std::cout << "The card " << card << " has been played at position (" << row << ", " << column << ").\n"; // Print the card that has been played at the position
-	board.SetTileValue({ row, column }, card, player.GetUserName()); // Set the tile value of the board to the card that has been played
-	player.SetIllusionPlayed(true); // Set the illusion card played to true
+	else
+		std::cout << "The tile is already filled.\n";
 }
 
 void Eter::Game::SetPlayer1(const Player& player)

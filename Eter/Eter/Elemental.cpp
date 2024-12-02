@@ -46,6 +46,39 @@ void Eter::Elemental::Earthquake(const Board& board)
 
 }
 
+void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
+{
+	auto gameBoard = board.GetBoardReference();
+
+	if (opponent.GetIllusionPlayed() == NULL) {
+		std::cerr << "ROCK: No illusion to be covered!";
+		return;
+	}
+	else {
+		Piece illusionCheckPiece;
+		
+		int row, column;
+		while (true) {
+			std::cout << "ROCK: Enter row index for illusion to be covered: ";
+			std::cin >> row;
+			std::cout << "ROCK: Enter column index for illusion to be covered: ";
+			std::cin >> column;
+
+			if (row < 0 || column < 0 || row >= board.GetCurrentSize() || column >= board.GetCurrentSize()) {
+				std::cerr << "ROCK: Invalid position! Please enter valid indices." << std::endl;
+				continue;
+			}
+
+			auto& currentTile = gameBoard[row][column];
+			if (currentTile.value().GetTopValue().GetIsIllusion() == true && currentTile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
+				auto& targetTile = gameBoard[row][column].value();
+				//TO DO-> GEORGE: put the chosen piece on board over the illusion one
+
+			}
+		}
+	}
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();
@@ -74,6 +107,41 @@ void Eter::Elemental::Squall(Player& opponent, Board& board)
 			}
 		}
 	}
+}
+
+void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
+{
+	auto& gameBoard = board.GetBoardReference();
+
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			if (tile.has_value()) {
+				Tile& currentTile = tile.value();
+
+				if (currentTile.GetValue().size() > 1) {
+					std::stack<Piece> pieceStack = currentTile.GetValue();
+					Piece topPiece = pieceStack.top();
+
+					currentTile.RemoveStack();
+					currentTile.SetValue(topPiece);
+
+					//returning the other pieces to their owner
+					while (!pieceStack.empty()) {
+						Piece currentPiece = pieceStack.top();
+						pieceStack.pop();
+						
+						if (currentPiece.GetUserName() == player1.GetUserName()) {
+							player1.AddPiece(currentPiece);
+						}
+						else if (currentPiece.GetUserName() == player2.GetUserName()) {
+							player2.AddPiece(currentPiece);
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards

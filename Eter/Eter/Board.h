@@ -44,10 +44,10 @@ namespace Eter {
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
 		void PrintBoardForFormatedOutput() const;
+		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 
 	private:
 		void IncreaseBoardForNegativeIndexes(const Position& pos);
-		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 		BoardMatrix m_board;
 		size_t m_maxSize;
 	};

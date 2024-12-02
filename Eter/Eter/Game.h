@@ -31,12 +31,16 @@ namespace Eter
 		void PlayGame();
 		bool CheckWinner();
 		void TotalScore(Player& player, const Board& board);
-		bool CheckDraw() const;
-		void Illusion(Player& player, Board& board);
+		void Illusion(Player& player);
 		bool CheckCompleteRowOrColumn() const;
 		
 		
 	private:
+		//Methods
+		void addBorderToMatrix(Eter::BoardMatrix& board);
+		bool checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded);
+
+		//Constants
 		static const size_t kDECK_SIZE_PRACTICE{ 7 }; //define the size of the practice deck
 		Player m_player1, m_player2;
 		Player* m_currentPlayer = nullptr;

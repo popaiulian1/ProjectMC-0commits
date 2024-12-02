@@ -351,7 +351,7 @@ void Eter::Wizards::gainExtraEtherCard(int row, int col)
 		return;
 	}
 
-	Piece magePowerCard('E', false, this->GetUserName());
+	Piece magePowerCard('E', false, this->GetUserName(), false);
 
 	// Placing the Eter card
 	Tile newTile;

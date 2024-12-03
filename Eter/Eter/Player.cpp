@@ -56,6 +56,11 @@ Eter::Piece Eter::Player::GetLastPlayedPiece() const
     return m_lastPlayedPiece;
 }
 
+const bool& Eter::Player::GetPowerExplosionPlayed() const
+{
+    return m_powerExplosionPlayed;
+}
+
 int Eter::Player::GetGamesWon() const
 {
 	return m_gamesWon;
@@ -80,6 +85,11 @@ void Eter::Player::SetPieces(const std::vector<Eter::Piece>& pieces)
 void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 {
 	m_illusionPlayed = illusionPlayed;
+}
+
+void Eter::Player::SetPowerExplosionPlayed(const bool& powerExplosionPlayed)
+{
+    m_powerExplosionPlayed = powerExplosionPlayed;
 }
 
 void Eter::Player::SetGamesWon(const int& gamesWon)

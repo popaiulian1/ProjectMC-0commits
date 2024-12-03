@@ -32,6 +32,11 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 	std::swap(m_board.GetBoardReference()[row1][column1], m_board.GetBoardReference()[row2][column2]);
 }
 
+void Eter::Elemental::Mist(Player& player)
+{
+	player.SetIllusionPlayed(false);
+}
+
 void Eter::Elemental::Earthquake(const Board& board)
 {
 	auto GameBoard = board.GetBoard();

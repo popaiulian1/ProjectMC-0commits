@@ -19,6 +19,12 @@ namespace Eter {
 		Duel
 	};
 
+	struct lastMove {
+		std::string playerUsername;
+		size_t row;
+		size_t column;
+	};
+
 	class Board
 	{
 	public:
@@ -40,6 +46,7 @@ namespace Eter {
 		//Setters
 		void SetBoard(const BoardMatrix& board);
 		void SetTileValue(const Position& pos, const char& value, const std::string& playerName);
+		void SetLastMove(const std::string& playerUsername, size_t row, size_t column);
 
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
@@ -51,6 +58,7 @@ namespace Eter {
 		void IncreaseBoardForNegativeIndexes(const Position& pos);
 		BoardMatrix m_board;
 		size_t m_maxSize;
+		lastMove m_lastMove;
 	};
 }
 

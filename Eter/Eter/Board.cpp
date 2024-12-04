@@ -99,6 +99,13 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	}
 }
 
+void Eter::Board::SetLastMove(const std::string& playerUsername, size_t row, size_t column)
+{
+	m_lastMove.playerUsername = playerUsername;
+	m_lastMove.row = row;
+	m_lastMove.column = column;
+}
+
 void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName) const
 {
 	std::string border1 = "<=======================================================================>";
@@ -209,6 +216,14 @@ bool Eter::Board::PowerExplosionAvailability() const
 	if (fullRows >= 2 || fullColumns >= 2 || (fullRows >= 1 && fullColumns >= 1)) {
 		return true;
 	}
+
+	/*if (m_lastMove.playerUsername == player1.GetUserName()) {
+		player1.SetPowerExplosionAccess(true);
+	}
+	else if (m_lastMove.playerUsername == player2.GetUserName()) {
+		player2.SetPowerExplosionAccess(true);
+	}*/
+
 	return false;
 }
 

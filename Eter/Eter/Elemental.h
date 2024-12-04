@@ -49,6 +49,7 @@ namespace Eter {
 		void Gale(Board& board, Player& player1, Player& player2);
 		void Storm(int row, int column);
 		void Tide(int row1, int column1, int row2, int column2);
+		void Mist(Player& player);
 		void Earthquake(const Board& board);
 		void Rock(Board& board, Player& player, Player& opponent);
 

@@ -24,6 +24,7 @@ namespace Eter {
 		const std::vector<Eter::Piece>& GetPieces() const;
 		const bool& GetIllusionPlayed() const;
 		Piece GetLastPlayedPiece() const;
+		const bool& GetPowerExplosionPlayed() const;
 		int GetGamesWon() const;
 
 		//Setters
@@ -31,6 +32,7 @@ namespace Eter {
 		void SetScore(const int& score);
 		void SetPieces(const std::vector<Eter::Piece>& pieces);
 		void SetIllusionPlayed(const bool& illusionPlayed);
+		void SetPowerExplosionPlayed(const bool& powerExplosionPlayed);
 		void SetGamesWon(const int& gamesWon);
 		 
 		//Methods
@@ -49,6 +51,7 @@ namespace Eter {
 		std::vector<Eter::Piece> m_pieces;
 		Piece m_lastPlayedPiece;
 		bool m_illusionPlayed; //m_faceDownCardPlayed
+		bool m_powerExplosionPlayed;
 		int m_gamesWon;
 	};
 }

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <regex>
 
+std::string bluePlayerName;
+
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
 	m_player1 = player1;
@@ -24,6 +26,7 @@ void Eter::Game::StartGame()
 			std::cout << "Username of the first player is: ";
 			std::getline(std::cin, UsernamePlayer1);
 			m_player1.SetUserName(UsernamePlayer1);
+			bluePlayerName = m_player1.GetUserName();
 		}
 
 		if (m_player2.GetUserName() == "") {
@@ -57,14 +60,16 @@ void Eter::Game::StartGame()
 
 void Eter::Game::PrintWinner(const Player& player) const
 {
+	std::cout << "\n\n<=============================================================>" << std::endl;
 	std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
+	std::cout << "\n<=============================================================>" << std::endl;
 }
 
 void Eter::Game::PlayGame()
 {
 	while (m_rounds <= 3) {
-		m_board.PrintBoardForFormatedOutput(); // Print the board
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
+		m_board.PrintBoardForFormatedOutput(bluePlayerName); // Print the board
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
 		std::string choice;
@@ -83,13 +88,13 @@ void Eter::Game::PlayGame()
 		else if(std::regex_match(choice, NoPattern) == true)
 			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
 
-		/*if (m_board.GetCurrentSize() == m_board.GetMaxSize() || CheckCompleteRowOrColumn()) {
+		if (m_board.GetCurrentSize() == m_board.GetMaxSize() || CheckCompleteRowOrColumn()) {
 			if (CheckWinner()) {
 				++m_rounds;
 				m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
 				StartGame();
 			}
-		}*/
+		}
 	}
 }
 
@@ -207,13 +212,26 @@ void Eter::Game::Illusion(Player& player)
 {
 	const std::pair<int, int>& Position = player.Play();
 	int row = Position.first, column = Position.second;
-	if (!m_board.GetBoard()[row][column].has_value()) {
+	bool canPlace = false;
+
+	if (row < 0 || column < 0 || row >= m_board.GetCurrentSize() || column >= m_board.GetBoard()[row].size())
+	{
+		canPlace = true;
+	}else if (m_board.GetBoard()[row][column].has_value()) {
+		canPlace = false;
+	}
+	
+	if (canPlace) {
 		player.SetIllusionPlayed(true);
 		m_board.SetTileValue(Position, player.ChoosePiece(), player.GetUserName());
+		row < 0 ? row = 0 : row;
+		column < 0 ? column = 0 : column;
 		m_board.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), true));
 	}
-	else
-		std::cout << "The tile is already filled.\n";
+	else {
+		std::cout << "You cannot place your illusion card there.\n";
+	}
+
 }
 
 void Eter::Game::SetPlayer1(const Player& player)

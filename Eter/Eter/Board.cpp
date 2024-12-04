@@ -65,17 +65,17 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 
 	if (line < 0 || column < 0) {
 		IncreaseBoardForNegativeIndexes({line, column});
-		std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
+		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
 	if (line > (int)m_board.size()-1 && m_board.size() < m_maxSize) {
-		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board.size()));
-		std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
+		m_board.insert(m_board.end(), std::vector<std::optional<Tile>>(m_board[0].size()));
+		//std::cout << "\n-------------------------------\n"  << *this << "\n-------------------------------\n";
 	}
 	if (column > (int)m_board[0].size()-1 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board) {
 			row.insert(row.end(), std::optional<Tile>());
 		}
-		std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
+		//std::cout << "\n-------------------------------\n" << *this << "\n-------------------------------\n";
 	}
 
 	int8_t adjustedLine = line, adjustedColumn = column;
@@ -85,7 +85,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 
 	if (adjustedLine > m_board.size() || adjustedColumn > m_board[0].size())
 	{
-		throw std::out_of_range("Invalid position");
+		std::cout << "Invalid move->Tile position is bigger than max size\n";
 	}
 	else {
 		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
@@ -99,7 +99,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	}
 }
 
-void Eter::Board::PrintBoardForFormatedOutput() const
+void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName) const
 {
 	std::string border1 = "<=======================================================================>";
 	std::string border2 = "<----------------------------------------------------------------------->";
@@ -114,10 +114,20 @@ void Eter::Board::PrintBoardForFormatedOutput() const
 		for (auto& line : row)
 		{
 			if (line.has_value()) {
-				if (line.value().GetTopValue().GetIsIllusion() == true)
-					std::cout << "I" << " ";
-				else
-					std::cout << line.value().GetTopValue().GetValue() << " ";
+				if (line.value().GetTopValue().GetUserName() == bluePlayerName) {
+					if (line.value().GetTopValue().GetIsIllusion() == true)
+						std::cout << "\033[1;34m" << "I" << "\033[0m ";
+					else {
+						std::cout << "\033[1;34m" << line.value().GetTopValue().GetValue() << "\033[0m ";
+					}
+				}
+				else {
+					if (line.value().GetTopValue().GetIsIllusion() == true)
+						std::cout << "\033[1;31m" << "I" << "\033[0m ";
+					else {
+						std::cout << "\033[1;31m" << line.value().GetTopValue().GetValue() << "\033[0m ";
+					}
+				}
 			}
 			else
 			{
@@ -135,14 +145,14 @@ void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)
 
 	if (line < 0 && m_board.size() < m_maxSize) {
 		m_board.insert(m_board.begin(), std::vector<std::optional<Tile>>(m_board[0].size()));
-		std::cout << "\n\n\n->->->->->->->->\n" << *this;
+		//std::cout << "\n\n\n->->->->->->->->\n" << *this;
 	}
 	if (column < 0 && m_board[0].size() < m_maxSize) {
 		for (auto& row : m_board)
 		{
 			row.insert(row.begin(), std::optional<Tile>());
 		}
-		std::cout << "\n\n\n->->->->->->->->\n" << *this;
+		//std::cout << "\n\n\n->->->->->->->->\n" << *this;
 	}
 }
 
@@ -157,6 +167,47 @@ bool Eter::Board::CheckEmptyTiles()
 				return true;
 			}
 		}
+	}
+	return false;
+}
+
+bool Eter::Board::PowerExplosionAvailability() const
+{
+	size_t fullRows = 0;
+	size_t fullColumns = 0;
+
+	for (const auto& row : m_board) {
+		bool isFull = true;
+
+		for (const auto& tile : row) {
+			if (!tile.has_value()) {
+				isFull = false;
+				break;
+			}
+		}
+
+		if (isFull == true) {
+			fullRows += 1;
+		}
+	}
+
+	for (size_t col = 0; col < m_board.size(); ++col) {
+		bool isFull = true;
+
+		for (size_t row = 0; row < m_board.size(); ++row) {
+			if (!m_board[row][col].has_value()) {
+				isFull = false;
+				break;
+			}
+		}
+
+		if (isFull == true) {
+			fullColumns += 1;
+		}
+	}
+
+	if (fullRows >= 2 || fullColumns >= 2 || (fullRows >= 1 && fullColumns >= 1)) {
+		return true;
 	}
 	return false;
 }

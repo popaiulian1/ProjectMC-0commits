@@ -19,7 +19,7 @@ namespace Eter {
 		Duel
 	};
 
-	struct lastMove {
+	struct lastMove { // Last Move a Player did on the board
 		std::string playerUsername;
 		size_t row;
 		size_t column;
@@ -52,7 +52,7 @@ namespace Eter {
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
 		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
-		bool PowerExplosionAvailability() const; //Checks if a Power Explosion can be played
+		bool PowerExplosionAvailability() const; //Checks if a Power Explosion can be played + Gives the access to the player to use the power explosion
 
 	private:
 		void IncreaseBoardForNegativeIndexes(const Position& pos);

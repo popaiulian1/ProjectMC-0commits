@@ -76,13 +76,13 @@ void Eter::Wizards::airMasterPower(int powerIndex, int row, int col)
 
 }
 
-void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int destRow)
+void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int destRow, int destCol)
 {
-	/*if (powerIndex == 1)
-		moveOpponentStack();
+	if (powerIndex == 1)
+		moveOpponentStack(srcRow,srcCol,destRow, destCol);
 
 	else if (powerIndex == 2)
-		moveEdgeRow();*/
+		moveEdgeRowCol();
 
 }
 
@@ -414,3 +414,91 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
 
 }
+
+void Eter::Wizards::moveEdgeRowCol() {
+	auto& gameBoard = m_board->GetBoardReference();
+	std::cout << "Would you like to move a row or a column?\n";
+	std::string option;
+	std::cin >> option;
+
+	if (option == "row") {
+		std::cout << "Which row would you like to move? (Must be an edge row: 0 or " << m_board->GetCurrentSize() - 1 << ")\n";
+		int srcRow;
+		std::cin >> srcRow;
+
+		if (srcRow != 0 && srcRow != m_board->GetCurrentSize() - 1) {
+			std::cout << "Invalid row. Only edge rows can be moved.\n";
+			return;
+		}
+
+		std::cout << "Where would you like to move it? (0 for top, " << m_board->GetCurrentSize() - 1 << " for bottom)\n";
+		int destRow;
+		std::cin >> destRow;
+
+		if (destRow != 0 && destRow != m_board->GetCurrentSize() - 1) {
+			std::cout << "Invalid destination row. You can only move to the edges.\n";
+			return;
+		}
+
+		if (srcRow == destRow) {
+			std::cout << "Source and destination rows are the same. No movement performed.\n";
+			return;
+		}
+
+		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+			if (gameBoard[destRow][col].value().IsPit()) {
+				std::cout << "Destination row contains a pit. Cannot move row.\n";
+				return;
+			}
+		}
+
+		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+			gameBoard[destRow][col] = gameBoard[srcRow][col];
+			gameBoard[srcRow][col] = Tile(); // Clear the source row
+		}
+
+		std::cout << "Row " << srcRow << " successfully moved to " << destRow << ".\n";
+	}
+	else if (option == "column") {
+		std::cout << "Which column would you like to move? (Must be an edge column: 0 or " << m_board->GetCurrentSize() - 1 << ")\n";
+		int srcCol;
+		std::cin >> srcCol;
+
+		if (srcCol != 0 && srcCol != m_board->GetCurrentSize() - 1) {
+			std::cout << "Invalid column. Only edge columns can be moved.\n";
+			return;
+		}
+
+		std::cout << "Where would you like to move it? (0 for left, " << m_board->GetCurrentSize() - 1 << " for right)\n";
+		int destCol;
+		std::cin >> destCol;
+
+		if (destCol != 0 && destCol != m_board->GetCurrentSize() - 1) {
+			std::cout << "Invalid destination column. You can only move to the edges.\n";
+			return;
+		}
+
+		if (srcCol == destCol) {
+			std::cout << "Source and destination columns are the same. No movement performed.\n";
+			return;
+		}
+
+		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+			if (gameBoard[row][destCol].value().IsPit()) {
+				std::cout << "Destination column contains a pit. Cannot move column.\n";
+				return;
+			}
+		}
+
+		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+			gameBoard[row][destCol] = gameBoard[row][srcCol];
+			gameBoard[row][srcCol] = Tile(); // Clear the source column
+		}
+
+		std::cout << "Column " << srcCol << " successfully moved to " << destCol << ".\n";
+	}
+	else 
+		std::cout << "Invalid option. Please choose 'row' or 'column'.\n";
+	
+}
+

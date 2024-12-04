@@ -37,8 +37,8 @@ namespace Eter {
         void createPit(int row, int col);
         void moveOwnStack(int srcRow, int srcCol, int destRow, int destCol);
 		void gainExtraEtherCard(int row, int col); 
-		//void moveOpponentStack();    
-        //void moveEdgeRow();          
+		void moveOpponentStack(int srcRow, int srcCol, int destRow, int destCol);
+        void moveEdgeRow();          
 
 
     private:

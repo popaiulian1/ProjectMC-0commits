@@ -154,6 +154,7 @@
     <ClCompile Include="Wizards.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="boardSave.json" />
     <None Include="exampleExporting.json" />
     <None Include="exampleImporting.json" />
   </ItemGroup>

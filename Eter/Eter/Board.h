@@ -5,6 +5,8 @@
 #include <ostream>
 #include <optional>
 #include "Tile.h"
+#include "json.hpp"
+#include <fstream>
 
 namespace Eter {
 	constexpr size_t kBOARD_SIZE_DUEL{ 4 }; // constexpr to define the size of the 4x4 board
@@ -53,6 +55,7 @@ namespace Eter {
 		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 		bool PowerExplosionAvailability() const; //Checks if a Power Explosion can be played + Gives the access to the player to use the power explosion
+		void exportBoardToJson(const std::string& filename) const;
 
 	private:
 		void IncreaseBoardForNegativeIndexes(const Position& pos);

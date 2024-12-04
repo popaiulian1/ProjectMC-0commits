@@ -227,6 +227,34 @@ bool Eter::Board::PowerExplosionAvailability() const
 	return false;
 }
 
+void Eter::Board::exportBoardToJson(const std::string& filename) const
+{
+	nlohmann::json j_board;
+
+	//(TO DO) add the whole stack of the tile to the json file
+	for (size_t i = 0; i < m_board.size(); ++i) {
+		for (size_t j = 0; j < m_board[i].size(); ++j) {
+			if (m_board[i][j].has_value()) {
+				j_board["board"][std::to_string(i)][std::to_string(j)] = m_board[i][j].value().GetTopValue().GetValue();
+			}
+			else {
+				j_board["board"][std::to_string(i)][std::to_string(j)] = kEMPTY_BOARD_CELL;
+			}
+		}
+	}
+
+	std::ofstream file(filename);
+
+	if (file.is_open()) {
+		file << j_board.dump(4) << std::endl;
+		file.close();
+		std::cout << "Board saved";
+	}
+	else {
+		std::cerr << "Error opening file\n";
+	}
+}
+
 
 std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 {

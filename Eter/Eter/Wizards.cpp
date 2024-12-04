@@ -62,7 +62,7 @@ void Eter::Wizards::airMasterPower(int powerIndex, int row, int col)
 	if (powerIndex == 1) {
 
 		int destrow, destcol;
-		std::cout << "At what row and column would you like to place your card?\n";
+		std::cout << "At what row and column would you like to place your card or deck of cards?\n";
 		std::cin >> destrow >> destcol;
 		if (destrow < 0 || destrow >= m_board->GetCurrentSize() || destcol < 0 || destcol >= m_board->GetCurrentSize()) {
 			std::cout << "Invalid destination position (" << destrow << ", " << destcol << ").\n";
@@ -359,4 +359,58 @@ void Eter::Wizards::gainExtraEtherCard(int row, int col)
 	gameBoard[row][col] = newTile;
 
 	std::cout << "Mage Power card has been placed as an ETER card at (" << row << ", " << col << ").\n";
+}
+
+
+// Methods for Masters of water
+
+void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int destCol)
+{
+	if (srcRow < 0 || srcRow >= m_board->GetCurrentSize() || srcCol < 0 || srcCol >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid source position (" << srcRow << ", " << srcCol << ").\n";
+		return;
+	}
+	if (destRow < 0 || destRow >= m_board->GetCurrentSize() || destCol < 0 || destCol >= m_board->GetCurrentSize()) {
+		std::cout << "Invalid destination position (" << destRow << ", " << destCol << ").\n";
+		return;
+	}
+
+	auto& gameBoard = m_board->GetBoardReference();
+
+	if (!gameBoard[srcRow][srcCol].has_value()) {
+		std::cout << "No stack found at source position (" << srcRow << ", " << srcCol << ").\n";
+		return;
+	}
+
+	Tile& srcTile = gameBoard[srcRow][srcCol].value();
+	Tile& destTile = gameBoard[destRow][destCol].value();
+
+	if (srcTile.GetTopValue().GetUserName() == this->GetUserName()) {
+		std::cout << "The stack at source position (" << srcRow << ", " << srcCol << ") does belong to you.\n";
+		return;
+	}
+
+	if (destTile.GetValue().size() > 0 || destTile.IsPit()) {
+		std::cout << "The destination position (" << destRow << ", " << destCol << ") is not empty or is a pit.\n";
+		return;
+	}
+
+	//Moving the stack of cards
+
+	std::stack<Piece> stackToMove = srcTile.GetValue();
+	std::vector<Piece> cardsInOrder;
+
+	while (!stackToMove.empty()) {
+		cardsInOrder.push_back(stackToMove.top());
+		stackToMove.pop();
+	}
+
+	for (auto it = cardsInOrder.rbegin(); it != cardsInOrder.rend(); ++it) {
+		destTile.SetValue(*it);
+	}
+
+	srcTile.RemoveStack();
+
+	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
+
 }

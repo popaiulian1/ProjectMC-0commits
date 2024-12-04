@@ -27,7 +27,7 @@ namespace Eter {
         void fireMasterPower(int powerIndex, int row, int col);
         void earthMasterPower(int powerIndex, int row, int col, std::vector<Piece>& playerHand);
         void airMasterPower(int powerIndex, int row, int col);
-        void waterMasterPower(int powerIndex, int srcRow, int srcCol, int destRow);
+        void waterMasterPower(int powerIndex, int srcRow, int srcCol, int destRow, int destCol);
 
         //Methods for Powers determined by powerIndex
         void eliminateOpponentCard(int row, int col);
@@ -38,7 +38,7 @@ namespace Eter {
         void moveOwnStack(int srcRow, int srcCol, int destRow, int destCol);
 		void gainExtraEtherCard(int row, int col); 
 		void moveOpponentStack(int srcRow, int srcCol, int destRow, int destCol);
-        void moveEdgeRow();          
+        void moveEdgeRowCol();          
 
 
     private:

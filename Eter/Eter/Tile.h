@@ -1,5 +1,5 @@
 #pragma once
-#include <stack>
+#include <deque>
 #include <ostream>
 #include <optional>
 #include "Piece.h"
@@ -18,7 +18,7 @@ namespace Eter
 		Tile& operator=(const Tile&) = default;
 
 		// Getter
-		std::stack<Piece> GetValue() const;
+		std::deque<Piece> GetValue() const;
 		Piece GetTopValue() const;
 
 		//Setter
@@ -32,7 +32,7 @@ namespace Eter
 		bool IsPit() const;
 
 	private:
-		std::stack<Piece> m_value;
+		std::deque<Piece> m_value;
 		bool m_isPit;
 	};
 

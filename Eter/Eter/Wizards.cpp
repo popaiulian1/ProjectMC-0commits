@@ -196,7 +196,7 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 
 			// Temporarily store the opponent's card to verify the card underneath
 			Piece opponentCard = tile.GetTopValue();
-			tile.GetValue().pop(); // Remove the opponent's top card
+			tile.GetValue().pop_back(); // Remove the opponent's top card
 
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
 				std::cout << "The opponent's card at (" << row << ", " << col << ") has been removed.\n";
@@ -204,7 +204,7 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 			}
 			else {
 				// Restore the opponent's card since the underlying card isn't the player's
-				tile.GetValue().push(opponentCard);
+				tile.GetValue().push_back(opponentCard);
 				std::cout << "The card underneath is not owned by you. Cannot remove the opponent's card.\n";
 			}
 		}
@@ -249,7 +249,7 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 	}
 	if (smallestCardIt != playerHand.end()) {
 		// Place the player's card on top of the opponent's card
-		tile.GetValue().push(*smallestCardIt);
+		tile.GetValue().push_back(*smallestCardIt);
 
 		// Remove the card from the player's hand
 		char placedCardValue = smallestCardIt->GetValue();
@@ -320,12 +320,12 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 
 	//Moving the stack of cards
 
-	std::stack<Piece> stackToMove = srcTile.GetValue();
+	std::deque<Piece> stackToMove = srcTile.GetValue();
 	std::vector<Piece> cardsInOrder;
 
 	while (!stackToMove.empty()) {
-		cardsInOrder.push_back(stackToMove.top());
-		stackToMove.pop();
+		cardsInOrder.push_back(stackToMove.front());
+		stackToMove.pop_back();
 	}
 
 	for (auto it = cardsInOrder.rbegin(); it != cardsInOrder.rend(); ++it) {
@@ -397,12 +397,12 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 
 	//Moving the stack of cards
 
-	std::stack<Piece> stackToMove = srcTile.GetValue();
+	std::deque<Piece> stackToMove = srcTile.GetValue();
 	std::vector<Piece> cardsInOrder;
 
 	while (!stackToMove.empty()) {
-		cardsInOrder.push_back(stackToMove.top());
-		stackToMove.pop();
+		cardsInOrder.push_back(stackToMove.front());
+		stackToMove.pop_back();
 	}
 
 	for (auto it = cardsInOrder.rbegin(); it != cardsInOrder.rend(); ++it) {

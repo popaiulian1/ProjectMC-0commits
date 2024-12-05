@@ -4,21 +4,21 @@
 #include <stack>
 
 Eter::Tile::Tile(const Piece& piece) {
-	m_value.push(piece);
+	m_value.push_back(piece);
 }
 
 Eter::Tile::Tile(const char& value)
 {
-	m_value.push(Piece(value, true, "", false));
+	m_value.push_back(Piece(value, true, "", false));
 }
 
-std::stack<Eter::Piece> Eter::Tile::GetValue() const {
+std::deque<Eter::Piece> Eter::Tile::GetValue() const {
 	return m_value;
 }
 
 Eter::Piece Eter::Tile::GetTopValue() const {
 	if (!m_value.empty()) {
-		return m_value.top();
+		return m_value.front();
 	}
 	throw std::runtime_error("No piece on tile"); // Handle error if stack is empty
 }
@@ -29,27 +29,27 @@ void Eter::Tile::SetValue(const Piece& piece) {
 	}
 	Piece updatedPiece = piece;
     updatedPiece.SetIsPlaced(true);
-	m_value.push(piece);
+	m_value.push_back(piece);
 }
 
 void Eter::Tile::SetAsPit()
 {
 	m_isPit = true;
 	while (!m_value.empty()) {
-		m_value.pop();
+		m_value.pop_back();
 	}
 }
 
 void Eter::Tile::RemoveStack()
 {
 	while (!m_value.empty()) {
-		m_value.pop();
+		m_value.pop_back();
 	}
 }
 
 Eter::Tile& Eter::Tile::operator=(const Piece& piece)
 {
-	m_value.push(piece); return *this;
+	m_value.push_back(piece); return *this;
 }
 
 bool Eter::Tile::IsPit() const
@@ -59,7 +59,7 @@ bool Eter::Tile::IsPit() const
 
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {
 	if (!tile.m_value.empty()) {
-		const Piece& topPiece = tile.m_value.top();
+		const Piece& topPiece = tile.m_value.front();
 		os << topPiece.GetUserName() << ":" << topPiece.GetValue();
 	}
 	else

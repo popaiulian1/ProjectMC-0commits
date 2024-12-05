@@ -214,7 +214,7 @@ void Eter::Game::Illusion(Player& player)
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
-	if (row < 0 || column < 0 || row >= m_board.GetCurrentSize() || column >= m_board.GetBoard()[row].size())
+	if (row < 0 || column < 0 || row >= m_board.GetCurrentSize() - 1 || column >= m_board.GetBoard()[row].size() - 1)
 	{
 		canPlace = true;
 	}else if (m_board.GetBoard()[row][column].has_value()) {

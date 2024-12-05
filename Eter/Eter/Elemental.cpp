@@ -45,7 +45,7 @@ void Eter::Elemental::Earthquake(const Board& board)
 		for (auto& tile : row)
 		{
 			if (tile.value().GetTopValue().GetValue() == '1')
-				tile.value().GetValue().pop();
+				tile.value().GetValue().pop_back();
 		}
 	}
 
@@ -91,7 +91,7 @@ void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 	for (auto& row : GameBoard) {
 		for (auto& tile : row) {
 			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedPiece().GetValue())
-				tile.value().GetValue().pop();
+				tile.value().GetValue().pop_back();
 		}
 	}
 }
@@ -107,7 +107,7 @@ void Eter::Elemental::Squall(Player& opponent, Board& board)
 					Piece removedPiece(tile.value().GetTopValue()); //add the future removed piece back in the opponents deck
 					opponent.AddPiece(removedPiece);
 
-					tile.value().GetValue().pop(); //remove the piece from the board
+					tile.value().GetValue().pop_back(); //remove the piece from the board
 				}
 			}
 		}
@@ -124,16 +124,16 @@ void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
 				Tile& currentTile = tile.value();
 
 				if (currentTile.GetValue().size() > 1) {
-					std::stack<Piece> pieceStack = currentTile.GetValue();
-					Piece topPiece = pieceStack.top();
+					std::deque<Piece> pieceStack = currentTile.GetValue();
+					Piece topPiece = pieceStack.front();
 
 					currentTile.RemoveStack();
 					currentTile.SetValue(topPiece);
 
 					//returning the other pieces to their owner
 					while (!pieceStack.empty()) {
-						Piece currentPiece = pieceStack.top();
-						pieceStack.pop();
+						Piece currentPiece = pieceStack.front();
+						pieceStack.pop_back();
 						
 						if (currentPiece.GetUserName() == player1.GetUserName()) {
 							player1.AddPiece(currentPiece);

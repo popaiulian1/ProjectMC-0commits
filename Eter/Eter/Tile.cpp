@@ -18,7 +18,7 @@ std::deque<Eter::Piece> Eter::Tile::GetValue() const {
 
 Eter::Piece Eter::Tile::GetTopValue() const {
 	if (!m_value.empty()) {
-		return m_value.front();
+		return m_value.back();
 	}
 	throw std::runtime_error("No piece on tile"); // Handle error if stack is empty
 }
@@ -59,7 +59,7 @@ bool Eter::Tile::IsPit() const
 
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {
 	if (!tile.m_value.empty()) {
-		const Piece& topPiece = tile.m_value.front();
+		const Piece& topPiece = tile.m_value.back();
 		os << topPiece.GetUserName() << ":" << topPiece.GetValue();
 	}
 	else

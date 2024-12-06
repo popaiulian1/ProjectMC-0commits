@@ -21,7 +21,14 @@ namespace Eter {
         Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string m_username);
         Wizards(const Wizards& other);
         ~Wizards() = default;
+
+        //Getters
         const std::string& GetUserName() const;
+        const Eter::MageType& GetMageType() const;
+
+        //Setters
+        void SetMageType(const Eter::MageType& type);
+        void SetUserName(const std::string& username);
 
         // Methods for each MageType, every MageType has two powers, the power will be determined by powerindex
         void fireMasterPower(int powerIndex, int row, int col);

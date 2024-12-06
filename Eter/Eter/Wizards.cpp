@@ -22,6 +22,21 @@ const std::string& Eter::Wizards::GetUserName() const
 	return m_username;
 }
 
+const Eter::MageType& Eter::Wizards::GetMageType() const
+{
+	return m_mageType;
+}
+
+void Eter::Wizards::SetMageType(const Eter::MageType& type)
+{
+	m_mageType = type;
+}
+
+void Eter::Wizards::SetUserName(const std::string& username)
+{
+	m_username = username;
+}
+
 // Determination of Power 
 void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 {
@@ -324,7 +339,7 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 	std::vector<Piece> cardsInOrder;
 
 	while (!stackToMove.empty()) {
-		cardsInOrder.push_back(stackToMove.front());
+		cardsInOrder.push_back(stackToMove.back());
 		stackToMove.pop_back();
 	}
 
@@ -401,7 +416,7 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 	std::vector<Piece> cardsInOrder;
 
 	while (!stackToMove.empty()) {
-		cardsInOrder.push_back(stackToMove.front());
+		cardsInOrder.push_back(stackToMove.back());
 		stackToMove.pop_back();
 	}
 

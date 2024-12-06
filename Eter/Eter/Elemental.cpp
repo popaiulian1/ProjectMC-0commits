@@ -125,14 +125,14 @@ void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
 
 				if (currentTile.GetValue().size() > 1) {
 					std::deque<Piece> pieceStack = currentTile.GetValue();
-					Piece topPiece = pieceStack.front();
+					Piece topPiece = pieceStack.back();
 
 					currentTile.RemoveStack();
 					currentTile.SetValue(topPiece);
 
 					//returning the other pieces to their owner
 					while (!pieceStack.empty()) {
-						Piece currentPiece = pieceStack.front();
+						Piece currentPiece = pieceStack.back();
 						pieceStack.pop_back();
 						
 						if (currentPiece.GetUserName() == player1.GetUserName()) {

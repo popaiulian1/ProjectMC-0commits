@@ -35,10 +35,10 @@ namespace Eter
 		//Methods
 		virtual void StartGame();
 		void PrintWinner(const Player& player) const;
-		void PlayGame();
+		virtual void PlayGame();
 		bool CheckWinner();
 		void TotalScore(Player& player, const Board& board);
-		void Illusion(Player& player);
+		virtual void Illusion(Player& player);
 		bool CheckCompleteRowOrColumn() const;
 		
 		

@@ -90,7 +90,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	else {
 		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
 		{
-			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false);
+			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
 		}
 		else {
 			std::string border = "=======================================================================";

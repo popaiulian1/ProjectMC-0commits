@@ -16,10 +16,13 @@ namespace Eter
 		Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType);
 
 		//Getters
+		Player& GetPlayer1Reference();
 		Player GetPlayer1() const;
+		Player& GetPlayer2Reference();
 		Player GetPlayer2() const;
 		Board GetBoard() const;
 		GameType GetGameType() const;
+		const std::string& GetBluePlayerName() const;
 
 
 		//Setters
@@ -27,6 +30,7 @@ namespace Eter
 		void SetPlayer2(const Player& player);
 		void SetBoard(const Board& board);
 		void SetGameType(const GameType& gameType);
+		void SetBluePlayerName(const std::string& name);
 
 		//Methods
 		virtual void StartGame();
@@ -50,6 +54,7 @@ namespace Eter
 		Board m_board;
 		GameType m_gameType;
 		size_t m_rounds = 1;
+		std::string m_bluePlayerName;
 	};
 }
 

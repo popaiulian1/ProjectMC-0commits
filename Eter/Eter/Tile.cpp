@@ -9,7 +9,7 @@ Eter::Tile::Tile(const Piece& piece) {
 
 Eter::Tile::Tile(const char& value)
 {
-	m_value.push_back(Piece(value, true, "", false));
+	m_value.push_back(Piece(value, true, "", false, false));
 }
 
 std::deque<Eter::Piece> Eter::Tile::GetValue() const {

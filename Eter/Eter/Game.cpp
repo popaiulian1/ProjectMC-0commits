@@ -2,8 +2,6 @@
 #include <iostream>
 #include <regex>
 
-std::string bluePlayerName;
-
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
 	m_player1 = player1;
@@ -26,7 +24,7 @@ void Eter::Game::StartGame()
 			std::cout << "Username of the first player is: ";
 			std::getline(std::cin, UsernamePlayer1);
 			m_player1.SetUserName(UsernamePlayer1);
-			bluePlayerName = m_player1.GetUserName();
+			m_bluePlayerName = m_player1.GetUserName();
 		}
 
 		if (m_player2.GetUserName() == "") {
@@ -69,24 +67,42 @@ void Eter::Game::PlayGame()
 {
 	while (m_rounds <= 3) {
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
-		m_board.PrintBoardForFormatedOutput(bluePlayerName); // Print the board
+		m_board.PrintBoardForFormatedOutput(m_bluePlayerName); // Print the board
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 
-		std::string choice;
-		std::cout << m_currentPlayer->GetUserName() << ", do you want to play your illusion card?" << "\n";
-		std::cin >> choice;
+		char option;
+		std::cout << "                 OPTIONS:       \n";
+		std::cout << "________________________________________________\n";
+		std::cout << "a. Choose piece\n";
+		std::cout << "b. Play illusion\n";
+		std::cout << "c. Play explosion\n";
+		std::cout << "________________________________________________\n";
+		std::cout << "Choose your option: \n";
+		std::cin >> option;
 
-		std::regex YesPattern("yes|Yes|YES");
-		std::regex NoPattern("no|No|NO");
-
-		if (std::regex_match(choice, YesPattern) == true) {
-			if(!m_currentPlayer->GetIllusionPlayed())
+		switch (option) {
+		case 'a': {
+			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+			break;
+		}
+		case 'b': {
+			std::regex YesPattern("yes|Yes|YES");
+			std::regex NoPattern("no|No|NO");
+			if (m_currentPlayer->GetIllusionPlayed() == false)
 				Illusion(*m_currentPlayer);
 			else
 				std::cout << "You have already played your illusion card.\n";
+			break;
 		}
-		else if(std::regex_match(choice, NoPattern) == true)
-			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		case 'c': {
+			std::cout << "To implement";
+			break;
+		}
+		default: {
+			std::cout << "Invalid option. Please choose a valid option.\n";
+			break;
+		}
+		}
 
 		if (m_board.GetCurrentSize() == m_board.GetMaxSize() || CheckCompleteRowOrColumn()) {
 			if (CheckWinner()) {
@@ -216,19 +232,21 @@ void Eter::Game::Illusion(Player& player)
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
-	if (row < 0 || column < 0 || row >= m_board.GetCurrentSize() - 1 || column >= m_board.GetBoard()[row].size() - 1)
+	if (row < 0 || column < 0 || row >= m_board.GetCurrentSize() || column >= m_board.GetBoard()[row].size())
 	{
 		canPlace = true;
 	}else if (m_board.GetBoard()[row][column].has_value()) {
 		canPlace = false;
 	}
+	else
+		canPlace = true;
 	
 	if (canPlace) {
 		player.SetIllusionPlayed(true);
 		m_board.SetTileValue(Position, player.ChoosePiece(), player.GetUserName());
 		row < 0 ? row = 0 : row;
 		column < 0 ? column = 0 : column;
-		m_board.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), true));
+		m_board.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), true, false));
 	}
 	else {
 		std::cout << "You cannot place your illusion card there.\n";
@@ -251,9 +269,19 @@ void Eter::Game::SetBoard(const Board& board)
 	m_board = board;
 }
 
+Eter::Player& Eter::Game::GetPlayer1Reference() 
+{
+	return m_player1;
+}
+
 Eter::Player Eter::Game::GetPlayer1() const
 {
 	return m_player1;
+}
+
+Eter::Player& Eter::Game::GetPlayer2Reference()
+{
+	return m_player2;
 }
 
 Eter::Player Eter::Game::GetPlayer2() const
@@ -271,7 +299,17 @@ Eter::GameType Eter::Game::GetGameType() const
 	return m_gameType;
 }
 
+const std::string& Eter::Game::GetBluePlayerName() const
+{
+	return m_bluePlayerName;
+}
+
 void Eter::Game::SetGameType(const GameType& gameType)
 {
 	m_gameType = gameType;
+}
+
+void Eter::Game::SetBluePlayerName(const std::string& name)
+{
+	m_bluePlayerName = name;
 }

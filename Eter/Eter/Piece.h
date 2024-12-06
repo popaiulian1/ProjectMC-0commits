@@ -7,7 +7,7 @@ namespace Eter {
 
 		//Constructors
 		Piece();
-		Piece(const char& value, const bool& isPlaced, const std::string& username, const bool& isIllusion);
+		Piece(const char& value, const bool& isPlaced, const std::string& username, const bool& isIllusion, const bool& eterCard);
 		Piece(Piece&& other) noexcept;
 		Piece(const Piece& other);
 		Piece& operator=(const Piece& other);
@@ -18,12 +18,14 @@ namespace Eter {
 		bool GetIsPlaced() const;
 		const std::string& GetUserName() const;
 		const bool& GetIsIllusion() const;
+		const bool& GetEterCard() const;
 		
 		//Setters
 		void SetValue(const char& value);
 		void SetIsPlaced(const bool& isPlaced);
 		void SetUserName(const std::string& username);
 		void SetIsIllusion(const bool& isIllusion);
+		void SetEterCard(const bool& eterCard);
 
 		//Methods
 
@@ -32,6 +34,7 @@ namespace Eter {
 		bool m_isPlaced;
 		std::string m_username;
 		bool m_isIllusion;
+		bool m_eterCard;
 	};
 }
 

@@ -35,6 +35,7 @@ namespace Eter {
 	#pragma endregion Methods
 
 	private:
+		static const size_t kDECK_SIZE_DUEL{ 10 }; //define the size of the duel deck
 		Wizards m_wizard;
 	};
 

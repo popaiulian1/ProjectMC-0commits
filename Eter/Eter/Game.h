@@ -19,14 +19,17 @@ namespace Eter
 		Player GetPlayer1() const;
 		Player GetPlayer2() const;
 		Board GetBoard() const;
+		GameType GetGameType() const;
+
 
 		//Setters
 		void SetPlayer1(const Player& player);
 		void SetPlayer2(const Player& player);
 		void SetBoard(const Board& board);
+		void SetGameType(const GameType& gameType);
 
 		//Methods
-		void StartGame();
+		virtual void StartGame();
 		void PrintWinner(const Player& player) const;
 		void PlayGame();
 		bool CheckWinner();

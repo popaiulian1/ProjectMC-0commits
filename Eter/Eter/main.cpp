@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Game.h"
+#include "WizardDuelMode.h"
 #include "json.hpp"
 #include <fstream>
 
@@ -35,7 +36,7 @@ void jsonTestWrite() {
 
 int main() {
 
-	Eter::Game game;
+	Eter::WizardDuelMode game;
 	game.StartGame();
 
 	/*Eter::Board board(Eter::GameType::Practice);

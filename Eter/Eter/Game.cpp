@@ -133,7 +133,9 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 	{
 		for (auto& tile : row)
 		{
-			if (tile.value().GetTopValue().GetUserName() == player.GetUserName())
+			if (tile.value().GetTopValue().GetUserName() == player.GetUserName() && tile.value().GetTopValue().GetIsIllusion())
+				score += 1;
+			else if(tile.value().GetTopValue().GetUserName() == player.GetUserName())
 				score += tile.value().GetTopValue().GetValue() - '0';
 		}
 	}
@@ -262,4 +264,14 @@ Eter::Player Eter::Game::GetPlayer2() const
 Eter::Board Eter::Game::GetBoard() const
 {
 	return m_board;
+}
+
+Eter::GameType Eter::Game::GetGameType() const
+{
+	return m_gameType;
+}
+
+void Eter::Game::SetGameType(const GameType& gameType)
+{
+	m_gameType = gameType;
 }

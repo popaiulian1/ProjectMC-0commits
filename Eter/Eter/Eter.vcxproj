@@ -141,6 +141,7 @@
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="WizardDuelMode.h" />
     <ClInclude Include="Wizards.h" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +152,7 @@
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="WizardDuelMode.cpp" />
     <ClCompile Include="Wizards.cpp" />
   </ItemGroup>
   <ItemGroup>

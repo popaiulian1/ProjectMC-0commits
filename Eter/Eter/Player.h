@@ -6,17 +6,24 @@
 #include "Board.h"
 
 namespace Eter {
-	class Player
-	{
+	
+	class Player {
+	
 	public:
-
 		//Constructors
 		Player();
+		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon);
+
+		//Rule Of Five ======= JUST TESTS
 		~Player() = default;
+
 		Player(const Player&) = default;
 		Player& operator=(const Player& other);
-		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon);
-		//+ player constructor with wizard and element
+
+		/*Player(Player&& other) noexcept;
+		Player& operator=(Player&& other) noexcept;
+
+		void swap(Piece& other) noexcept;*/
 		
 		//Getters
 		const std::string& GetUserName() const;

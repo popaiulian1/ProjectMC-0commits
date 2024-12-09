@@ -1,6 +1,14 @@
 #include "Player.h"
 
 //Constructors
+Eter::Player::Player() {
+    
+    m_username = "";
+    m_score = 0;
+    m_illusionPlayed = false;
+    m_gamesWon = 0;
+}
+
 Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon):
 	m_username{ username }, 
     m_score{ score }, 
@@ -8,14 +16,6 @@ Eter::Player::Player(const std::string& username, const int& score, const std::v
 	m_illusionPlayed{ illusionPlayed },
 	m_gamesWon{ gamesWon }
 {}
-
-Eter::Player::Player()
-{
-	m_username = "";
-	m_score = 0;
-	m_illusionPlayed = false;
-	m_gamesWon = 0;
-}
 
 Eter::Player& Eter::Player::operator=(const Player& other)
 {
@@ -28,6 +28,22 @@ Eter::Player& Eter::Player::operator=(const Player& other)
     }
 	return *this;
 }
+
+//Eter::Player::Player(Player&& other) noexcept
+//{
+//    this->swap(other);
+//}
+//
+//Eter::Player& Eter::Player::operator=(Player&& other) noexcept
+//{
+//    this->swap(other);
+//    return *this;
+//}
+//
+//void Eter::Player::swap(Piece& other) noexcept
+//{
+//    std::swap(*this, other);
+//}
 
 
 //Getters

@@ -103,9 +103,9 @@ void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 	m_illusionPlayed = illusionPlayed;
 }
 
-void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionPlayed)
+void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionAccess)
 {
-    m_powerExplosionAccess = powerExplosionPlayed;
+    m_powerExplosionAccess = powerExplosionAccess;
 }
 
 void Eter::Player::SetGamesWon(const int& gamesWon)

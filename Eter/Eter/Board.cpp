@@ -178,7 +178,7 @@ bool Eter::Board::CheckEmptyTiles()
 	return false;
 }
 
-bool Eter::Board::PowerExplosionAvailability() const
+bool Eter::Board::PowerExplosionAvailability(Player& player1, Player& player2) const
 {
 	size_t fullRows = 0;
 	size_t fullColumns = 0;
@@ -214,15 +214,14 @@ bool Eter::Board::PowerExplosionAvailability() const
 	}
 
 	if (fullRows >= 2 || fullColumns >= 2 || (fullRows >= 1 && fullColumns >= 1)) {
-		return true;
+		return true; // PowerExplosion can be accesd by one of the players 
+		if (m_lastMove.playerUsername == player1.GetUserName()) {
+			player1.SetPowerExplosionAccess(true);
+		}
+		else if (m_lastMove.playerUsername == player2.GetUserName()) {
+			player2.SetPowerExplosionAccess(true);
+		}
 	}
-
-	/*if (m_lastMove.playerUsername == player1.GetUserName()) {
-		player1.SetPowerExplosionAccess(true);
-	}
-	else if (m_lastMove.playerUsername == player2.GetUserName()) {
-		player2.SetPowerExplosionAccess(true);
-	}*/
 
 	return false;
 }
@@ -253,6 +252,11 @@ void Eter::Board::exportBoardToJson(const std::string& filename) const
 	else {
 		std::cerr << "Error opening file\n";
 	}
+}
+
+void Eter::Board::PowerExplosionStart() const
+{
+
 }
 
 

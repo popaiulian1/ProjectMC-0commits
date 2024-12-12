@@ -208,7 +208,7 @@ void Eter::WizardDuelMode::PlayGame()
 	}
 }
 
-//It does not display the illusion on this game mode (i'll check the problem tomorrow)
+//It does not display the illusion on this game mode (i'll check the problem tomorrow)... he never did.... :(
 void Eter::WizardDuelMode::Illusion(Player& player)
 {
 	auto GameBoard = this->GetBoard();

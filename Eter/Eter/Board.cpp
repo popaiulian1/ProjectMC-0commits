@@ -178,53 +178,53 @@ bool Eter::Board::CheckEmptyTiles()
 	return false;
 }
 
-bool Eter::Board::PowerExplosionAvailability(Player& player1, Player& player2) const
-{
-	size_t fullRows = 0;
-	size_t fullColumns = 0;
-
-	for (const auto& row : m_board) {
-		bool isFull = true;
-
-		for (const auto& tile : row) {
-			if (!tile.has_value()) {
-				isFull = false;
-				break;
-			}
-		}
-
-		if (isFull == true) {
-			fullRows += 1;
-		}
-	}
-
-	for (size_t col = 0; col < m_board.size(); ++col) {
-		bool isFull = true;
-
-		for (size_t row = 0; row < m_board.size(); ++row) {
-			if (!m_board[row][col].has_value()) {
-				isFull = false;
-				break;
-			}
-		}
-
-		if (isFull == true) {
-			fullColumns += 1;
-		}
-	}
-
-	if (fullRows >= 2 || fullColumns >= 2 || (fullRows >= 1 && fullColumns >= 1)) {
-		return true; // PowerExplosion can be accesd by one of the players 
-		if (m_lastMove.playerUsername == player1.GetUserName()) {
-			player1.SetPowerExplosionAccess(true);
-		}
-		else if (m_lastMove.playerUsername == player2.GetUserName()) {
-			player2.SetPowerExplosionAccess(true);
-		}
-	}
-
-	return false;
-}
+//bool Eter::Board::PowerExplosionAvailability(Player& player1, Player& player2) const
+//{
+//	size_t fullRows = 0;
+//	size_t fullColumns = 0;
+//
+//	for (const auto& row : m_board) {
+//		bool isFull = true;
+//
+//		for (const auto& tile : row) {
+//			if (!tile.has_value()) {
+//				isFull = false;
+//				break;
+//			}
+//		}
+//
+//		if (isFull == true) {
+//			fullRows += 1;
+//		}
+//	}
+//
+//	for (size_t col = 0; col < m_board.size(); ++col) {
+//		bool isFull = true;
+//
+//		for (size_t row = 0; row < m_board.size(); ++row) {
+//			if (!m_board[row][col].has_value()) {
+//				isFull = false;
+//				break;
+//			}
+//		}
+//
+//		if (isFull == true) {
+//			fullColumns += 1;
+//		}
+//	}
+//
+//	if (fullRows >= 2 || fullColumns >= 2 || (fullRows >= 1 && fullColumns >= 1)) {
+//		return true; // PowerExplosion can be accesd by one of the players 
+//		if (m_lastMove.playerUsername == player1.GetUserName()) {
+//			player1.SetPowerExplosionAccess(true);
+//		}
+//		else if (m_lastMove.playerUsername == player2.GetUserName()) {
+//			player2.SetPowerExplosionAccess(true);
+//		}
+//	}
+//
+//	return false;
+//}
 
 void Eter::Board::exportBoardToJson(const std::string& filename) const
 {

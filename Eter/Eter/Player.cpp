@@ -8,7 +8,6 @@ Eter::Player::Player() {
     m_illusionPlayed = false;
     m_gamesWon = 0;
 }
-
 Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon):
 	m_username{ username }, 
     m_score{ score }, 
@@ -28,22 +27,25 @@ Eter::Player& Eter::Player::operator=(const Player& other)
     }
 	return *this;
 }
-
-//Eter::Player::Player(Player&& other) noexcept
-//{
-//    this->swap(other);
-//}
-//
-//Eter::Player& Eter::Player::operator=(Player&& other) noexcept
-//{
-//    this->swap(other);
-//    return *this;
-//}
-//
-//void Eter::Player::swap(Piece& other) noexcept
-//{
-//    std::swap(*this, other);
-//}
+Eter::Player::Player(Player&& other) noexcept
+{
+    this->swap(other);
+}
+Eter::Player& Eter::Player::operator=(Player&& other) noexcept
+{
+    this->swap(other);
+    return *this;
+}
+void Eter::Player::swap(Player& other) noexcept
+{
+    this->m_username = other.m_username;
+    this->m_score = other.m_score;
+    this->m_pieces = other.m_pieces;
+    this->m_lastPlayedPiece = other.m_lastPlayedPiece;
+    this->m_illusionPlayed = other.m_illusionPlayed;
+    this->m_gamesWon = other.m_gamesWon;
+    this->m_powerExplosionAccess = other.m_powerExplosionAccess;
+}
 
 
 //Getters
@@ -51,67 +53,58 @@ const std::string& Eter::Player::GetUserName() const
 {
     return m_username;
 }
-
 const int& Eter::Player::GetScore() const
 {
 	return m_score;
 }
-
 const std::vector<Eter::Piece>& Eter::Player::GetPieces() const
 {
 	return m_pieces;
 }
-
 const bool& Eter::Player::GetIllusionPlayed() const
 {
     return m_illusionPlayed;
 }
-
 Eter::Piece Eter::Player::GetLastPlayedPiece() const
 {
     return m_lastPlayedPiece;
 }
-
 const bool& Eter::Player::GetPowerExplosionAccess() const
 {
     return m_powerExplosionAccess;
 }
-
 int Eter::Player::GetGamesWon() const
 {
 	return m_gamesWon;
 }
+
 
 //Setters
 void Eter::Player::SetUserName(const std::string& username)
 {
 	m_username = username;
 }
-
 void Eter::Player::SetScore(const int& score)
 {
 	m_score = score;
 }
-
 void Eter::Player::SetPieces(const std::vector<Eter::Piece>& pieces)
 {
 	m_pieces = pieces;
 }
-
 void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 {
 	m_illusionPlayed = illusionPlayed;
 }
-
 void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionAccess)
 {
     m_powerExplosionAccess = powerExplosionAccess;
 }
-
 void Eter::Player::SetGamesWon(const int& gamesWon)
 {
 	m_gamesWon = gamesWon;
 }
+
 
 //Methods
 std::pair<int, int> Eter::Player::Play()

@@ -14,16 +14,16 @@ namespace Eter {
 		Player();
 		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon);
 
-		//Rule Of Five ======= JUST TESTS
+		//Rule Of Five 
 		~Player() = default;
 
 		Player(const Player&) = default;
 		Player& operator=(const Player& other);
 
-		/*Player(Player&& other) noexcept;
+		Player(Player&& other) noexcept;
 		Player& operator=(Player&& other) noexcept;
 
-		void swap(Piece& other) noexcept;*/
+		void swap(Player& other) noexcept;
 		
 		//Getters
 		const std::string& GetUserName() const;

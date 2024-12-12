@@ -1,6 +1,6 @@
 #include "Board.h"
 #include "Piece.h"
-#include <stdexcept>;
+#include <stdexcept>
 #include <iostream>
 
 Eter::Board::Board(const GameType& gameType)

@@ -2,6 +2,16 @@
 #include <iostream>
 #include <regex>
 
+Eter::Game::Game()
+{
+	m_player1 = Player();
+	m_player2 = Player();
+	m_gameType = GameType::Practice;
+	m_currentPlayer = &m_player1;
+	m_rounds = 0;
+	m_bluePlayerName = m_player1.GetUserName();
+}
+
 Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
 {
 	m_player1 = player1;
@@ -161,7 +171,7 @@ void Eter::Game::TotalScore(Player& player, const Board& board)
 bool Eter::Game::CheckCompleteRowOrColumn() const
 {
 	BoardMatrix board = m_board.GetBoard();
-	int maxSize = m_board.GetMaxSize();
+	size_t maxSize = m_board.GetMaxSize();
 
 	// Check rows
 	for (const auto& row : board) {

@@ -9,7 +9,7 @@ namespace Eter
 	public:
 
 		//Constructors
-		Game() = default;
+		Game();
 		~Game() = default;
 		Game(const Game&) = default;
 		Game& operator=(const Game&) = default;

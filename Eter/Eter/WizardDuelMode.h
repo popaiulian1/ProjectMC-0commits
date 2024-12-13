@@ -38,10 +38,10 @@ namespace Eter {
 		void StartGame() override;
 		void PlayGame() override;
 		void Illusion(Player& player) override;
+		void PlayEterCard(Player& Player);
 	#pragma endregion Methods
 
 	private:
-
 	#pragma region Methods
 		int Random(const std::pair<int, int>& distance);
 	#pragma endregion Methods

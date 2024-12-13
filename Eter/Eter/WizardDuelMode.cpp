@@ -152,7 +152,7 @@ void Eter::WizardDuelMode::StartGame()
 
 void Eter::WizardDuelMode::PlayGame()
 { 
-	auto GameBoard = this->GetBoard();
+	auto& GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 	while (m_rounds <= 3) {
@@ -168,13 +168,21 @@ void Eter::WizardDuelMode::PlayGame()
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
 		std::cout << "d. Play wizard\n";
+		std::cout << "e. Play eter card\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
 
 		switch (option) {
 		case 'a': {
-			GameBoard.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+			try {
+				GameBoard.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+			}
+			catch (const std::invalid_argument& e) {
+				size_t deckSize = m_currentPlayer->GetPiecesReference().size();
+				m_currentPlayer->GetPiecesReference().resize(deckSize + 1);
+				m_currentPlayer->GetPiecesReference()[deckSize].SetValue(m_currentPlayer->GetLastPlayedPiece().GetValue());
+			}
 			break;
 		}
 		case 'b': {
@@ -190,6 +198,13 @@ void Eter::WizardDuelMode::PlayGame()
 		}
 		case 'd': {
 			std::cout << m_currentWizard->GetUserName() << " " << static_cast<int>(m_currentWizard->GetMageType()) << "\n";
+			break;
+		}
+		case 'e':{
+			if (m_currentPlayer->GetEterCardPlayed() == false)
+				PlayEterCard(*m_currentPlayer);
+			else
+				std::cout << "You have already played your eter card.\n";
 			break;
 		}
 		default: {
@@ -208,19 +223,19 @@ void Eter::WizardDuelMode::PlayGame()
 	}
 }
 
-//It does not display the illusion on this game mode (i'll check the problem tomorrow)... he never did.... :(
+//It does not display the illusion on this game mode (i'll check the problem tomorrow)... he never did.... :( but i did it now 
 void Eter::WizardDuelMode::Illusion(Player& player)
 {
-	auto GameBoard = this->GetBoard();
+	auto& GameBoard = this->GetBoardReference();
 	const std::pair<int, int>& Position = player.Play();
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
-	if (row < 0 || column < 0 || row >= GameBoard.GetCurrentSize() || column >= GameBoard.GetBoard()[row].size())
+	if (row < 0 || column < 0 || row >= GameBoard.GetCurrentSize()|| column >= GameBoard.GetBoardReference()[row].size())
 	{
 		canPlace = true;
 	}
-	else if (GameBoard.GetBoard()[row][column].has_value()) {
+	else if (GameBoard.GetBoardReference()[row][column].has_value()) {
 		canPlace = false;
 	}
 	else
@@ -237,6 +252,38 @@ void Eter::WizardDuelMode::Illusion(Player& player)
 		std::cout << "You cannot place your illusion card there.\n";
 	}
 }
+
+//Eter card is not impacted by Mage or Elemental Powers (need to check)
+void Eter::WizardDuelMode::PlayEterCard(Player& player)
+{
+	auto& pieces = player.GetPiecesReference();
+	auto& GameBoard = this->GetBoardReference();
+	const std::pair<int, int>& Position = player.Play();
+	int row = Position.first, column = Position.second;
+	bool canPlace = false;
+
+	if (row < 0 || column < 0 || row >= GameBoard.GetCurrentSize() || column >= GameBoard.GetBoardReference()[row].size())
+	{
+		canPlace = true;
+	}
+	else if (GameBoard.GetBoardReference()[row][column].has_value()) {
+		canPlace = false;
+	}
+	else
+		canPlace = true;
+
+	if (canPlace) {
+		player.SetEterCardPlayed(true);
+		GameBoard.SetTileValue(Position, pieces[0].GetValue(), player.GetUserName());
+		pieces.erase(pieces.begin());
+		row < 0 ? row = 0 : row;
+		column < 0 ? column = 0 : column;
+		GameBoard.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), false, true));
+	}		
+	else 
+		std::cout << "You cannot place your eter card there.\n";
+}
+
 
 int Eter::WizardDuelMode::Random(const std::pair<int, int>& distance)
 {

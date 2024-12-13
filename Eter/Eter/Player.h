@@ -12,7 +12,7 @@ namespace Eter {
 	public:
 		//Constructors
 		Player();
-		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon);
+		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const bool& eterCardPlayed, const int& gamesWon);
 
 		//Rule Of Five 
 		~Player() = default;
@@ -29,10 +29,12 @@ namespace Eter {
 		const std::string& GetUserName() const;
 		const int& GetScore() const;
 		const std::vector<Eter::Piece>& GetPieces() const;
+		std::vector<Eter::Piece>& GetPiecesReference(); //Non-const reference
 		const bool& GetIllusionPlayed() const;
 		Piece GetLastPlayedPiece() const;
 		const bool& GetPowerExplosionAccess() const;
 		int GetGamesWon() const;
+		bool GetEterCardPlayed() const;
 
 		//Setters
 		void SetUserName(const std::string& username);
@@ -41,6 +43,7 @@ namespace Eter {
 		void SetIllusionPlayed(const bool& illusionPlayed);
 		void SetPowerExplosionAccess(const bool& powerExplosionAccess);
 		void SetGamesWon(const int& gamesWon);
+		void SetEterCardPlayed(const bool& eterCardPlayed);
 		 
 		//Methods
 		std::pair<int, int> Play(); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
@@ -57,9 +60,10 @@ namespace Eter {
 		int m_score;
 		std::vector<Eter::Piece> m_pieces;
 		Piece m_lastPlayedPiece;
-		bool m_illusionPlayed; //m_faceDownCardPlayed
+		bool m_illusionPlayed; 
 		bool m_powerExplosionAccess;
 		int m_gamesWon;
+		bool m_eterCardPlayed;
 	};
 }
 

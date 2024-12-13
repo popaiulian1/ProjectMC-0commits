@@ -7,23 +7,28 @@ Eter::Player::Player() {
     m_score = 0;
     m_illusionPlayed = false;
     m_gamesWon = 0;
+	m_eterCardPlayed = false;
 }
-Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const int& gamesWon):
+
+Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const bool& eterCardPlayed, const int& gamesWon):
 	m_username{ username }, 
     m_score{ score }, 
     m_pieces{ pieces },
 	m_illusionPlayed{ illusionPlayed },
+	m_eterCardPlayed{ eterCardPlayed },
 	m_gamesWon{ gamesWon }
 {}
 
 Eter::Player& Eter::Player::operator=(const Player& other)
 {
     if (this != &other) {
-		m_username = other.m_username;
-		m_score = other.m_score;
-		m_pieces = other.m_pieces;
-		m_illusionPlayed = other.m_illusionPlayed;
-		m_gamesWon = other.m_gamesWon;
+        m_username = other.m_username;
+        m_score = other.m_score;
+        m_pieces = other.m_pieces;
+        m_illusionPlayed = other.m_illusionPlayed;
+        m_gamesWon = other.m_gamesWon;
+        m_eterCardPlayed = other.m_eterCardPlayed;
+		m_powerExplosionAccess = other.m_powerExplosionAccess;
     }
 	return *this;
 }
@@ -61,6 +66,12 @@ const std::vector<Eter::Piece>& Eter::Player::GetPieces() const
 {
 	return m_pieces;
 }
+
+std::vector<Eter::Piece>& Eter::Player::GetPiecesReference()
+{
+	return m_pieces;
+}
+
 const bool& Eter::Player::GetIllusionPlayed() const
 {
     return m_illusionPlayed;
@@ -78,6 +89,10 @@ int Eter::Player::GetGamesWon() const
 	return m_gamesWon;
 }
 
+bool Eter::Player::GetEterCardPlayed() const
+{
+	return m_eterCardPlayed;
+}
 
 //Setters
 void Eter::Player::SetUserName(const std::string& username)
@@ -105,6 +120,10 @@ void Eter::Player::SetGamesWon(const int& gamesWon)
 	m_gamesWon = gamesWon;
 }
 
+void Eter::Player::SetEterCardPlayed(const bool& eterCardPlayed)
+{
+	m_eterCardPlayed = eterCardPlayed;
+}
 
 //Methods
 std::pair<int, int> Eter::Player::Play()
@@ -130,17 +149,40 @@ char Eter::Player::ChoosePiece()
     std::cout << "DECK :  \n| ";
 	for (Piece piece : m_pieces)
     {
-		std::cout << piece.GetValue() << " | ";
+        if(piece.GetEterCard() == true)
+			std::cout << "E | ";
+        else
+		    std::cout << piece.GetValue() << " | ";
 	}
-    std::cout << std::endl << "INDEX : \n| ";
-	for (int index = 0; index < m_pieces.size(); index++) {
-        std::cout << index << " | ";
-	}
-    std::cout << "\n<=====================================================================>\n";
 
-	std::cout << "Choose by index a piece to play: ";
+    std::cout << std::endl << "INDEX : \n| ";
+    for (size_t index = 0; index < m_pieces.size(); ++index) {
+        if (m_pieces[index].GetEterCard()) {
+            std::cout << "X | "; // Mark the special card as unselectable
+        }
+        else {
+            std::cout << index << " | ";
+        }
+    }
+    std::cout << "\n<=====================================================================>\n";
+    
     int inputIndex;
-	std::cin >> inputIndex;
+    while (true) {
+        std::cout << "Choose by index a piece to play: ";
+        std::cin >> inputIndex;
+
+        // Validate the chosen index
+        if (inputIndex < 0 || inputIndex >= static_cast<int>(m_pieces.size())) {
+            std::cout << "Invalid index. Try again.\n";
+        }
+        else if (m_pieces[inputIndex].GetEterCard()) {
+            std::cout << "Special card cannot be played now. Choose a different card.\n";
+        }
+        else {
+            break; // Valid non-special card chosen
+        }
+    }
+
 	char returnArgument = m_pieces[inputIndex].GetValue();
 	m_lastPlayedPiece = m_pieces[inputIndex];
 	m_pieces.erase(m_pieces.begin() + inputIndex);

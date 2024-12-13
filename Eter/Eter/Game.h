@@ -21,6 +21,7 @@ namespace Eter
 		Player& GetPlayer2Reference();
 		Player GetPlayer2() const;
 		Board GetBoard() const;
+		Board& GetBoardReference();
 		GameType GetGameType() const;
 		const std::string& GetBluePlayerName() const;
 

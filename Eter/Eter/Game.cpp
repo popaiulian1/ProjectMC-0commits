@@ -306,6 +306,11 @@ Eter::Board Eter::Game::GetBoard() const
 	return m_board;
 }
 
+Eter::Board& Eter::Game::GetBoardReference()
+{
+	return m_board;
+}
+
 Eter::GameType Eter::Game::GetGameType() const
 {
 	return m_gameType;

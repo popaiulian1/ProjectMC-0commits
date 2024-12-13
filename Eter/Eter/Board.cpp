@@ -60,7 +60,6 @@ void Eter::Board::SetBoard(const BoardMatrix& board)
 
 void Eter::Board::SetTileValue(const Position& pos, const char& value, const std::string& playerName)
 {
-
 	const auto& [line, column] = pos;
 
 	if (line < 0 || column < 0) {
@@ -88,9 +87,15 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 		std::cout << "Invalid move->Tile position is bigger than max size\n";
 	}
 	else {
-		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value)
+		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && 
+			!m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard())
 		{
 			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
+		}
+		else if (m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard()) {
+			std::string border = "=======================================================================";
+			std::cout << "\n" << border << "\nInvalid move->Eter card cannot be covered\n" << border << "\n";
+			throw std::invalid_argument("Eter card cannot be covered");
 		}
 		else {
 			std::string border = "=======================================================================";
@@ -124,6 +129,9 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 				if (line.value().GetTopValue().GetUserName() == bluePlayerName) {
 					if (line.value().GetTopValue().GetIsIllusion() == true)
 						std::cout << "\033[1;34m" << "I" << "\033[0m ";
+					else if (line.value().GetTopValue().GetEterCard() == true) {
+						std::cout << "\033[1;34m" << "E" << "\033[0m ";
+					}
 					else {
 						std::cout << "\033[1;34m" << line.value().GetTopValue().GetValue() << "\033[0m ";
 					}
@@ -131,6 +139,9 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 				else {
 					if (line.value().GetTopValue().GetIsIllusion() == true)
 						std::cout << "\033[1;31m" << "I" << "\033[0m ";
+					else if (line.value().GetTopValue().GetEterCard() == true) {
+						std::cout << "\033[1;31m" << "E" << "\033[0m ";
+					}
 					else {
 						std::cout << "\033[1;31m" << line.value().GetTopValue().GetValue() << "\033[0m ";
 					}

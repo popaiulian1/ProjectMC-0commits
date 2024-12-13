@@ -36,7 +36,7 @@ void jsonTestWrite() {
 
 int main() {
 
-	Eter::Game game;
+	Eter::WizardDuelMode game;
 	game.StartGame();
 
 	/*Eter::Board board(Eter::GameType::Practice);

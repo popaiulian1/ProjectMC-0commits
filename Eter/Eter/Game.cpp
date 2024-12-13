@@ -2,68 +2,67 @@
 #include <iostream>
 #include <regex>
 
-Eter::Game::Game()
-{
-	m_player1 = Player();
-	m_player2 = Player();
-	m_gameType = GameType::Practice;
-	m_currentPlayer = &m_player1;
-	m_rounds = 0;
-	m_bluePlayerName = m_player1.GetUserName();
-}
+Eter::Game::Game() : m_player1{ Player() }, m_player2{ Player() }, m_board{ Board(GameType::Practice) },
+	m_currentPlayer{ &m_player1 }, m_gameType{ GameType::Practice }, m_rounds{ 0 }, m_bluePlayerName{ m_player1.GetUserName() }
+{}
 
-Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : m_board(board)
-{
-	m_player1 = player1;
-	m_player2 = player2;
-	m_gameType = gameType;
-}
+Eter::Game::Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType) : 
+	m_board(board), m_player1(player1), m_player2(player2), m_gameType(gameType)
+{}
 
 void Eter::Game::StartGame()
 {
 	if (m_gameType == GameType::Practice) {
-
-		m_board = Board(GameType::Practice);
-		std::vector<char> Values = { '1', '1', '2', '2', '3', '3', '4' }; // Define the values of the cards in the practice deck
-		std::vector<Eter::Piece> CardsPractice;
-
-		std::string UsernamePlayer1;
-		std::string UsernamePlayer2;
-
-		if (m_player1.GetUserName() == "") {
-			std::cout << "Username of the first player is: ";
-			std::getline(std::cin, UsernamePlayer1);
-			m_player1.SetUserName(UsernamePlayer1);
-			m_bluePlayerName = m_player1.GetUserName();
-		}
-
-		if (m_player2.GetUserName() == "") {
-			std::cout << "Username of the second player is: ";
-			std::getline(std::cin, UsernamePlayer2);
-			m_player2.SetUserName(UsernamePlayer2);
-		}
-
-		CardsPractice.resize(kDECK_SIZE_PRACTICE); // Resize the practice deck to the size of the practice deck
-
-		int index = 0;
-		for (auto& card : CardsPractice) {
-			card.SetValue(Values[index++]);
-			card.SetIsPlaced(false);
-			card.SetUserName("");
-			card.SetIsIllusion(false);
-		}
-
-		m_player1.SetPieces(CardsPractice);
-		m_player2.SetPieces(CardsPractice);
-		m_player1.SetIllusionPlayed(false);
-		m_player2.SetIllusionPlayed(false);
-		m_player1.SetScore(0);
-		m_player2.SetScore(0);
-		m_player1.SetGamesWon(0);
-		m_player2.SetGamesWon(0);
-
+		InitializePracticeGame();
 		PlayGame();
 	}
+}
+
+void Eter::Game::InitializePracticeGame()
+{
+	m_board = Board(GameType::Practice);
+	std::vector<char> Values = { '1', '1', '2', '2', '3', '3', '4' }; // Define the values of the cards in the practice deck
+	std::vector<Eter::Piece> CardsPractice(kDECK_SIZE_PRACTICE); // Resize the practice deck to the size of the practice deck
+
+	UsernameHandling();
+
+	int index = 0;
+	for (auto& card : CardsPractice) {
+		card.SetValue(Values[index++]);
+		card.SetIsPlaced(false);
+		card.SetUserName("");
+		card.SetIsIllusion(false);
+	}
+
+	m_player1.SetPieces(CardsPractice);
+	m_player2.SetPieces(CardsPractice);
+	ResetPlayerData(m_player1);
+	ResetPlayerData(m_player2);
+}
+
+void Eter::Game::UsernameHandling()
+{
+	std::string username;
+
+	if (m_player1.GetUserName() == "") {
+		std::cout << "Username of the first player is: ";
+		std::getline(std::cin, username);
+		m_player1.SetUserName(username);
+		m_bluePlayerName = m_player1.GetUserName();
+	}
+
+	if (m_player2.GetUserName() == "") {
+		std::cout << "Username of the second player is: ";
+		std::getline(std::cin, username);
+		m_player2.SetUserName(username);
+	}
+}
+
+void Eter::Game::ResetPlayerData(Player& player)
+{
+	player.SetIllusionPlayed(false);
+	player.SetScore(0);
+	player.SetGamesWon(0);
 }
 
 void Eter::Game::PrintWinner(const Player& player) const
@@ -76,7 +75,10 @@ void Eter::Game::PrintWinner(const Player& player) const
 void Eter::Game::PlayGame()
 {
 	while (m_rounds <= 3) {
+
+		//switch players
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
+
 		m_board.PrintBoardForFormatedOutput(m_bluePlayerName); // Print the board
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
 

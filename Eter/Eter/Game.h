@@ -34,6 +34,9 @@ namespace Eter
 
 		//Methods
 		virtual void StartGame();
+		void InitializePracticeGame();
+		void UsernameHandling();
+		void ResetPlayerData(Player& player);
 		void PrintWinner(const Player& player) const;
 		virtual void PlayGame();
 		bool CheckWinner();

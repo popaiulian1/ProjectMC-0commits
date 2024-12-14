@@ -99,7 +99,7 @@ void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerC
 				if (topPiece.GetIsIllusion() && topPiece.GetUserName()==opponent.GetUserName()) {
 					illusionRevealed = true;
 					std::cout << "Illusion revealed at position (" << row << ", " << col << ").\n";
-					//topPiece.RevealIllusion(); 
+					topPiece.SetIsIllusion(false); 
 					break;
 				}
 			}

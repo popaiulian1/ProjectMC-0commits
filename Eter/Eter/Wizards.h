@@ -16,11 +16,14 @@ namespace Eter {
     class Wizards {
     public:
 
-        //Constructors
+        //Constructors + Rule of Five
         Wizards();
         Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string m_username);
         Wizards(const Wizards& other);
         ~Wizards() = default;
+        Wizards(Wizards&& other) noexcept = default;
+        Wizards& operator=(const Wizards& other) = default ;
+        Wizards& operator=(Wizards&& other) noexcept = default;
 
         //Getters
         const std::string& GetUserName() const;

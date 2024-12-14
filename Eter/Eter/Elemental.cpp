@@ -84,6 +84,30 @@ void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 	}
 }
 
+void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerCard)
+{
+	// Need to implement showing the opponent's illusion
+	std::cout << "Choose a position to place your card on the playing field (row, column):\n";
+	int destRow, destCol;
+	std::cin >> destRow >> destCol;
+
+	if (destRow < 0 || destRow >= board.GetCurrentSize() || destCol < 0 || destCol >= board.GetCurrentSize()) {
+		std::cout << "Invalid position. Card placement failed.\n";
+		return;
+	}
+
+	auto& destTileOptional = board.GetBoardReference()[destRow][destCol];
+	if (!destTileOptional || !destTileOptional->GetValue().empty() || destTileOptional->IsPit()) {
+		std::cout << "The chosen position is occupied or a pit. Card placement failed.\n";
+		return;
+	}
+
+	destTileOptional->SetValue(playerCard);
+	std::cout << "Card successfully placed at (" << destRow << ", " << destCol << ").\n";
+
+	m_ElementalCardUsed = true;
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

@@ -29,6 +29,7 @@ namespace Eter {
 
 		//Methods
 
+
 	private:
 		char m_value;
 		bool m_isPlaced;

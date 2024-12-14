@@ -1,4 +1,4 @@
-#include "Elemental.h"
+﻿#include "Elemental.h"
 #include <algorithm>
 #include "Board.h"
 #include "Tile.h"
@@ -86,7 +86,31 @@ void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 
 void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerCard)
 {
-	// Need to implement showing the opponent's illusion
+	bool illusionRevealed = false;
+	auto gameBoard = board.GetBoardReference();
+
+	for (int row = 0; row < board.GetCurrentSize(); ++row) {
+		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+			auto &tileOptional = gameBoard[row][col];
+
+			// First we verify if the optional has any values
+			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
+				Piece topPiece = tileOptional.value().GetTopValue();
+				if (topPiece.GetIsIllusion() && topPiece.GetUserName()==opponent.GetUserName()) {
+					illusionRevealed = true;
+					std::cout << "Illusion revealed at position (" << row << ", " << col << ").\n";
+					//topPiece.RevealIllusion(); 
+					break;
+				}
+			}
+		}
+		if (illusionRevealed) break;
+	}
+
+	if (!illusionRevealed) {
+		std::cout << "No opponent's illusions found.\n";
+	}
+
 	std::cout << "Choose a position to place your card on the playing field (row, column):\n";
 	int destRow, destCol;
 	std::cin >> destRow >> destCol;

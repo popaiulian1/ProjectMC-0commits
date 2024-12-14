@@ -16,7 +16,7 @@ std::deque<Eter::Piece> Eter::Tile::GetValue() const {
 	return m_value;
 }
 
-Eter::Piece Eter::Tile::GetTopValue() const {
+Eter::Piece Eter::Tile::GetTopValue()const {
 	if (!m_value.empty()) {
 		return m_value.back();
 	}

@@ -1,5 +1,6 @@
 #include "Player.h"
 
+
 //Constructors
 Eter::Player::Player() {
     
@@ -9,7 +10,6 @@ Eter::Player::Player() {
     m_gamesWon = 0;
 	m_eterCardPlayed = false;
 }
-
 Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const bool& eterCardPlayed, const int& gamesWon):
 	m_username{ username }, 
     m_score{ score }, 
@@ -19,6 +19,8 @@ Eter::Player::Player(const std::string& username, const int& score, const std::v
 	m_gamesWon{ gamesWon }
 {}
 
+
+//Rule Of Five
 Eter::Player& Eter::Player::operator=(const Player& other)
 {
     if (this != &other) {
@@ -66,12 +68,10 @@ const std::vector<Eter::Piece>& Eter::Player::GetPieces() const
 {
 	return m_pieces;
 }
-
 std::vector<Eter::Piece>& Eter::Player::GetPiecesReference()
 {
 	return m_pieces;
 }
-
 const bool& Eter::Player::GetIllusionPlayed() const
 {
     return m_illusionPlayed;
@@ -88,11 +88,11 @@ int Eter::Player::GetGamesWon() const
 {
 	return m_gamesWon;
 }
-
 bool Eter::Player::GetEterCardPlayed() const
 {
 	return m_eterCardPlayed;
 }
+
 
 //Setters
 void Eter::Player::SetUserName(const std::string& username)
@@ -119,11 +119,11 @@ void Eter::Player::SetGamesWon(const int& gamesWon)
 {
 	m_gamesWon = gamesWon;
 }
-
 void Eter::Player::SetEterCardPlayed(const bool& eterCardPlayed)
 {
 	m_eterCardPlayed = eterCardPlayed;
 }
+
 
 //Methods
 std::pair<int, int> Eter::Player::Play()

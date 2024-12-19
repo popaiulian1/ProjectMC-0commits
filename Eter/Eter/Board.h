@@ -55,9 +55,7 @@ namespace Eter {
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
 		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
-		//bool PowerExplosionAvailability(Player& player1, Player& player2) const; //Checks if a Power Explosion can be played
 		void exportBoardToJson(const std::string& filename) const;
-		void PowerExplosionStart() const; // TO DISCUSS IF POWEREXPLOSION NEEDS TO BE A CLASS
 
 	private:
 		void IncreaseBoardForNegativeIndexes(const Position& pos);

@@ -80,10 +80,10 @@ Eter::Piece Eter::Player::GetLastPlayedPiece() const
 {
     return m_lastPlayedPiece;
 }
-const bool& Eter::Player::GetPowerExplosionAccess() const
-{
-    return m_powerExplosionAccess;
-}
+//const bool& Eter::Player::GetPowerExplosionAccess() const
+//{
+//    return m_powerExplosionAccess;
+//}
 int Eter::Player::GetGamesWon() const
 {
 	return m_gamesWon;
@@ -111,10 +111,10 @@ void Eter::Player::SetIllusionPlayed(const bool& illusionPlayed)
 {
 	m_illusionPlayed = illusionPlayed;
 }
-void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionAccess)
-{
-    m_powerExplosionAccess = powerExplosionAccess;
-}
+//void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionAccess)
+//{
+//    m_powerExplosionAccess = powerExplosionAccess;
+//}
 void Eter::Player::SetGamesWon(const int& gamesWon)
 {
 	m_gamesWon = gamesWon;

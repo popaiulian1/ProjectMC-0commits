@@ -189,6 +189,48 @@ bool Eter::Board::CheckEmptyTiles()
 	return false;
 }
 
+bool Eter::Board::PowerExplosionAvailability() const
+{
+	size_t fullRows = 0;
+	size_t fullCols = 0;
+
+	for (const auto& row : m_board) {
+		bool isFull = true;
+
+		for (const auto& tile : row) {
+			if (!tile.has_value()) {
+				isFull = false;
+				break;
+			}
+		}
+
+		if (isFull == true) {
+			fullRows++;
+		}
+	}
+
+	for (const auto& col : m_board) {
+		bool isFull = true;
+
+		for (const auto& tile : col) {
+			if (!tile.has_value()) {
+				isFull = false;
+				break;
+			}
+		}
+
+		if (isFull == true) {
+			fullCols++;
+		}
+	}
+
+	if (fullRows == 2 || fullCols == 2 || (fullRows == 1 && fullCols == 1)) {
+		return true;
+	}
+
+	return false;
+}
+
 void Eter::Board::exportBoardToJson(const std::string& filename) const
 {
 	nlohmann::json j_board;

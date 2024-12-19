@@ -55,6 +55,7 @@ namespace Eter {
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
 		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
+		bool PowerExplosionAvailability() const;
 		void exportBoardToJson(const std::string& filename) const;
 
 	private:

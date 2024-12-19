@@ -17,14 +17,17 @@ namespace Eter {
 		//Getters
 		Player* GetTriggeringPlayer() const;
 		Matrix GetAffectedTiles() const;
+		bool GetWasUsed() const;
 
 		//Setters
 		void SetTriggeringPlayer(Player* triggeringPlayer);
 		void SetAffectedTiles(const Matrix& affectedTiles);
+		void SetWasUsed(const bool& wasUsed);
 
 	private:
 		Player* m_triggeringPlayer;
 		Matrix m_affectedTiles;
+		bool m_wasUsed;
 	};
 }
 

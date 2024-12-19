@@ -42,6 +42,9 @@
     <ClInclude Include="WizardDuelMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PowerExplosion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WizardDuelMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerExplosion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -248,27 +248,34 @@ void Eter::Board::exportBoardToJson(const std::string& filename) const
 {
 	nlohmann::json j_board;
 
-	//(TO DO) add the whole stack of the tile to the json file
-	for (size_t i = 0; i < m_board.size(); ++i) {
-		for (size_t j = 0; j < m_board[i].size(); ++j) {
-			if (m_board[i][j].has_value()) {
-				j_board["board"][std::to_string(i)][std::to_string(j)] = m_board[i][j].value().GetTopValue().GetValue();
+	j_board["maxSize"] = m_maxSize;
+	j_board["currentSize"] = m_board.size();
+	j_board["lastMove"] = {
+		{"playerUsername", m_lastMove.playerUsername },
+		{ "row", m_lastMove.row },
+		{ "column", m_lastMove.column}
+	};
+
+	j_board["board"] = nlohmann::json::array();
+
+	for (const auto& row : m_board)
+	{
+		nlohmann::json j_row = nlohmann::json::array();
+		for (const auto& tile : row) {
+			if (tile.has_value()) {
+				j_row.push_back(tile.value());
 			}
 			else {
-				j_board["board"][std::to_string(i)][std::to_string(j)] = kEMPTY_BOARD_CELL;
+				j_row.push_back(nullptr);
 			}
 		}
+		j_board["board"].push_back(j_row);
 	}
 
+	//Write to file here
 	std::ofstream file(filename);
-
 	if (file.is_open()) {
-		file << j_board.dump(4) << std::endl;
-		file.close();
-		std::cout << "Board saved";
-	}
-	else {
-		std::cerr << "Error opening file\n";
+		file << j_board.dump(4);
 	}
 }
 

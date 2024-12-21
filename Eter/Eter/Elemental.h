@@ -54,6 +54,7 @@ namespace Eter {
 		void Rock(Board& board, Player& player, Player& opponent);
 		void Flame(Player& opponent, Board& board, const Piece& playerCard);
 		void Fire(Board& board, Player& player1, Player& player2);
+		void Ash(Board& board, Player& player);
 
 	private:
 		Board m_board;

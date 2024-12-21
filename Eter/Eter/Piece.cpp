@@ -118,5 +118,14 @@ void Eter::Piece::SetIsEliminated(const bool& isEliminated)
 	m_isEliminated = isEliminated;
 }
 
-
-
+void Eter::to_json(nlohmann::json& j, const Piece& p)
+{
+	j = nlohmann::json{
+		{"value", p.GetValue()-'0'}, // convert the char to an int
+		{"isPlaced", p.GetIsPlaced()},
+		{"username", p.GetUserName()},
+		{"isIllusion", p.GetIsIllusion()},
+		{"eterCard", p.GetEterCard()},
+		{"isEliminated", p.GetIsEliminated()}
+	};
+}

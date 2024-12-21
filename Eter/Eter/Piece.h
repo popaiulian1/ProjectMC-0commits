@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
+#include <json.hpp>
+
 namespace Eter {
+
 	class Piece
 	{
 	public:
@@ -31,7 +34,6 @@ namespace Eter {
 
 		//Methods
 
-
 	private:
 		char m_value;
 		bool m_isPlaced;
@@ -40,6 +42,8 @@ namespace Eter {
 		bool m_eterCard;
 		bool m_isEliminated;
 	};
+
+	void to_json(nlohmann::json& j, const Piece& p);
 }
 
 

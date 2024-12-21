@@ -36,18 +36,20 @@ void jsonTestWrite() {
 
 int main() {
 
-	Eter::WizardDuelMode game;
-	game.StartGame();
+	/*Eter::WizardDuelMode game;
+	game.StartGame();*/
 
-	/*Eter::Board board(Eter::GameType::Practice);
+	Eter::Board board(Eter::GameType::Practice);
 
-	board.SetTileValue({ 0, 0 }, 'X', "Player1");
-	board.SetTileValue({ 0, 1 }, 'X', "Player1");
-	board.SetTileValue({ 0, 2 }, 'X', "Player1");
-	board.SetTileValue({ 1, 2 }, 'X', "Player1");
+	board.SetTileValue({ 0, 0 }, '1', "Player1");
+	board.SetTileValue({ 0, 1 }, '2', "Player1");
+	board.SetTileValue({ 0, 2 }, '3', "Player1");
+	board.SetTileValue({ 0, 0 }, '4', "Player2");
+	board.SetTileValue({ 1, 2 }, '4', "Player1");
 
-	board.exportBoardToJson("boardSave.json");*/
+	board.exportBoardToJson("boardSave.json");
 	
+	board.PrintBoardForFormatedOutput("Player1");
 
 	/*jsonTestRead();
 	jsonTestWrite();*/

@@ -3,6 +3,7 @@
 #include <ostream>
 #include <optional>
 #include "Piece.h"
+
 namespace Eter
 {
 	class Tile
@@ -37,5 +38,6 @@ namespace Eter
 		bool m_isPit;
 	};
 
+	void to_json(nlohmann::json& j, const Tile& t);
 }
 

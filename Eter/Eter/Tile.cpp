@@ -65,6 +65,7 @@ bool Eter::Tile::IsPit() const
 	return m_isPit;
 }
 
+
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {
 	if (!tile.m_value.empty()) {
 		const Piece& topPiece = tile.m_value.back();
@@ -73,4 +74,12 @@ std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {
 	else
 		os << "Empty tile\n";
 	return os;
+}
+
+void Eter::to_json(nlohmann::json& j, const Tile& t)
+{
+	j = nlohmann::json{
+		{"value", t.GetValue()},
+		{"isPit", t.IsPit()}
+	};
 }

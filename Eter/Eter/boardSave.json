@@ -1,14 +1,77 @@
 {
-    "board": {
-        "0": {
-            "0": 88,
-            "1": 88,
-            "2": 88
-        },
-        "1": {
-            "0": 95,
-            "1": 95,
-            "2": 88
-        }
-    }
+    "board": [
+        [
+            {
+                "isPit": false,
+                "value": [
+                    {
+                        "eterCard": false,
+                        "isEliminated": false,
+                        "isIllusion": false,
+                        "isPlaced": true,
+                        "username": "Player1",
+                        "value": 1
+                    },
+                    {
+                        "eterCard": false,
+                        "isEliminated": false,
+                        "isIllusion": false,
+                        "isPlaced": true,
+                        "username": "Player2",
+                        "value": 4
+                    }
+                ]
+            },
+            {
+                "isPit": false,
+                "value": [
+                    {
+                        "eterCard": false,
+                        "isEliminated": false,
+                        "isIllusion": false,
+                        "isPlaced": true,
+                        "username": "Player1",
+                        "value": 2
+                    }
+                ]
+            },
+            {
+                "isPit": true,
+                "value": [
+                    {
+                        "eterCard": false,
+                        "isEliminated": false,
+                        "isIllusion": false,
+                        "isPlaced": true,
+                        "username": "Player1",
+                        "value": 3
+                    }
+                ]
+            }
+        ],
+        [
+            null,
+            null,
+            {
+                "isPit": true,
+                "value": [
+                    {
+                        "eterCard": false,
+                        "isEliminated": false,
+                        "isIllusion": false,
+                        "isPlaced": true,
+                        "username": "Player1",
+                        "value": 4
+                    }
+                ]
+            }
+        ]
+    ],
+    "currentSize": 2,
+    "lastMove": {
+        "column": 0,
+        "playerUsername": "",
+        "row": 0
+    },
+    "maxSize": 3
 }

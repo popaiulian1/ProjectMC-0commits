@@ -12,6 +12,7 @@ namespace Eter {
 
 		//Constructor
 		PowerExplosion() = default;
+		PowerExplosion(const Matrix& affetedTiles);
 		~PowerExplosion() = default;
 
 		//Getters
@@ -24,9 +25,13 @@ namespace Eter {
 		void SetAffectedTiles(const Matrix& affectedTiles);
 		void SetWasUsed(const bool& wasUsed);
 
+		//Methods
+		void Trigger();
+		Matrix Rotate90Degrees();
+
 	private:
 		Player* m_triggeringPlayer;
-		Matrix m_affectedTiles;
+		Matrix m_affectedTiles;	
 		bool m_wasUsed;
 	};
 }

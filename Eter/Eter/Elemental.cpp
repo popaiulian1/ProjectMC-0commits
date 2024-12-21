@@ -174,7 +174,7 @@ void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 
 					// Eliminating the card from the board
 					if (!tileOptional->GetValue().empty()) {
-						tileOptional->GetValue().pop_front(); 
+						tileOptional->GetValue().pop_back(); 
 					}
 
 				}
@@ -184,6 +184,37 @@ void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 
 	std::cout << "All cards with value '" << chosenValue << "' have been returned to their owners.\n";
 
+}
+
+void Eter::Elemental::Ash(Board& board, Player& player)
+{
+	auto& playerPieces = player.GetPiecesReference();
+	auto& gameBoard = board.GetBoardReference();
+
+	// Verify if the player has eliminated cards 
+	auto it = std::find_if(playerPieces.begin(), playerPieces.end(), [](const Piece& piece) {
+		return piece.GetIsEliminated();
+	});
+
+	if (it != playerPieces.end()) {
+		Piece& eliminatedPiece = *it;
+		std::cout << "Where yould you like to place your card(row, column)?\n";
+		int row, col;
+		std::cin >> row >> col;
+		if (row < 0 || row >= board.GetCurrentSize() || col < 0 || col >= board.GetCurrentSize() || gameBoard[row][col].has_value()) {
+			std::cout << "Invalid position. Card placement failed.\n";
+			return;
+		}
+		gameBoard[row][col] = Tile(eliminatedPiece);
+
+		eliminatedPiece.SetIsEliminated(false);
+		eliminatedPiece.SetIsPlaced(true);
+
+		std::cout << "Card '" << eliminatedPiece.GetValue() << "' placed at (" << row << ", " << col << ").\n";
+	}
+	else 
+		std::cout << "No eliminated cards available to play.\n";
+	
 }
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)

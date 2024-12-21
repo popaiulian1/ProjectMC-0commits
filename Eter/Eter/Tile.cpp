@@ -23,6 +23,14 @@ Eter::Piece Eter::Tile::GetTopValue()const {
 	throw std::runtime_error("No piece on tile"); // Handle error if stack is empty
 }
 
+Eter::Piece& Eter::Tile::GetTopValueRef()
+{
+	if (!m_value.empty()) {
+		return m_value.back();
+	}
+	throw std::runtime_error("No piece on tile"); // Handle error if stack is empty
+}
+
 void Eter::Tile::SetValue(const Piece& piece) {
 	if (m_isPit) {
 		throw std::runtime_error("Cannot set value on a pit tile");

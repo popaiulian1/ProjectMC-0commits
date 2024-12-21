@@ -30,7 +30,7 @@ Eter::Player& Eter::Player::operator=(const Player& other)
         m_illusionPlayed = other.m_illusionPlayed;
         m_gamesWon = other.m_gamesWon;
         m_eterCardPlayed = other.m_eterCardPlayed;
-		m_powerExplosionAccess = other.m_powerExplosionAccess;
+		//m_powerExplosionAccess = other.m_powerExplosionAccess;
     }
 	return *this;
 }
@@ -51,7 +51,7 @@ void Eter::Player::swap(Player& other) noexcept
     this->m_lastPlayedPiece = other.m_lastPlayedPiece;
     this->m_illusionPlayed = other.m_illusionPlayed;
     this->m_gamesWon = other.m_gamesWon;
-    this->m_powerExplosionAccess = other.m_powerExplosionAccess;
+    //this->m_powerExplosionAccess = other.m_powerExplosionAccess;
 }
 
 

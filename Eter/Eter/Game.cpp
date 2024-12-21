@@ -98,8 +98,8 @@ void Eter::Game::PlayGame()
 			break;
 		}
 		case 'b': {
-			std::regex YesPattern("yes|Yes|YES");
-			std::regex NoPattern("no|No|NO");
+			/*std::regex YesPattern("yes|Yes|YES");
+			std::regex NoPattern("no|No|NO");*/
 			if (m_currentPlayer->GetIllusionPlayed() == false)
 				Illusion(*m_currentPlayer);
 			else

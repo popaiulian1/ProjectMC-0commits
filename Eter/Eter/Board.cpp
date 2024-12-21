@@ -88,7 +88,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 	}
 	else {
 		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && 
-			!m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard())
+			!m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard() && !m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion())
 		{
 			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
 		}
@@ -96,6 +96,19 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 			std::string border = "=======================================================================";
 			std::cout << "\n" << border << "\nInvalid move->Eter card cannot be covered\n" << border << "\n";
 			throw std::invalid_argument("Eter card cannot be covered");
+		}
+		else if (m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion() && m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() >= value) {
+			auto& topValue = m_board[adjustedLine][adjustedColumn]->GetTopValueRef();
+			topValue.SetIsIllusion(false);
+			std::string border = "=======================================================================";
+			std::cout << "\n" << border << "\n" << topValue.GetValue() << " is greater than or equal to " << value << "\n" << border << "\n";
+		}
+		else if (m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion() && m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value) {
+			auto& topValue = m_board[adjustedLine][adjustedColumn]->GetTopValueRef();
+			topValue.SetIsIllusion(false);
+			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
+			std::string border = "=======================================================================";
+			std::cout << "\n" << border << "\n" << topValue.GetValue() << " is not greater than " << value << "\n" << border << "\n";
 		}
 		else {
 			std::string border = "=======================================================================";

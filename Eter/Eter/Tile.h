@@ -19,7 +19,8 @@ namespace Eter
 
 		// Getter
 		std::deque<Piece> GetValue() const;
-		Piece GetTopValue()const;
+		Piece GetTopValue() const;
+		Piece& GetTopValueRef();
 
 		//Setter
 		void SetValue(const Piece& piece);

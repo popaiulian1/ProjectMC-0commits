@@ -132,6 +132,60 @@ void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerC
 	m_ElementalCardUsed = true;
 }
 
+void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
+{
+	auto gameBoard = board.GetBoardReference();
+	std::unordered_map<char, int> cardCounts;
+
+	// Counting the visible cards on the board
+	for (int row = 0; row < board.GetCurrentSize(); ++row) {
+		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
+				char topCardValue = tileOptional->GetTopValue().GetValue();
+				++cardCounts[topCardValue];
+			}
+		}
+	}
+
+	char chosenValue;
+	std::cout << "Choose a card value (with at least 2 visible cards on the board): ";
+	std::cin >> chosenValue;
+
+	if (cardCounts[chosenValue] < 2) {
+		std::cout << "Not enough cards with value '" << chosenValue << "' on the board.\n";
+		return;
+	}
+	// Eliminating cards witch chosen value and returning them to the owner
+	for (int row = 0; row < board.GetCurrentSize(); ++row) {
+		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
+				Piece topPiece = tileOptional.value().GetTopValue();
+				if (topPiece.GetValue() == chosenValue) {
+					// Verify the owner
+					if (topPiece.GetUserName() == player1.GetUserName()) {
+						// Returning the card
+						player1.AddPiece(topPiece);
+					}
+					else if (topPiece.GetUserName() == player2.GetUserName()) {
+						player2.AddPiece(topPiece);
+					}
+
+					// Eliminating the card from the board
+					if (!tileOptional->GetValue().empty()) {
+						tileOptional->GetValue().pop_front(); 
+					}
+
+				}
+			}
+		}
+	}
+
+	std::cout << "All cards with value '" << chosenValue << "' have been returned to their owners.\n";
+
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

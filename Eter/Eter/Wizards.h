@@ -10,7 +10,8 @@ namespace Eter {
         FIRE,
         EARTH,
         AIR,
-        WATER
+        WATER,
+        UNKNOWN
     };
 
     class Wizards {
@@ -28,10 +29,12 @@ namespace Eter {
         //Getters
         const std::string& GetUserName() const;
         const Eter::MageType& GetMageType() const;
+		const std::string toStringMageType(MageType mageType) const;
 
         //Setters
         void SetMageType(const Eter::MageType& type);
         void SetUserName(const std::string& username);
+        void SetBoardForMage(Board* board);
 
         // Methods for each MageType, every MageType has two powers, the power will be determined by powerindex
         void fireMasterPower(int powerIndex, int row, int col);

@@ -12,6 +12,8 @@ Eter::Game::Game(const Player& player1, const Player& player2, const Board& boar
 
 void Eter::Game::StartGame()
 {
+	std::cout << "This is the Practice Mode\n";
+	std::cout << "_____________________________\n";
 	if (m_gameType == GameType::Practice) {
 		InitializePracticeGame();
 		PlayGame();

@@ -86,7 +86,7 @@ void Eter::WizardDuelMode::StartGame()
 		SetGameType(Eter::GameType::Duel);
 	
 	SetBoard(Board(Eter::GameType::Duel));
-	auto GameBoard = this->GetBoard().GetBoardReference();
+	auto GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
@@ -167,7 +167,7 @@ void Eter::WizardDuelMode::PlayGame()
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
-		std::cout << "d. Play wizard\n";
+		std::cout << "d. Play mage\n";
 		std::cout << "e. Play eter card\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
@@ -197,7 +197,7 @@ void Eter::WizardDuelMode::PlayGame()
 			break;
 		}
 		case 'd': {
-			std::cout << m_currentWizard->GetUserName() << " " << static_cast<int>(m_currentWizard->GetMageType()) << "\n";
+			HandleWizzardType();
 			break;
 		}
 		case 'e':{
@@ -282,6 +282,92 @@ void Eter::WizardDuelMode::PlayEterCard(Player& player)
 	}		
 	else 
 		std::cout << "You cannot place your eter card there.\n";
+}
+
+void Eter::WizardDuelMode::HandleWizzardType()
+{
+	auto GameBoard = this->GetBoardReference();
+	m_currentWizard->SetBoardForMage(&GameBoard);
+
+	std::cout << m_currentWizard->GetUserName() << "'s mage type is: " << m_currentWizard->toStringMageType(m_currentWizard->GetMageType()) << "\n";
+	switch (m_currentWizard->GetMageType()) {
+	case MageType::FIRE: {
+
+		std::cout << "Choose your power: \n";
+		std::cout << "1. Eliminate opponent card.\n";
+		std::cout << "2. Eliminate a row or a column.\n";
+
+		int power;
+		std::cin >> power;
+
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		int row = Position.first, column = Position.second;
+		if (power == 1)
+			m_currentWizard->fireMasterPower(power, row, column);
+		else if (power == 2)
+			m_currentWizard->fireMasterPower(power, row, column);
+		break;
+	}
+	case MageType::EARTH: {
+
+		std::cout << "Choose your power: \n";
+		std::cout << "1. Cover opponent card.\n";
+		std::cout << "2. Create pit.\n";
+
+		int power;
+		std::cin >> power;
+
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		int row = Position.first, column = Position.second;
+		if (power == 1)
+			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
+		else if (power == 2)
+			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
+		break;
+	}
+	case MageType::AIR: {
+
+		std::cout << "Choose your power: \n";
+		std::cout << "1. Move own stack.\n";
+		std::cout << "2. Gain extra ether card.\n";
+
+		int power;
+		std::cin >> power;
+
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		int row = Position.first, column = Position.second;
+		if (power == 1)
+			m_currentWizard->airMasterPower(power, row, column);
+		else if (power == 2)
+			m_currentWizard->airMasterPower(power, row, column);
+		break;
+	}
+	case MageType::WATER: {
+
+		std::cout << "Choose your power: \n";
+		std::cout << "1. Move opponent stack.\n";
+		std::cout << "2. Move EdgeRowCol.\n";
+
+		int power;
+		std::cin >> power;
+
+		const std::pair<uint8_t, uint8_t>& Position1 = m_currentPlayer->Play();
+		int srcRow = Position1.first, srcColumn = Position1.second;
+
+		const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play();
+		int destRow = Position2.first, destColumn = Position2.second;
+
+		if (power == 1)
+			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
+		else if (power == 2)
+			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
+		break;
+	}
+	case MageType::UNKNOWN: {
+		std::cout << "Unknown mage";
+		break;
+	}
+	}
 }
 
 

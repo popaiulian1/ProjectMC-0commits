@@ -27,6 +27,22 @@ const Eter::MageType& Eter::Wizards::GetMageType() const
 	return m_mageType;
 }
 
+const std::string Eter::Wizards::toStringMageType(MageType mageType) const
+{
+	switch (mageType) {
+	case MageType::FIRE:  
+		return "FIRE";
+	case MageType::EARTH: 
+		return "EARTH";
+	case MageType::AIR:   
+		return "AIR";
+	case MageType::WATER: 
+		return "WATER";
+	default:              
+		return "UNKNOWN";
+	}
+}
+
 void Eter::Wizards::SetMageType(const Eter::MageType& type)
 {
 	m_mageType = type;
@@ -35,6 +51,11 @@ void Eter::Wizards::SetMageType(const Eter::MageType& type)
 void Eter::Wizards::SetUserName(const std::string& username)
 {
 	m_username = username;
+}
+
+void Eter::Wizards::SetBoardForMage(Board* board)
+{
+	m_board = board;
 }
 
 // Determination of Power 
@@ -366,7 +387,7 @@ void Eter::Wizards::gainExtraEtherCard(int row, int col)
 		return;
 	}
 
-	Piece magePowerCard('E', false, this->GetUserName(), false, false);
+	Piece magePowerCard('E', false, this->GetUserName(), false, true);
 
 	// Placing the Eter card
 	Tile newTile;

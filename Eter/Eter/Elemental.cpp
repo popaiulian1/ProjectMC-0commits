@@ -217,16 +217,46 @@ void Eter::Elemental::Ash(Board& board, Player& player)
 	
 }
 
-void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
+void Eter::Elemental::Spark(Board& board, Player& player)
 {
-	auto GameBoard = board.GetBoard();
+	auto& gameBoard = board.GetBoardReference();
+	const auto& playerName = player.GetUserName();
 
-	for (auto& row : GameBoard) {
-		for (auto& tile : row) {
-			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedPiece().GetValue())
-				tile.value().GetValue().pop_back();
+	std::vector<std::pair<int, int>> coveredCardsPositions;
+
+	// We stack in a vector the cards that are ours and under the opponent's card
+	for (int row = 0; row <board.GetCurrentSize(); ++row) {
+		for (int col = 0; col <board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value() && tileOptional->GetValue().size() > 1 && tileOptional.value().GetTopValue().GetUserName()!=player.GetUserName()) {
+				auto stack = tileOptional->GetValue();
+				for (size_t i = 0; i < stack.size() - 1; ++i) 
+					if (stack[i].GetUserName() == playerName) {
+						coveredCardsPositions.emplace_back(stack[i]);
+						break;
+					}
+				
+			}
 		}
 	}
+	if (coveredCardsPositions.empty()) {
+		std::cout << "No covered cards belonging to you were found.\n";
+		return;
+	}
+	std::cout << "Covered cards found at the following positions:\n";
+	for (size_t i = 0; i < coveredCardsPositions.size(); ++i) {
+		std::cout << i + 1 << ": (" << coveredCardsPositions[i].first << ", " << coveredCardsPositions[i].second << ")\n";
+	}
+
+	std::cout << "Choose a card to move by entering the corresponding number: ";
+	int choice;
+	std::cin >> choice;
+
+	if (choice < 1 || choice > coveredCardsPositions.size()) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+	
 }
 
 void Eter::Elemental::Squall(Player& opponent, Board& board)

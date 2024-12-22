@@ -259,6 +259,18 @@ void Eter::Elemental::Spark(Board& board, Player& player)
 	
 }
 
+void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
+{
+	auto GameBoard = board.GetBoard();
+
+	for (auto& row : GameBoard) {
+		for (auto& tile : row) {
+			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedPiece().GetValue())
+				tile.value().GetValue().pop_back();
+		}
+	}
+}
+
 void Eter::Elemental::Squall(Player& opponent, Board& board)
 {
 	auto gameBoard = board.GetBoard();

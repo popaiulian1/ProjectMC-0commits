@@ -30,6 +30,7 @@ namespace Eter {
         const std::string& GetUserName() const;
         const Eter::MageType& GetMageType() const;
 		const std::string toStringMageType(MageType mageType) const;
+		const Board* GetBoardWizard() const;
 
         //Setters
         void SetMageType(const Eter::MageType& type);

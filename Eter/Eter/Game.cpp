@@ -140,7 +140,7 @@ bool Eter::Game::CheckWinner()
 			return true;
 		}
 	}
-	else if (m_board.CheckEmptyTiles() == false) {
+	else if (m_board.CheckEmptyTiles() == false && m_board.GetBoard()[0].size() == m_board.GetMaxSize() && m_board.GetCurrentSize() == m_board.GetMaxSize()) {
 		TotalScore(m_player1, m_board);
 		TotalScore(m_player2, m_board);
 		if (m_player1.GetScore() > m_player2.GetScore()) {

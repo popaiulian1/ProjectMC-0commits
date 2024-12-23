@@ -13,13 +13,14 @@ namespace Eter
 		//Constructors
 		Tile() : m_isPit{ false } {};
 		~Tile() = default;
-		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{false} {}
+		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{tile.m_isPit} {}
 		Tile(const Piece& piece); // Constructor to initialize with a Piece
 		Tile(const char& value); // Constructor to initialize with a char no username provided add MANUALLY!!!
 		Tile& operator=(const Tile&) = default;
 
 		// Getter
 		std::deque<Piece> GetValue() const;
+		std::deque<Piece>& GetValueRef();
 		Piece GetTopValue() const;
 		Piece& GetTopValueRef();
 
@@ -35,7 +36,7 @@ namespace Eter
 
 	private:
 		std::deque<Piece> m_value;
-		bool m_isPit;
+		bool m_isPit = false;
 	};
 
 	void to_json(nlohmann::json& j, const Tile& t);

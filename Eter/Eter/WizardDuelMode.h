@@ -13,10 +13,10 @@ namespace Eter {
 		WizardDuelMode(
 			const Player& player1,
 			const Player& player2,
-			const Board& board,
+			Board& board,
 			const GameType& gameType,
-			const Wizards& wizardPlayer1,
-			const Wizards& wizardPlayer2
+			Wizards& wizardPlayer1,
+			Wizards& wizardPlayer2
 		);
 		~WizardDuelMode() = default;
 		WizardDuelMode(WizardDuelMode&& other) noexcept;

@@ -43,6 +43,11 @@ const std::string Eter::Wizards::toStringMageType(MageType mageType) const
 	}
 }
 
+const Eter::Board* Eter::Wizards::GetBoardWizard() const
+{
+	return m_board;
+}
+
 void Eter::Wizards::SetMageType(const Eter::MageType& type)
 {
 	m_mageType = type;
@@ -67,7 +72,7 @@ void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 	else if (powerIndex == 2)
 	{
 		std::cout << "Would you like to eliminate a row or a column?";
-		std::cout << "Type 'row' or 'column' depending on your choice.";
+		std::cout << "Type 'row' or 'column' depending on your choice.\n";
 		std::string input;
 		std::cin >> input;
 		if (input == "row")
@@ -125,14 +130,16 @@ void Eter::Wizards::waterMasterPower(int powerIndex, int srcRow, int srcCol, int
 // Methods for Masters of fire
 void Eter::Wizards::eliminateRow(int row)
 {
+	auto rowSize = m_board->GetBoard()[row].size();
+
 	// Verify if the row is valid
-	if (row < 0 || row >= m_board->GetCurrentSize()) {
+	if (row < 0 || row >= rowSize) {
 		std::cout << "Invalid row index.\n";
 		return;
 	}
 
 	// Verify if the row has at least 3 positions 
-	if (m_board->GetCurrentSize() < 3) {
+	if (rowSize < 3) {
 		std::cout << "Row must have at least 3 positions.\n";
 		return;
 	}
@@ -141,7 +148,7 @@ void Eter::Wizards::eliminateRow(int row)
 	auto& gameBoard = m_board->GetBoardReference();
 
 	// Verify every column of the row
-	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+	for (int col = 0; col < rowSize; ++col) {
 		if (gameBoard[row][col].has_value()) { // Verify if we have at least one of our own card visibile in the row
 			const Tile& tile = gameBoard[row][col].value();
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
@@ -158,7 +165,7 @@ void Eter::Wizards::eliminateRow(int row)
 	}
 
 	// Applied power
-	for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+	for (int col = 0; col < rowSize; ++col) {
 		if (gameBoard[row][col].has_value()) {
 
 			Tile& tile = gameBoard[row][col].value();
@@ -209,6 +216,7 @@ void Eter::Wizards::eliminateCol(int col)
 
 			Tile& tile = gameBoard[row][col].value();
 			tile.RemoveStack();
+			//gameBoard[row][col].value().RemoveStack();
 		}
 	}
 
@@ -232,7 +240,7 @@ void Eter::Wizards::eliminateOpponentCard(int row, int col)
 
 			// Temporarily store the opponent's card to verify the card underneath
 			Piece opponentCard = tile.GetTopValue();
-			tile.GetValue().pop_back(); // Remove the opponent's top card
+			tile.GetValueRef().pop_back(); // Remove the opponent's top card
 
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
 				std::cout << "The opponent's card at (" << row << ", " << col << ") has been removed.\n";
@@ -258,7 +266,7 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 {
 	auto& gameBoard = m_board->GetBoardReference();
 
-	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize() ||
+	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetBoard()[row].size() ||
 		!gameBoard[row][col].has_value())
 	{
 		std::cout << "Invalid position or no tile found at (" << row << ", " << col << ").\n";
@@ -278,17 +286,17 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 	auto smallestCardIt = playerHand.end();
 
 	for (auto it = playerHand.begin(); it != playerHand.end(); ++it) {
-		if (it->GetValue() < opponentCardValue) {
+		if (it->GetValue() < opponentCardValue && it->GetEterCard() == false) {
 			if (smallestCardIt == playerHand.end() || it->GetValue() < smallestCardIt->GetValue()) //Finding the smallest value that is in our hand and < opponent's card
 				smallestCardIt = it;
 		}
 	}
 	if (smallestCardIt != playerHand.end()) {
 		// Place the player's card on top of the opponent's card
-		tile.GetValue().push_back(*smallestCardIt);
+		char placedCardValue = smallestCardIt->GetValue();
+		tile.GetValueRef().push_back(Piece(placedCardValue, true, this->GetUserName(), false, false));
 
 		// Remove the card from the player's hand
-		char placedCardValue = smallestCardIt->GetValue();
 		playerHand.erase(smallestCardIt);
 
 		std::cout << "You have successfully covered the opponent's card at (" << row << ", " << col
@@ -312,9 +320,8 @@ void Eter::Wizards::createPit(int row, int col)
 		return;
 	}
 
-	Tile pitTile; // Creates a Tile as a pit
-	pitTile.SetAsPit();
-	gameBoard[row][col] = pitTile;
+	gameBoard[row][col].emplace(); // Create an empty Tile in-place
+	gameBoard[row][col]->SetAsPit(); // Set it as a pit
 
 	std::cout << "A pit has been created at position (" << row << ", " << col << ").\n";
 

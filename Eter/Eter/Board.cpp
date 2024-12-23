@@ -87,7 +87,12 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 		std::cout << "Invalid move->Tile position is bigger than max size\n";
 	}
 	else {
-		if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && 
+		if (m_board[adjustedLine][adjustedColumn].has_value() && m_board[adjustedLine][adjustedColumn].value().IsPit()) {
+			std::string border = "=======================================================================";
+			std::cout << "\n" << border << "\nInvalid move->Tile is a pit\n" << border << "\n";
+			throw std::invalid_argument("Tile is a pit");
+		}
+		else if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && 
 			!m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard() && !m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion())
 		{
 			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
@@ -138,7 +143,7 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 		std::cout << "\t\t\t";
 		for (auto& line : row)
 		{
-			if (line.has_value()) {
+			if (line.has_value() && line.value().GetValue().size() != 0) {
 				if (line.value().GetTopValue().GetUserName() == bluePlayerName) {
 					if (line.value().GetTopValue().GetIsIllusion() == true)
 						std::cout << "\033[1;34m" << "I" << "\033[0m ";
@@ -189,8 +194,14 @@ void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)
 
 bool Eter::Board::CheckEmptyTiles()
 {
+	if (m_board.size() != GetMaxSize())
+		return false;
+
 	for (auto& row : m_board)
 	{
+		if (row.size() != GetMaxSize())
+			return false;
+
 		for (auto& line : row)
 		{
 			if (!line.has_value())

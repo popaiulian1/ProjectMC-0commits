@@ -16,6 +16,11 @@ std::deque<Eter::Piece> Eter::Tile::GetValue() const {
 	return m_value;
 }
 
+std::deque<Eter::Piece>& Eter::Tile::GetValueRef()
+{
+	return m_value;
+}
+
 Eter::Piece Eter::Tile::GetTopValue()const {
 	if (!m_value.empty()) {
 		return m_value.back();
@@ -43,9 +48,9 @@ void Eter::Tile::SetValue(const Piece& piece) {
 void Eter::Tile::SetAsPit()
 {
 	m_isPit = true;
-	while (!m_value.empty()) {
+	/*while (!m_value.empty()) {
 		m_value.pop_back();
-	}
+	}*/
 }
 
 void Eter::Tile::RemoveStack()

@@ -4,10 +4,10 @@
 Eter::WizardDuelMode::WizardDuelMode(
 	const Player& player1, 
 	const Player& player2, 
-	const Board& board, 
+	Board& board, 
 	const GameType& gameType, 
-	const Wizards& wizardPlayer1,
-	const Wizards& wizardPlayer2) : Game(player1, player2, board, gameType), m_wizardPlayer1(wizardPlayer1), m_wizardPlayer2(wizardPlayer1)
+	Wizards& wizardPlayer1,
+	Wizards& wizardPlayer2) : Game(player1, player2, board, gameType), m_wizardPlayer1(wizardPlayer1), m_wizardPlayer2(wizardPlayer1)
 {
 }
 
@@ -136,11 +136,15 @@ void Eter::WizardDuelMode::StartGame()
 	Player1.SetGamesWon(0);
 	Player2.SetGamesWon(0);
 
-	int mageTypePlayer1 = Random(std::make_pair(0, 3));
+	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	while(mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));
+		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
+
+
+	int mageTypePlayer1 = 1;
+	int mageTypePlayer2 = 1;
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
@@ -278,7 +282,8 @@ void Eter::WizardDuelMode::PlayEterCard(Player& player)
 		pieces.erase(pieces.begin());
 		row < 0 ? row = 0 : row;
 		column < 0 ? column = 0 : column;
-		GameBoard.GetBoardReference()[row][column] = Tile(Piece(player.GetLastPlayedPiece().GetValue(), true, player.GetUserName(), false, true));
+		GameBoard.GetBoardReference()[row][column] = Tile(Piece('1', true, player.GetUserName(), false, true));
+		GameBoard.GetBoardReference()[row][column].value().GetTopValueRef().SetEterCard(true);
 	}		
 	else 
 		std::cout << "You cannot place your eter card there.\n";
@@ -286,7 +291,7 @@ void Eter::WizardDuelMode::PlayEterCard(Player& player)
 
 void Eter::WizardDuelMode::HandleWizzardType()
 {
-	auto GameBoard = this->GetBoardReference();
+	auto& GameBoard = this->GetBoardReference();
 	m_currentWizard->SetBoardForMage(&GameBoard);
 
 	std::cout << m_currentWizard->GetUserName() << "'s mage type is: " << m_currentWizard->toStringMageType(m_currentWizard->GetMageType()) << "\n";
@@ -306,10 +311,13 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			m_currentWizard->fireMasterPower(power, row, column);
 		else if (power == 2)
 			m_currentWizard->fireMasterPower(power, row, column);
+
+		auto wizardBoard = m_currentWizard->GetBoardWizard();
+		GameBoard.SetBoard(wizardBoard->GetBoard());
+
 		break;
 	}
 	case MageType::EARTH: {
-
 		std::cout << "Choose your power: \n";
 		std::cout << "1. Cover opponent card.\n";
 		std::cout << "2. Create pit.\n";
@@ -323,6 +331,10 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
 		else if (power == 2)
 			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
+
+		auto wizardBoard = m_currentWizard->GetBoardWizard();
+		GameBoard.SetBoard(wizardBoard->GetBoard());
+
 		break;
 	}
 	case MageType::AIR: {
@@ -340,6 +352,10 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			m_currentWizard->airMasterPower(power, row, column);
 		else if (power == 2)
 			m_currentWizard->airMasterPower(power, row, column);
+
+		auto wizardBoard = m_currentWizard->GetBoardWizard();
+		GameBoard.SetBoard(wizardBoard->GetBoard());
+
 		break;
 	}
 	case MageType::WATER: {

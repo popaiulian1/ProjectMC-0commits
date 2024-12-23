@@ -92,9 +92,11 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 			std::cout << "\n" << border << "\nInvalid move->Tile is a pit\n" << border << "\n";
 			throw std::invalid_argument("Tile is a pit");
 		}
-		else if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && 
-			!m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard() && !m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion())
+		else if (!m_board[adjustedLine][adjustedColumn].has_value())
 		{
+			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
+		}
+		else if (m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetValue() < value && !m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard() && !m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetIsIllusion()) {
 			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
 		}
 		else if (m_board[adjustedLine][adjustedColumn].value().GetTopValue().GetEterCard()) {

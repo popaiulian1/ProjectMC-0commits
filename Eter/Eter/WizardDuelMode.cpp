@@ -143,8 +143,8 @@ void Eter::WizardDuelMode::StartGame()
 		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
 
 
-	int mageTypePlayer1 = 1;
-	int mageTypePlayer2 = 1;
+	int mageTypePlayer1 = 2;
+	int mageTypePlayer2 = 2;
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());

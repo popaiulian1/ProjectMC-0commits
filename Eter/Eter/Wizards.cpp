@@ -168,8 +168,9 @@ void Eter::Wizards::eliminateRow(int row)
 	for (int col = 0; col < rowSize; ++col) {
 		if (gameBoard[row][col].has_value()) {
 
-			Tile& tile = gameBoard[row][col].value();
-			tile.RemoveStack();
+			/*Tile& tile = gameBoard[row][col].value();
+			tile.RemoveStack();*/
+			gameBoard[row][col] = std::nullopt;
 		}
 	}
 
@@ -214,9 +215,9 @@ void Eter::Wizards::eliminateCol(int col)
 	for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
 		if (gameBoard[row][col].has_value()) {
 
-			Tile& tile = gameBoard[row][col].value();
-			tile.RemoveStack();
-			//gameBoard[row][col].value().RemoveStack();
+			/*Tile& tile = gameBoard[row][col].value();
+			tile.RemoveStack();*/
+			gameBoard[row][col] = std::nullopt;
 		}
 	}
 
@@ -349,6 +350,9 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 	}
 
 	Tile& srcTile = gameBoard[srcRow][srcCol].value();
+
+	//carete a new tile at the destination
+	gameBoard[destRow][destCol] = Tile();
 	Tile& destTile = gameBoard[destRow][destCol].value();
 
 	if (srcTile.GetTopValue().GetUserName() != this->GetUserName()) {
@@ -375,7 +379,8 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 		destTile.SetValue(*it);
 	}
 
-	srcTile.RemoveStack();
+	/*srcTile.RemoveStack();*/
+	gameBoard[srcRow][srcCol] = std::nullopt;
 
 	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
 

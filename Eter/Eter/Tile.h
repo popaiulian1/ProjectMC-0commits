@@ -11,7 +11,7 @@ namespace Eter
 	public:
 		
 		//Constructors
-		Tile() : m_isPit{ false } {};
+		Tile() : m_isPit { false } {};
 		~Tile() = default;
 		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{tile.m_isPit} {}
 		Tile(const Piece& piece); // Constructor to initialize with a Piece

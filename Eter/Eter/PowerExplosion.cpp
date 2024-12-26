@@ -39,12 +39,24 @@ void Eter::PowerExplosion::SetWasUsed(const bool& wasUsed)
 
 
 //Methods
-void Eter::PowerExplosion::Trigger()
-{
+void Eter::PowerExplosion::Trigger(Board& board) {
+
+    if (m_wasUsed == true) {
+        throw std::runtime_error("Power Explosion Has Already Been Used In This Round!");
+    }
+
+    if (!m_triggeringPlayer) {
+        throw std::runtime_error("Triggering Player Must Be Set Before Triggering Power Explosion");
+    }
+
+    ApllyExplosion(board);
+    m_wasUsed = true;
+
+    std::cout << "\nPower Explosion Was Triggered By Player " << m_triggeringPlayer->GetUserName();
 }
 
-Matrix Eter::PowerExplosion::Rotate90Degrees()
-{
+Matrix Eter::PowerExplosion::Rotate90Degrees() {
+  
     int rows = m_affectedTiles.size();
     int cols = m_affectedTiles[0].size();
 
@@ -57,4 +69,26 @@ Matrix Eter::PowerExplosion::Rotate90Degrees()
     }
 
     return rotatedMatrix;
+}
+
+void Eter::PowerExplosion::ApllyExplosion(Board& board) {
+
+    auto gameBoard = board.GetBoardReference();
+    
+    size_t indexRow = 0;
+    size_t indexCol = 0;
+    
+    for (auto& row : gameBoard) {
+        indexRow++;
+        for (auto& tile : row) {
+            indexCol++;
+            if (m_affectedTiles[indexRow][indexCol] == 1) {
+                // TO DO: Card to return to owners hand
+                tile.value().GetValue().pop_back();
+            }
+            else if (m_affectedTiles[indexRow][indexCol] == 2) {
+                tile.value().GetValue().pop_back();
+            }
+        }
+    }
 }

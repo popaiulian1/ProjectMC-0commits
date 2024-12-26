@@ -26,8 +26,9 @@ namespace Eter {
 		void SetWasUsed(const bool& wasUsed);
 
 		//Methods
-		void Trigger();
+		void Trigger(Board& board);
 		Matrix Rotate90Degrees();
+		void ApllyExplosion(Board& board);
 
 	private:
 		Player* m_triggeringPlayer;

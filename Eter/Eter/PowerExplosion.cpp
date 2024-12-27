@@ -4,17 +4,27 @@
 Eter::PowerExplosion::PowerExplosion(const Matrix& affetedTiles)
     : m_triggeringPlayer{ nullptr }, m_affectedTiles{ affetedTiles }, m_wasUsed{ false } {}
 
+Eter::PowerExplosion& Eter::PowerExplosion::operator=(const PowerExplosion& other) {
+
+    if (this != &other) {
+        m_triggeringPlayer = other.m_triggeringPlayer;
+        m_affectedTiles = other.m_affectedTiles;
+        m_wasUsed = other.m_wasUsed;
+    }
+
+    return *this;
+}
+
+
 //Getters
 Eter::Player* Eter::PowerExplosion::GetTriggeringPlayer() const
 {
     return m_triggeringPlayer;
 }
-
 Matrix Eter::PowerExplosion::GetAffectedTiles() const
 {
     return m_affectedTiles;
 }
-
 bool Eter::PowerExplosion::GetWasUsed() const
 {
     return m_wasUsed;
@@ -26,12 +36,10 @@ void Eter::PowerExplosion::SetTriggeringPlayer(Player* triggeringPlayer)
 {
     m_triggeringPlayer = triggeringPlayer;
 }
-
 void Eter::PowerExplosion::SetAffectedTiles(const Matrix& affectedTiles)
 {
     m_affectedTiles = affectedTiles;
 }
-
 void Eter::PowerExplosion::SetWasUsed(const bool& wasUsed)
 {
     m_wasUsed = wasUsed;

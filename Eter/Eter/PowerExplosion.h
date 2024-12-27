@@ -20,6 +20,10 @@ namespace Eter {
 		//Constructor
 		PowerExplosion() = default;
 		PowerExplosion(const Matrix& affetedTiles);
+
+		PowerExplosion(const PowerExplosion&) = default;
+		PowerExplosion& operator=(const PowerExplosion& other);
+
 		~PowerExplosion() = default;
 
 		//Getters

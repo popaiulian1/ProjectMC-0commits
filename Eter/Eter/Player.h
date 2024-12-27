@@ -32,7 +32,7 @@ namespace Eter {
 		std::vector<Eter::Piece>& GetPiecesReference(); //Non-const reference
 		const bool& GetIllusionPlayed() const;
 		Piece GetLastPlayedPiece() const;
-		//const bool& GetPowerExplosionAccess() const;
+		const bool& GetPowerExplosionAccess() const;
 		int GetGamesWon() const;
 		bool GetEterCardPlayed() const;
 
@@ -41,7 +41,7 @@ namespace Eter {
 		void SetScore(const int& score);
 		void SetPieces(const std::vector<Eter::Piece>& pieces);
 		void SetIllusionPlayed(const bool& illusionPlayed);
-		//void SetPowerExplosionAccess(const bool& powerExplosionAccess);
+		void SetPowerExplosionAccess(const bool& powerExplosionAccess);
 		void SetGamesWon(const int& gamesWon);
 		void SetEterCardPlayed(const bool& eterCardPlayed);
 		 
@@ -61,7 +61,7 @@ namespace Eter {
 		std::vector<Eter::Piece> m_pieces;
 		Piece m_lastPlayedPiece;
 		bool m_illusionPlayed; 
-		//bool m_powerExplosionAccess;
+		bool m_powerExplosionAccess;
 		int m_gamesWon;
 		bool m_eterCardPlayed;
 	};

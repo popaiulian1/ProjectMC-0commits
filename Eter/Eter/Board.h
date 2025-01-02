@@ -23,15 +23,15 @@ namespace Eter {
 	};
 
 	struct lastMove { // Last Move a Player did on the board
-		std::string playerUsername;
-		size_t row;
-		size_t column;
+		std::string m_playerUsername;
+		size_t m_row;
+		size_t m_column;
 	};
 
 	class Board
 	{
 	public:
-		using Position = std::pair<int8_t, int8_t>;
+		using Position = std::pair<int8_t, int8_t>; //easier to read than std::pair<int8_t, int8_t>
 
 		//Constructors
 		Board() = default;
@@ -65,7 +65,3 @@ namespace Eter {
 		lastMove m_lastMove;
 	};
 }
-
-
-
-

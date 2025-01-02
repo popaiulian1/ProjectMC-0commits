@@ -12,6 +12,7 @@ namespace Eter
 		Game();
 		~Game() = default;
 		Game(const Game&) = default;
+		Game(Game&&) = default;
 		Game& operator=(const Game&) = default;
 		Game(const Player& player1, const Player& player2, const Board& board, const GameType& gameType);
 

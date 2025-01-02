@@ -16,10 +16,8 @@ namespace Eter {
 
 		//Rule Of Five 
 		~Player() = default;
-
 		Player(const Player&) = default;
 		Player& operator=(const Player& other);
-
 		Player(Player&& other) noexcept;
 		Player& operator=(Player&& other) noexcept;
 

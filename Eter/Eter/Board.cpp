@@ -126,9 +126,9 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 
 void Eter::Board::SetLastMove(const std::string& playerUsername, size_t row, size_t column)
 {
-	m_lastMove.playerUsername = playerUsername;
-	m_lastMove.row = row;
-	m_lastMove.column = column;
+	m_lastMove.m_playerUsername = playerUsername;
+	m_lastMove.m_row = row;
+	m_lastMove.m_column = column;
 }
 
 void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName) const
@@ -264,9 +264,9 @@ void Eter::Board::exportBoardToJson(const std::string& filename) const
 	j_board["maxSize"] = m_maxSize;
 	j_board["currentSize"] = m_board.size();
 	j_board["lastMove"] = {
-		{"playerUsername", m_lastMove.playerUsername },
-		{ "row", m_lastMove.row },
-		{ "column", m_lastMove.column}
+		{"playerUsername", m_lastMove.m_playerUsername },
+		{ "row", m_lastMove.m_row },
+		{ "column", m_lastMove.m_column}
 	};
 
 	j_board["board"] = nlohmann::json::array();

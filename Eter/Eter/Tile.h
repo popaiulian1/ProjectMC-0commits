@@ -17,6 +17,7 @@ namespace Eter
 		Tile(const Piece& piece); // Constructor to initialize with a Piece
 		Tile(const char& value); // Constructor to initialize with a char no username provided add MANUALLY!!!
 		Tile& operator=(const Tile&) = default;
+		Tile(Tile&&) = default;
 
 		// Getter
 		std::deque<Piece> GetValue() const;

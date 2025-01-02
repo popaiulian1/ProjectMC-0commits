@@ -41,6 +41,8 @@ namespace Eter {
 		Elemental() = default;
 		Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard);
 		Elemental(const Elemental& other);
+		Elemental(Elemental&& other) = default;
+		Elemental& operator=(const Elemental& other) = default;
 		~Elemental() = default;
 
 		//Methods

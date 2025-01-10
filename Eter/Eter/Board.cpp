@@ -203,7 +203,7 @@ bool Eter::Board::CheckEmptyTiles()
 
 		for (auto& line : row)
 		{
-			if (!line.has_value())
+			if (!line.has_value() || line.value().IsPit())
 			{
 				return true;
 			}

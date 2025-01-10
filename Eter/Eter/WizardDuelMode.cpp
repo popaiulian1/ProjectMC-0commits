@@ -146,6 +146,8 @@ void Eter::WizardDuelMode::StartGame()
 	int mageTypePlayer1 = 2;
 	int mageTypePlayer2 = 2;
 
+	firstMove = true;
+
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
 	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
@@ -180,7 +182,7 @@ void Eter::WizardDuelMode::PlayGame()
 		switch (option) {
 		case 'a': {
 			try {
-				GameBoard.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+				GameBoard.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
 			}
 			catch (const std::invalid_argument& e) {
 				size_t deckSize = m_currentPlayer->GetPiecesReference().size();
@@ -231,7 +233,7 @@ void Eter::WizardDuelMode::PlayGame()
 void Eter::WizardDuelMode::Illusion(Player& player)
 {
 	auto& GameBoard = this->GetBoardReference();
-	const std::pair<int, int>& Position = player.Play();
+	const std::pair<int, int>& Position = player.Play(firstMove);
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
@@ -262,7 +264,7 @@ void Eter::WizardDuelMode::PlayEterCard(Player& player)
 {
 	auto& pieces = player.GetPiecesReference();
 	auto& GameBoard = this->GetBoardReference();
-	const std::pair<int, int>& Position = player.Play();
+	const std::pair<int, int>& Position = player.Play(firstMove);
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
@@ -305,7 +307,7 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		int power;
 		std::cin >> power;
 
-		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
 		if (power == 1)
 			m_currentWizard->fireMasterPower(power, row, column);
@@ -325,7 +327,7 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		int power;
 		std::cin >> power;
 
-		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
 		if (power == 1)
 			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
@@ -346,7 +348,7 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		int power;
 		std::cin >> power;
 
-		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play();
+		const std::pair<uint8_t, uint8_t>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
 		if (power == 1)
 			m_currentWizard->airMasterPower(power, row, column);
@@ -367,10 +369,10 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		int power;
 		std::cin >> power;
 
-		const std::pair<uint8_t, uint8_t>& Position1 = m_currentPlayer->Play();
+		const std::pair<uint8_t, uint8_t>& Position1 = m_currentPlayer->Play(firstMove);
 		int srcRow = Position1.first, srcColumn = Position1.second;
 
-		const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play();
+		const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play(firstMove);
 		int destRow = Position2.first, destColumn = Position2.second;
 
 		if (power == 1)

@@ -196,13 +196,10 @@ void Eter::Board::IncreaseBoardForNegativeIndexes(const Position& pos)
 
 bool Eter::Board::CheckEmptyTiles()
 {
-	if (m_board.size() != GetMaxSize())
-		return false;
-
 	for (auto& row : m_board)
 	{
-		if (row.size() != GetMaxSize())
-			return false;
+		if (row.size() < GetMaxSize()) // to jump the for if the column is not full meaning that there is at least 1 empty tile since the board is still to get to max size
+			return true;
 
 		for (auto& line : row)
 		{

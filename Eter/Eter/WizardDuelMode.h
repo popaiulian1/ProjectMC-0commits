@@ -54,6 +54,7 @@ namespace Eter {
 		Wizards* m_currentWizard = nullptr;
 		Player* m_currentPlayer = nullptr;
 		size_t m_rounds = 1;
+		bool firstMove = true;
 	#pragma endregion Variables
 	};
 

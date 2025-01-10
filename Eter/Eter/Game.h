@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "Board.h"
+#include <memory>
 
 namespace Eter
 {
@@ -60,6 +61,7 @@ namespace Eter
 		GameType m_gameType;
 		size_t m_rounds = 1;
 		std::string m_bluePlayerName;
+		bool firstMove = true;
 	};
 }
 

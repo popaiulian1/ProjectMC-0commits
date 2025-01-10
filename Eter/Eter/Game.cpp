@@ -36,6 +36,8 @@ void Eter::Game::InitializePracticeGame()
 		card.SetIsIllusion(false);
 	}
 
+	firstMove = true;
+
 	m_player1.SetPieces(CardsPractice);
 	m_player2.SetPieces(CardsPractice);
 	ResetPlayerData(m_player1);
@@ -69,7 +71,7 @@ void Eter::Game::ResetPlayerData(Player& player)
 
 void Eter::Game::PrintWinner(const Player& player) const
 {
-	std::cout << "\n\n<=============================================================>" << std::endl;
+	std::cout << "\n\n<=============================================================>\n" << std::endl;
 	std::cout << "Congratulations! The winner is " << player.GetUserName() << "!\n";
 	std::cout << "\n<=============================================================>" << std::endl;
 }
@@ -96,7 +98,7 @@ void Eter::Game::PlayGame()
 
 		switch (option) {
 		case 'a': {
-			m_board.SetTileValue(m_currentPlayer->Play(), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+			m_board.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
 			break;
 		}
 		case 'b': {
@@ -130,13 +132,15 @@ void Eter::Game::PlayGame()
 
 bool Eter::Game::CheckWinner()
 {
-	if (m_board.CheckEmptyTiles() == true) {
-		if (m_player1.HasWon(m_board) == true) {
-			PrintWinner(m_player1);
-			return true;
-		}
-		else if (m_player2.HasWon(m_board) == true) {
-			PrintWinner(m_player2);
+	if (m_currentPlayer->HasWon(m_board) == true) {
+		PrintWinner(*m_currentPlayer);
+		return true;
+	}
+	else if (m_board.CheckEmptyTiles() == true) {
+		std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_currentPlayer == &m_player1 ? m_player2 : m_player1);
+
+		if (otherPlayer->HasWon(m_board) == true) {
+			PrintWinner(*m_currentPlayer);
 			return true;
 		}
 	}
@@ -242,7 +246,7 @@ bool Eter::Game::checkAdjacent(const Eter::Board::Position& pos, const Eter::Pie
 
 void Eter::Game::Illusion(Player& player)
 {
-	const std::pair<int, int>& Position = player.Play();
+	const std::pair<int, int>& Position = player.Play(firstMove);
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 

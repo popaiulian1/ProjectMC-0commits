@@ -127,8 +127,13 @@ void Eter::Player::SetEterCardPlayed(const bool& eterCardPlayed)
 
 
 //Methods
-std::pair<int, int> Eter::Player::Play()
+std::pair<int, int> Eter::Player::Play(bool& firstMove)
 {
+    if (firstMove) {
+        firstMove = false;
+        return { 0, 0 };
+    }
+
     int rowIndex, colIndex;
 
     std::cout << "Enter Row Index: ";

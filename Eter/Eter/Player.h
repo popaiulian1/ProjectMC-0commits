@@ -44,7 +44,7 @@ namespace Eter {
 		void SetEterCardPlayed(const bool& eterCardPlayed);
 		 
 		//Methods
-		std::pair<int, int> Play(); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
+		std::pair<int, int> Play(bool& firstMove); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???
 		char ChoosePiece(); //player chooses a piece from his deck; the chosen piece it's removed then from his deck
 		void PrintPieces() const;
 		void AddPiece(const Eter::Piece& piece);

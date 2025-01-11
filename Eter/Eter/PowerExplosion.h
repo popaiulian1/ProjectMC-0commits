@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <unordered_map>	
 #include "Player.h"
 #include "Board.h"
 
@@ -7,7 +8,7 @@ using Matrix = std::vector<std::vector<int>>;
 
 namespace Eter {
 
-	enum class powerExplosionCard { //TO DISCUSS ABOUT CARD TYPES
+	enum class pwrExplCardTypes { //TO DISCUSS ABOUT CARD TYPES
 		cardType1,
 		cardType2,
 		cardType3,
@@ -30,6 +31,7 @@ namespace Eter {
 		Player* GetTriggeringPlayer() const;
 		Matrix GetAffectedTiles() const;
 		bool GetWasUsed() const;
+		Matrix GetCardType(pwrExplCardTypes card) const;
 
 		//Setters
 		void SetTriggeringPlayer(Player* triggeringPlayer);
@@ -45,6 +47,7 @@ namespace Eter {
 		Player* m_triggeringPlayer;
 		Matrix m_affectedTiles;	
 		bool m_wasUsed;
+		static const std::unordered_map<pwrExplCardTypes, Matrix> cardTypes;
 	};
 }
 

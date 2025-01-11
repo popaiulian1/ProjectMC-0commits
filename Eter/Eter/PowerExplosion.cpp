@@ -3,7 +3,6 @@
 
 Eter::PowerExplosion::PowerExplosion(const Matrix& affetedTiles)
     : m_triggeringPlayer{ nullptr }, m_affectedTiles{ affetedTiles }, m_wasUsed{ false } {}
-
 Eter::PowerExplosion& Eter::PowerExplosion::operator=(const PowerExplosion& other) {
 
     if (this != &other) {
@@ -28,6 +27,11 @@ Matrix Eter::PowerExplosion::GetAffectedTiles() const
 bool Eter::PowerExplosion::GetWasUsed() const
 {
     return m_wasUsed;
+}
+
+Matrix Eter::PowerExplosion::GetCardType(Eter::pwrExplCardTypes card) const
+{
+    return cardTypes.at(card);
 }
 
 
@@ -62,7 +66,6 @@ void Eter::PowerExplosion::Trigger(Board& board, Player& player) {
 
     std::cout << "\nPower Explosion Was Triggered By Player " << m_triggeringPlayer->GetUserName();
 }
-
 Matrix Eter::PowerExplosion::Rotate90Degrees() {
   
     int rows = m_affectedTiles.size();
@@ -78,7 +81,6 @@ Matrix Eter::PowerExplosion::Rotate90Degrees() {
 
     return rotatedMatrix;
 }
-
 void Eter::PowerExplosion::ApllyExplosion(Board& board, Player& player) {
 
     auto gameBoard = board.GetBoardReference();
@@ -101,3 +103,9 @@ void Eter::PowerExplosion::ApllyExplosion(Board& board, Player& player) {
         }
     }
 }
+
+const std::unordered_map<Eter::pwrExplCardTypes, Matrix> cardTypes = {
+    { Eter::pwrExplCardTypes::cardType1, {{0, 0, 1}, {0, 1, 0}, {1, 0, 0}} },
+    { Eter::pwrExplCardTypes::cardType2, {{1, 1, 1}, {0, 0, 0}, {0, 0, 0}} },
+    { Eter::pwrExplCardTypes::cardType3, {{0, 0, 0}, {1, 1, 1}, {0, 0, 0}} }
+};

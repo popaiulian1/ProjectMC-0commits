@@ -2,21 +2,16 @@
 
 
 //Constructors
-Eter::Player::Player() {
-    
-    m_username = "";
-    m_score = 0;
-    m_illusionPlayed = false;
-    m_gamesWon = 0;
-	m_eterCardPlayed = false;
-}
-Eter::Player::Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const bool& eterCardPlayed, const int& gamesWon):
-	m_username{ username }, 
-    m_score{ score }, 
-    m_pieces{ pieces },
-	m_illusionPlayed{ illusionPlayed },
-	m_eterCardPlayed{ eterCardPlayed },
-	m_gamesWon{ gamesWon }
+Eter::Player::Player() {}
+Eter::Player::Player(const std::string& username, const std::vector<Eter::Piece>& pieces, const int& score, const int& gamesWon, const Piece& lastPlayedPiece, const bool& illusionPlayed, const bool& powerExplosionAccess, const bool& eterCardPlayed)
+ :  m_username{username},
+    m_pieces{pieces},
+    m_score{score},
+    m_gamesWon{gamesWon},
+    m_lastPlayedPiece{lastPlayedPiece},
+    m_illusionPlayed{illusionPlayed},
+    m_powerExplosionAccess{powerExplosionAccess},
+    m_eterCardPlayed{eterCardPlayed}
 {}
 
 
@@ -294,6 +289,7 @@ void Eter::Player::ResetPlayer()
     m_pieces.clear();
     m_lastPlayedPiece = Piece();
     m_illusionPlayed = false;
+    m_eterCardPlayed = false;
 
     std::cout << "Player " << m_username << "has been reset for new game!";
 }

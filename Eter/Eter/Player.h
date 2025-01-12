@@ -11,8 +11,16 @@ namespace Eter {
 	
 	public:
 		//Constructors
-		Player();
-		Player(const std::string& username, const int& score, const std::vector<Eter::Piece>& pieces, const bool& illusionPlayed, const bool& eterCardPlayed, const int& gamesWon);
+		Player() = default;
+		Player( const std::string& username,
+			    const std::vector<Eter::Piece>& pieces,
+			    const int& score,
+			    const int& gamesWon,
+				const Piece& lastPlayedPiece,
+			    const bool& illusionPlayed,
+				const bool& powerExplosionAccess,
+			    const bool& eterCardPlayed
+			 );
 
 		//Rule Of Five 
 		~Player() = default;
@@ -55,12 +63,13 @@ namespace Eter {
 
 	private:
 		std::string m_username;
-		int m_score;
 		std::vector<Eter::Piece> m_pieces;
+		int m_score;
+		int m_gamesWon;
+
 		Piece m_lastPlayedPiece;
 		bool m_illusionPlayed; 
 		bool m_powerExplosionAccess;
-		int m_gamesWon;
 		bool m_eterCardPlayed;
 	};
 }

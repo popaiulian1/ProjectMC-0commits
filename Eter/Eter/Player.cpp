@@ -3,7 +3,7 @@
 
 //Constructors
 Eter::Player::Player() {}
-Eter::Player::Player(const std::string& username, const std::vector<Eter::Piece>& pieces, const int& score, const int& gamesWon, const Piece& lastPlayedPiece, const bool& illusionPlayed, const bool& powerExplosionAccess, const bool& eterCardPlayed)
+Eter::Player::Player(const std::string& username, const std::vector<Eter::Piece>& pieces, const int& score, const size_t& gamesWon, const Piece& lastPlayedPiece, const bool& illusionPlayed, const bool& powerExplosionAccess, const bool& eterCardPlayed)
  :  m_username{username},
     m_pieces{pieces},
     m_score{score},
@@ -80,7 +80,7 @@ const bool& Eter::Player::GetPowerExplosionAccess() const
 {
     return m_powerExplosionAccess;
 }
-int Eter::Player::GetGamesWon() const
+size_t Eter::Player::GetGamesWon() const
 {
 	return m_gamesWon;
 }
@@ -111,7 +111,7 @@ void Eter::Player::SetPowerExplosionAccess(const bool& powerExplosionAccess)
 {
     m_powerExplosionAccess = powerExplosionAccess;
 }
-void Eter::Player::SetGamesWon(const int& gamesWon)
+void Eter::Player::SetGamesWon(const size_t& gamesWon)
 {
 	m_gamesWon = gamesWon;
 }
@@ -292,6 +292,11 @@ void Eter::Player::ResetPlayer()
     m_eterCardPlayed = false;
 
     std::cout << "Player " << m_username << "has been reset for new game!";
+}
+
+void Eter::Player::IncrementGamesWon()
+{
+    ++m_gamesWon;
 }
 
 std::ostream& Eter::operator<<(std::ostream& os, const Player& player)

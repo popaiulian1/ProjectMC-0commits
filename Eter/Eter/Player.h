@@ -15,7 +15,7 @@ namespace Eter {
 		Player( const std::string& username,
 			    const std::vector<Eter::Piece>& pieces,
 			    const int& score,
-			    const int& gamesWon,
+			    const size_t& gamesWon,
 				const Piece& lastPlayedPiece,
 			    const bool& illusionPlayed,
 				const bool& powerExplosionAccess,
@@ -39,7 +39,7 @@ namespace Eter {
 		const bool& GetIllusionPlayed() const;
 		Piece GetLastPlayedPiece() const;
 		const bool& GetPowerExplosionAccess() const;
-		int GetGamesWon() const;
+		size_t GetGamesWon() const;
 		bool GetEterCardPlayed() const;
 
 		//Setters
@@ -48,7 +48,7 @@ namespace Eter {
 		void SetPieces(const std::vector<Eter::Piece>& pieces);
 		void SetIllusionPlayed(const bool& illusionPlayed);
 		void SetPowerExplosionAccess(const bool& powerExplosionAccess);
-		void SetGamesWon(const int& gamesWon);
+		void SetGamesWon(const size_t& gamesWon);
 		void SetEterCardPlayed(const bool& eterCardPlayed);
 		 
 		//Methods
@@ -59,18 +59,21 @@ namespace Eter {
 		void RemovePieces();
 		bool HasWon(const Board& board);
 		void ResetPlayer(); //for tournament, resets player 
+		void IncrementGamesWon();
 		friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 	private:
 		std::string m_username;
 		std::vector<Eter::Piece> m_pieces;
 		int m_score;
-		int m_gamesWon;
+		size_t m_gamesWon;
 
 		Piece m_lastPlayedPiece;
 		bool m_illusionPlayed; 
 		bool m_powerExplosionAccess;
 		bool m_eterCardPlayed;
+
+		//std::bitset<static_cast<size_t>(PlayerState::MAX_STATE)> m_states;  Compact storage for player states | IDEA TO IMPLEMENT
 	};
 }
 

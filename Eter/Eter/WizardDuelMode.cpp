@@ -90,38 +90,9 @@ void Eter::WizardDuelMode::StartGame()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	std::vector<char> Values = { '1', '1', '1', '2', '2', '2', '3', '3', '3', '4'};
-	std::vector<Eter::Piece> CardsPractice;
-
+	
 	UsernameHandling();
-
-	CardsPractice.resize(kDECK_SIZE_DUEL);
-
-	int index = 0;
-	bool EterCard = false;
-
-	for (auto& card : CardsPractice) {
-		card.SetValue(Values[index++]);
-		card.SetIsPlaced(false);
-		card.SetUserName("");
-		card.SetIsIllusion(false);
-		if (!EterCard) {
-			card.SetEterCard(true);
-			EterCard = true;
-		}
-		else
-			card.SetEterCard(false);
-	}
-
-	Player1.SetPieces(CardsPractice);
-	Player2.SetPieces(CardsPractice);
-	Player1.SetIllusionPlayed(false);
-	Player2.SetIllusionPlayed(false);
-	Player1.SetScore(0);
-	Player2.SetScore(0);
-	Player1.SetGamesWon(0);
-	Player2.SetGamesWon(0);
-
+	InitializeWizzardDuelGame();
 	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = Random(std::make_pair(0, 3));
 
@@ -160,6 +131,41 @@ void Eter::WizardDuelMode::UsernameHandling()
 		std::getline(std::cin, UsernamePlayer2);
 		Player2.SetUserName(UsernamePlayer2);
 	}
+}
+
+void Eter::WizardDuelMode::InitializeWizzardDuelGame()
+{
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+	std::vector<char> Values = { '1', '1', '1', '2', '2', '2', '3', '3', '3', '4' };
+	std::vector<Eter::Piece> CardsPractice;
+
+	CardsPractice.resize(kDECK_SIZE_DUEL);
+
+	int index = 0;
+	bool EterCard = false;
+
+	for (auto& card : CardsPractice) {
+		card.SetValue(Values[index++]);
+		card.SetIsPlaced(false);
+		card.SetUserName("");
+		card.SetIsIllusion(false);
+		if (!EterCard) {
+			card.SetEterCard(true);
+			EterCard = true;
+		}
+		else
+			card.SetEterCard(false);
+	}
+
+	Player1.SetPieces(CardsPractice);
+	Player2.SetPieces(CardsPractice);
+	Player1.SetIllusionPlayed(false);
+	Player2.SetIllusionPlayed(false);
+	Player1.SetScore(0);
+	Player2.SetScore(0);
+	Player1.SetGamesWon(0);
+	Player2.SetGamesWon(0);
 }
 
 void Eter::WizardDuelMode::PlayGame()

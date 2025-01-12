@@ -39,6 +39,7 @@ namespace Eter {
 		void PlayGame() override;
 		void Illusion(Player& player) override;
 		void UsernameHandling();
+		void InitializeWizzardDuelGame();
 		void PlayEterCard(Player& Player);
 		void HandleWizzardType();
 	#pragma endregion Methods

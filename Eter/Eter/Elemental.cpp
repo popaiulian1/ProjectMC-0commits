@@ -217,47 +217,95 @@ void Eter::Elemental::Ash(Board& board, Player& player)
 	
 }
 
-//void Eter::Elemental::Spark(Board& board, Player& player)
-//{
-//	auto& gameBoard = board.GetBoardReference();
-//	const auto& playerName = player.GetUserName();
-//
-//	std::vector<std::pair<int, int>> coveredCardsPositions;
-//
-//	// We stack in a vector the cards that are ours and under the opponent's card
-//	for (int row = 0; row <board.GetCurrentSize(); ++row) {
-//		for (int col = 0; col <board.GetCurrentSize(); ++col) {
-//			auto& tileOptional = gameBoard[row][col];
-//			if (tileOptional.has_value() && tileOptional->GetValue().size() > 1 && tileOptional.value().GetTopValue().GetUserName()!=player.GetUserName()) {
-//				auto stack = tileOptional->GetValue();
-//				for (size_t i = 0; i < stack.size() - 1; ++i) 
-//					if (stack[i].GetUserName() == playerName) {
-//						coveredCardsPositions.emplace_back(stack[i]);
-//						break;
-//					}
-//				
-//			}
-//		}
-//	}
-//	if (coveredCardsPositions.empty()) {
-//		std::cout << "No covered cards belonging to you were found.\n";
-//		return;
-//	}
-//	std::cout << "Covered cards found at the following positions:\n";
-//	for (size_t i = 0; i < coveredCardsPositions.size(); ++i) {
-//		std::cout << i + 1 << ": (" << coveredCardsPositions[i].first << ", " << coveredCardsPositions[i].second << ")\n";
-//	}
-//
-//	std::cout << "Choose a card to move by entering the corresponding number: ";
-//	int choice;
-//	std::cin >> choice;
-//
-//	if (choice < 1 || choice > coveredCardsPositions.size()) {
-//		std::cout << "Invalid choice. Operation canceled.\n";
-//		return;
-//	}
-//	
-//}
+void Eter::Elemental::Spark(Board& board, Player& player)
+{
+	auto& gameBoard = board.GetBoardReference();
+	const auto& playerName = player.GetUserName();
+
+	std::vector<std::pair<int, int>> coveredCardsPositions;
+
+	// We stack in a vector the cards that are ours and under the opponent's card
+	for (int row = 0; row <board.GetCurrentSize(); ++row) {
+		for (int col = 0; col <board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value() && tileOptional->GetValue().size() > 1 && tileOptional.value().GetTopValue().GetUserName()!=player.GetUserName()) {
+				auto stack = tileOptional->GetValue();
+				for (size_t i = 0; i < stack.size() - 1; ++i) 
+					if (stack[i].GetUserName() == playerName) {
+						coveredCardsPositions.emplace_back(row,col);
+						break;
+					}
+				
+			}
+		}
+	}
+	if (coveredCardsPositions.empty()) {
+		std::cout << "No covered cards belonging to you were found.\n";
+		return;
+	}
+
+	std::vector <Piece> cards;
+	std::vector<std::pair<int, int>> sourcePositions;
+
+	for (const auto& pos : coveredCardsPositions) {
+		auto& tileOptional = gameBoard[pos.first][pos.second];
+		auto stack = tileOptional->GetValue();
+		for (size_t i = 0; i < stack.size() - 1; ++i)
+			if (stack[i].GetUserName() == playerName) {
+				cards.emplace_back(stack[i]);
+				sourcePositions.emplace_back(pos.first, pos.second);
+				std::cout << cards.size() << ": Card '" << stack[i].GetValue()
+					<< "' at (" << pos.first << ", " << pos.second << ")\n";
+			}
+	}
+
+	int option;
+	std::cout << "Choose a card to move by entering the corresponding number: ";
+	std::cin >> option;
+	int row, col;
+	std::cout << "Choose the row and the column you whant to place the card at.";
+	std::cout << "Row: ";
+	std::cin >> row;
+	std::cout << "Column: ";
+	std::cin >> col;
+
+	if (option < 1 || option>static_cast<int>(cards.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+	if (row < 0 || row >= board.GetCurrentSize() || col < 0 || col >= board.GetCurrentSize() || gameBoard[row][col].has_value()) {
+		std::cout << "Invalid position. Card placement failed.\n";
+		return;
+	}
+    auto& destTileOptional = board.GetBoardReference()[row][col];
+	if (destTileOptional && destTileOptional->IsPit()) {
+		std::cout << "The chosen position is a pit. Card placement failed.\n";
+		return;
+	}
+
+	Piece chosenCard = cards[option-1];
+	auto [sourceRow, sourceCol] = sourcePositions[option - 1];
+	
+	auto& sourceTile = gameBoard[sourceRow][sourceCol];
+	auto& sourceStack = sourceTile->GetValueRef();
+	auto it = std::find_if(sourceStack.begin(), sourceStack.end(),
+		[&chosenCard](const Piece& piece) {
+		return piece.GetValue() == chosenCard.GetValue();
+	});
+
+	if (it != sourceStack.end()) {
+		sourceStack.erase(it);
+	}
+
+	if (sourceStack.empty()) {
+		sourceTile.reset();
+	}
+
+
+	destTileOptional->SetValue(chosenCard);
+	std::cout << "Card successfully placed at (" << row << ", " << col << ").\n";
+
+}
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {

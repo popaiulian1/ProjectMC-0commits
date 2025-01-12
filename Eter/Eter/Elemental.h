@@ -58,7 +58,14 @@ namespace Eter {
 		void Fire(Board& board, Player& player1, Player& player2);
 		void Ash(Board& board, Player& player);
 		void Spark(Board& board, Player& player);
+		void Hurricane(Board& board);
 		
+		void shiftRowToLeft(Board& board, int index);
+		void shiftRowToRight(Board& board, int index);
+		void shiftColUp(Board& board, int index);
+		void shiftColDown(Board& board, int index);
+
+
 
 	private:
 		Board m_board;

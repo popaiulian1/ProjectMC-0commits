@@ -64,6 +64,8 @@ namespace Eter {
 		void shiftRowToRight(Board& board, int index);
 		void shiftColUp(Board& board, int index);
 		void shiftColDown(Board& board, int index);
+		bool isRowFull(const Board& board, int rowIndex);
+		bool isColumnFull(const Board& board, int colIndex);
 
 
 

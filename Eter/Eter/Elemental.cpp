@@ -365,10 +365,77 @@ void Eter::Elemental::shiftRowToRight(Board& board, int index)
 
 void Eter::Elemental::shiftColUp(Board& board, int index)
 {
+	auto& gameBoard = board.GetBoardReference();
+	int size = board.GetCurrentSize();
+	Player player1, player2; 
+
+	auto topTile = gameBoard[0][index];
+	if (topTile.has_value()) {
+		auto& stack = topTile->GetValueRef();
+		for (auto& piece : stack) {
+			if (piece.GetUserName() == player1.GetUserName())
+				player1.AddPiece(piece); 
+			else
+				player2.AddPiece(piece); 
+		}
+	}
+
+	for (int row = 1; row < size; ++row) {
+		gameBoard[row - 1][index] = gameBoard[row][index];
+	}
+
+	gameBoard[size - 1][index].reset();
+
 }
 
 void Eter::Elemental::shiftColDown(Board& board, int index)
 {
+	auto& gameBoard = board.GetBoardReference();
+	int size = board.GetCurrentSize();
+	Player player1, player2; 
+
+	auto bottomTile = gameBoard[size - 1][index];
+	if (bottomTile.has_value()) {
+		auto& stack = bottomTile->GetValueRef();
+		for (auto& piece : stack) {
+			if (piece.GetUserName() == player1.GetUserName())
+				player1.AddPiece(piece);  
+			else
+				player2.AddPiece(piece); 
+		}
+	}
+
+	for (int row = size - 2; row >= 0; --row) {
+		gameBoard[row + 1][index] = gameBoard[row][index];
+	}
+
+	gameBoard[0][index].reset();
+}
+
+bool Eter::Elemental::isRowFull(const Board& board, int rowIndex)
+{
+    auto gameBoard = board.GetBoard();
+	int size = board.GetCurrentSize();
+
+	for (int col = 0; col < size; ++col) {
+		if (!gameBoard[rowIndex][col].has_value()) {
+			return false; 
+		}
+	}
+	return true;
+}
+
+bool Eter::Elemental::isColumnFull(const Board& board, int colIndex)
+{
+    auto gameBoard = board.GetBoard();
+	int size = board.GetCurrentSize();
+
+	for (int row = 0; row < size; ++row) {
+		if (!gameBoard[row][colIndex].has_value()) {
+			return false; 
+		}
+	}
+	return true;
 }
 
 void Eter::Elemental::Hurricane(Board& board)
@@ -377,12 +444,13 @@ void Eter::Elemental::Hurricane(Board& board)
 	std::string option;
 	int src;
 	std::cin >> option;
+	
 	if (option == "row")
 	{
-		std::cout << "Enter the positions of the row you want to shift: \n";
+		std::cout << "Enter the positions of the full row you want to shift: \n";
 		std::cin >> src;
-		if (src < 0 || src >= board.GetCurrentSize()) {
-			std::cout << "Invalid position.\n";
+		if (src < 0 || src >= board.GetCurrentSize() || !isRowFull(board,src)) {
+			std::cout << "Invalid position or not a full row.\n";
 			return;
 		}
 
@@ -399,10 +467,10 @@ void Eter::Elemental::Hurricane(Board& board)
 	}
 	else if (option == "col")
 	{
-		std::cout << "Enter the positions of the row you want to shift: \n";
+		std::cout << "Enter the positions of the full column you want to shift: \n";
 		std::cin >> src;
-		if ( src < 0 || src >= board.GetCurrentSize()) {
-			std::cout << "Invalid position\n";
+		if ( src < 0 || src >= board.GetCurrentSize() || !isColumnFull(board,src)) {
+			std::cout << "Invalid position or not a full column.\n";
 			return;
 		}
 

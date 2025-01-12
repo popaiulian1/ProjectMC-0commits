@@ -307,6 +307,120 @@ void Eter::Elemental::Spark(Board& board, Player& player)
 
 }
 
+void Eter::Elemental::shiftRowToLeft(Board& board, int index)
+{
+	auto& gameBoard = board.GetBoardReference();
+	int size = board.GetCurrentSize();
+
+	Player player1;
+	Player player2;
+
+	auto& firstTile = gameBoard[index][0];
+	if (firstTile.has_value()) {
+		auto& stack = firstTile->GetValueRef();
+		for (auto& piece : stack) {
+			if (piece.GetUserName() == player1.GetUserName())
+				player1.AddPiece(piece);
+			else
+				player2.AddPiece(piece);
+		}
+		firstTile->RemoveStack(); 
+	}
+
+	for (int col = 0; col < size - 1; ++col) {
+		gameBoard[index][col] = gameBoard[index][col + 1];
+	}
+
+	gameBoard[index][size - 1].reset();
+	std::cout << "Row successfully shifted to left.\n";
+}
+
+void Eter::Elemental::shiftRowToRight(Board& board, int index)
+{
+	auto& gameBoard = board.GetBoardReference();
+	int size = board.GetCurrentSize();
+
+	Player player1;
+	Player player2;
+
+	auto& lastTile = gameBoard[index][size - 1];
+	if (lastTile.has_value()) {
+		auto& stack = lastTile->GetValueRef();
+		for (auto& piece : stack) {
+			if (piece.GetUserName() == player1.GetUserName())
+				player1.AddPiece(piece);
+			else
+				player2.AddPiece(piece);
+		}
+		lastTile->RemoveStack(); 
+	}
+
+	for (int col = size - 1; col > 0; --col) {
+		gameBoard[index][col] = gameBoard[index][col - 1];
+	}
+
+	gameBoard[index][0].reset();
+	std::cout << "Row successfully shifted to right.\n";
+}
+
+void Eter::Elemental::shiftColUp(Board& board, int index)
+{
+}
+
+void Eter::Elemental::shiftColDown(Board& board, int index)
+{
+}
+
+void Eter::Elemental::Hurricane(Board& board)
+{
+	std::cout << "What would you like to shift? (column or row)\n";
+	std::string option;
+	int src;
+	std::cin >> option;
+	if (option == "row")
+	{
+		std::cout << "Enter the positions of the row you want to shift: \n";
+		std::cin >> src;
+		if (src < 0 || src >= board.GetCurrentSize()) {
+			std::cout << "Invalid position.\n";
+			return;
+		}
+
+		std::cout << "Wold you like to shift the row to the left or to the right? (left/ right)\n";
+		std::cin >> option;
+		if (option == "right")
+			shiftRowToRight(board, src);
+		else if (option == "left")
+			shiftRowToLeft(board, src);
+		else
+			std::cout << "Invalid option.";
+		
+
+	}
+	else if (option == "col")
+	{
+		std::cout << "Enter the positions of the row you want to shift: \n";
+		std::cin >> src;
+		if ( src < 0 || src >= board.GetCurrentSize()) {
+			std::cout << "Invalid position\n";
+			return;
+		}
+
+		std::cout << "Wold you like to shift the column upwards or downwards? (up/ down)\n";
+		std::cin >> option;
+		if (option == "up")
+			shiftColUp(board, src);
+		else if (option == "down")
+			shiftColDown(board, src);
+		else
+			std::cout << "Invalid option.";
+
+	}
+	else
+		std::cout << "Invalid option.\n";
+
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

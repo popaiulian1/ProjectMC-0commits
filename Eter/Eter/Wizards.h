@@ -52,7 +52,9 @@ namespace Eter {
         void moveOwnStack(int srcRow, int srcCol, int destRow, int destCol);
 		void gainExtraEtherCard(int row, int col); 
 		void moveOpponentStack(int srcRow, int srcCol, int destRow, int destCol);
-        void moveEdgeRowCol();          
+        void moveEdgeRowCol();  
+
+
 
 
     private:

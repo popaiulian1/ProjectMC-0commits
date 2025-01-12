@@ -151,6 +151,11 @@ void Eter::Wizards::eliminateRow(int row)
 	for (int col = 0; col < rowSize; ++col) {
 		if (gameBoard[row][col].has_value()) { // Verify if we have at least one of our own card visibile in the row
 			const Tile& tile = gameBoard[row][col].value();
+			if (tile.GetTopValue().GetEterCard()) {
+				std::cout << "An ETER card is present in the row. Cannot eliminate the row.\n";
+				return;
+			}
+
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
 				hasOwnCard = true;
 				break;
@@ -198,6 +203,11 @@ void Eter::Wizards::eliminateCol(int col)
 	for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
 		if (gameBoard[row][col].has_value()) { // Verify if we have at least one of our own card visibile in the col
 			const Tile& tile = gameBoard[row][col].value();
+			if (tile.GetTopValue().GetEterCard()) {
+				std::cout << "An ETER card is present in the column. Cannot eliminate the col.\n";
+				return;
+			}
+
 			if (tile.GetTopValue().GetUserName() == this->GetUserName()) {
 				hasOwnCard = true;
 				break;
@@ -341,7 +351,7 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 		std::cout << "Invalid destination position (" << destRow << ", " << destCol << ").\n";
 		return;
 	}
-
+	
 	auto& gameBoard = m_board->GetBoardReference();
 
 	if (!gameBoard[srcRow][srcCol].has_value()) {
@@ -350,6 +360,11 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 	}
 
 	Tile& srcTile = gameBoard[srcRow][srcCol].value();
+
+	if (srcTile.GetTopValue().GetEterCard()) {
+		std::cout << "The stack at source position (" << srcRow << ", " << srcCol << ") contains an ETER card. Cannot move it.\n";
+		return;
+	}
 
 	//carete a new tile at the destination
 	gameBoard[destRow][destCol] = Tile();
@@ -364,6 +379,7 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 		std::cout << "The destination position (" << destRow << ", " << destCol << ") is not empty or is a pit.\n";
 		return;
 	}
+
 
 	//Moving the stack of cards
 
@@ -431,10 +447,17 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 	}
 
 	Tile& srcTile = gameBoard[srcRow][srcCol].value();
+
+	gameBoard[destRow][destCol] = Tile();
 	Tile& destTile = gameBoard[destRow][destCol].value();
 
 	if (srcTile.GetTopValue().GetUserName() == this->GetUserName()) {
 		std::cout << "The stack at source position (" << srcRow << ", " << srcCol << ") does belong to you.\n";
+		return;
+	}
+
+	if (srcTile.GetTopValue().GetEterCard()) {
+		std::cout << "The stack at source position (" << srcRow << ", " << srcCol << ") contains an ETER card. Cannot move it.\n";
 		return;
 	}
 
@@ -457,7 +480,8 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 		destTile.SetValue(*it);
 	}
 
-	srcTile.RemoveStack();
+	//srcTile.RemoveStack();
+	gameBoard[srcRow][srcCol] = std::nullopt;
 
 	std::cout << "The stack from (" << srcRow << ", " << srcCol << ") has been moved to (" << destRow << ", " << destCol << ").\n";
 
@@ -494,15 +518,34 @@ void Eter::Wizards::moveEdgeRowCol() {
 		}
 
 		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+			if (!gameBoard[destRow][col].has_value())
+				gameBoard[destRow][col] = Tile();
+		}
+
+		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
 			if (gameBoard[destRow][col].value().IsPit()) {
 				std::cout << "Destination row contains a pit. Cannot move row.\n";
 				return;
 			}
 		}
 
+		//for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+		//	gameBoard[destRow][col] = gameBoard[srcRow][col];
+		//	gameBoard[srcRow][col] = Tile(); // Clear the source row
+		//}
+
 		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-			gameBoard[destRow][col] = gameBoard[srcRow][col];
-			gameBoard[srcRow][col] = Tile(); // Clear the source row
+			if (gameBoard[destRow][col].has_value() && gameBoard[srcRow][col].has_value()) {
+				std::swap(gameBoard[destRow][col], gameBoard[srcRow][col]);
+			}
+			else if (gameBoard[destRow][col].has_value()) {
+				gameBoard[srcRow][col] = std::move(gameBoard[destRow][col]);
+				gameBoard[destRow][col] = std::nullopt;
+			}
+			else if (gameBoard[srcRow][col].has_value()) {
+				gameBoard[destRow][col] = std::move(gameBoard[srcRow][col]);
+				gameBoard[srcRow][col] = std::nullopt;
+			}
 		}
 
 		std::cout << "Row " << srcRow << " successfully moved to " << destRow << ".\n";
@@ -532,15 +575,34 @@ void Eter::Wizards::moveEdgeRowCol() {
 		}
 
 		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+			if(!gameBoard[row][destCol].has_value())
+				gameBoard[row][destCol] = Tile();
+		}
+
+		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
 			if (gameBoard[row][destCol].value().IsPit()) {
 				std::cout << "Destination column contains a pit. Cannot move column.\n";
 				return;
 			}
 		}
 
+		//for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+		//	gameBoard[row][destCol] = gameBoard[row][srcCol];
+		//	gameBoard[row][srcCol] = Tile(); // Clear the source column
+		//}
+
 		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
-			gameBoard[row][destCol] = gameBoard[row][srcCol];
-			gameBoard[row][srcCol] = Tile(); // Clear the source column
+			if (gameBoard[row][srcCol].has_value() && gameBoard[row][destCol].has_value()) {
+				std::swap(gameBoard[row][destCol], gameBoard[row][srcCol]);
+			}
+			else if (gameBoard[row][srcCol].has_value()) {
+				gameBoard[row][destCol] = std::move(gameBoard[row][srcCol]);
+				gameBoard[row][srcCol] = std::nullopt;
+			}
+			else if (gameBoard[row][destCol].has_value()) {
+				gameBoard[row][srcCol] = std::move(gameBoard[row][destCol]);
+				gameBoard[row][destCol] = std::nullopt;
+			}
 		}
 
 		std::cout << "Column " << srcCol << " successfully moved to " << destCol << ".\n";

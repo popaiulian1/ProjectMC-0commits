@@ -11,13 +11,14 @@ namespace Eter
 	public:
 		
 		//Constructors
-		Tile() : m_isPit { false } {};
+		Tile() : m_value{ std::deque<Piece>() }, m_isPit{false} {};
 		~Tile() = default;
 		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{tile.m_isPit} {}
 		Tile(const Piece& piece); // Constructor to initialize with a Piece
 		Tile(const char& value); // Constructor to initialize with a char no username provided add MANUALLY!!!
+		Tile(Tile&&) noexcept = default;
 		Tile& operator=(const Tile&) = default;
-		Tile(Tile&&) = default;
+		Tile& operator=(Tile&&) noexcept = default; 
 
 		// Getter
 		std::deque<Piece> GetValue() const;

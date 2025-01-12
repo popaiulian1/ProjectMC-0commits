@@ -93,21 +93,7 @@ void Eter::WizardDuelMode::StartGame()
 	std::vector<char> Values = { '1', '1', '1', '2', '2', '2', '3', '3', '3', '4'};
 	std::vector<Eter::Piece> CardsPractice;
 
-	std::string UsernamePlayer1;
-	std::string UsernamePlayer2;
-
-	if (Player1.GetUserName() == "") {
-		std::cout << "Username of the first player is: ";
-		std::getline(std::cin, UsernamePlayer1);
-		Player1.SetUserName(UsernamePlayer1);
-		this->SetBluePlayerName(Player1.GetUserName());
-	}
-
-	if (Player2.GetUserName() == "") {
-		std::cout << "Username of the second player is: ";
-		std::getline(std::cin, UsernamePlayer2);
-		Player2.SetUserName(UsernamePlayer2);
-	}
+	UsernameHandling();
 
 	CardsPractice.resize(kDECK_SIZE_DUEL);
 
@@ -143,8 +129,8 @@ void Eter::WizardDuelMode::StartGame()
 		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
 
 
-	int mageTypePlayer1 = 2;
-	int mageTypePlayer2 = 2;
+	int mageTypePlayer1 = 3;
+	int mageTypePlayer2 = 3;
 
 	firstMove = true;
 
@@ -154,6 +140,26 @@ void Eter::WizardDuelMode::StartGame()
 	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
 
 	PlayGame();
+}
+
+void Eter::WizardDuelMode::UsernameHandling()
+{
+	std::string UsernamePlayer1;
+	std::string UsernamePlayer2;
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+	if (Player1.GetUserName() == "") {
+		std::cout << "Username of the first player is: ";
+		std::getline(std::cin, UsernamePlayer1);
+		Player1.SetUserName(UsernamePlayer1);
+		this->SetBluePlayerName(Player1.GetUserName());
+	}
+
+	if (Player2.GetUserName() == "") {
+		std::cout << "Username of the second player is: ";
+		std::getline(std::cin, UsernamePlayer2);
+		Player2.SetUserName(UsernamePlayer2);
+	}
 }
 
 void Eter::WizardDuelMode::PlayGame()
@@ -379,6 +385,10 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
 		else if (power == 2)
 			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
+
+		auto wizardBoard = m_currentWizard->GetBoardWizard();
+		GameBoard.SetBoard(wizardBoard->GetBoard());
+
 		break;
 	}
 	case MageType::UNKNOWN: {

@@ -38,6 +38,7 @@ namespace Eter {
 		void StartGame() override;
 		void PlayGame() override;
 		void Illusion(Player& player) override;
+		void UsernameHandling();
 		void PlayEterCard(Player& Player);
 		void HandleWizzardType();
 	#pragma endregion Methods

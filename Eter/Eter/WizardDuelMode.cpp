@@ -89,27 +89,11 @@ void Eter::WizardDuelMode::StartGame()
 	auto GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
-
 	
 	UsernameHandling();
 	InitializeWizzardDuelGame();
-	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
-	int mageTypePlayer2 = Random(std::make_pair(0, 3));
-
-	while(mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
-
-
-	int mageTypePlayer1 = 3;
-	int mageTypePlayer2 = 3;
 
 	firstMove = true;
-
-	m_wizardPlayer1.SetUserName(Player1.GetUserName());
-	m_wizardPlayer2.SetUserName(Player2.GetUserName());
-	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
-	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
-
 	PlayGame();
 }
 
@@ -166,6 +150,32 @@ void Eter::WizardDuelMode::InitializeWizzardDuelGame()
 	Player2.SetScore(0);
 	Player1.SetGamesWon(0);
 	Player2.SetGamesWon(0);
+}
+
+void Eter::WizardDuelMode::SetWizzardType()
+{
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+
+	int mageTypePlayer1 = Random(std::make_pair(0, 3));
+	int mageTypePlayer2 = Random(std::make_pair(0, 3));
+
+	while (mageTypePlayer2 == mageTypePlayer1)
+		mageTypePlayer2 = Random(std::make_pair(0, 3));
+
+	m_wizardPlayer1.SetUserName(Player1.GetUserName());
+	m_wizardPlayer2.SetUserName(Player2.GetUserName());
+	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
+	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
+}
+
+int Eter::WizardDuelMode::Random(const std::pair<int, int>& distance)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(distance.first, distance.second);
+	int random_number = dis(gen);
+	return random_number;
 }
 
 void Eter::WizardDuelMode::PlayGame()
@@ -404,15 +414,6 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	}
 }
 
-
-int Eter::WizardDuelMode::Random(const std::pair<int, int>& distance)
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(distance.first, distance.second);
-	int random_number = dis(gen);
-	return random_number;
-}
 #pragma endregion Methods
 
 

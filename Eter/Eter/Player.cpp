@@ -2,7 +2,7 @@
 
 
 //Constructors
-Eter::Player::Player() {}
+
 Eter::Player::Player(const std::string& username, const std::vector<Eter::Piece>& pieces, const int& score, const size_t& gamesWon, const Piece& lastPlayedPiece, const bool& illusionPlayed, const bool& powerExplosionAccess, const bool& eterCardPlayed)
  :  m_username{username},
     m_pieces{pieces},
@@ -219,8 +219,7 @@ bool Eter::Player::HasWon(const Board& board)
     // Lambda to check if the tile's top piece belongs to this player
     auto isTileOwnedByPlayer = [this](const std::optional<Tile>& tile) {
         return tile.has_value() && tile->GetTopValue().GetUserName() == this->GetUserName();
-        };
-
+    };
     
     // Check for horizontal, vertical, and diagonal lines
 
@@ -228,6 +227,9 @@ bool Eter::Player::HasWon(const Board& board)
         for (size_t i = 0; i < gameBoard.size(); i++) {
             for (size_t j = 0; j < maxSize; j++) {
                 // Horizontal check
+				if (gameBoard[i][j].has_value() && gameBoard[i][j].value().IsPit())
+					return false;
+
                 if (!isTileOwnedByPlayer(gameBoard[i][j])) {
                     count = 0;
                 }
@@ -245,6 +247,9 @@ bool Eter::Player::HasWon(const Board& board)
         for (size_t i = 0; i < gameBoard[0].size(); i++) {
             for (size_t j = 0; j < maxSize; j++) {
                 // Vertical check
+                if (gameBoard[i][j].has_value() && gameBoard[i][j].value().IsPit())
+                    return false;
+
                 if (!isTileOwnedByPlayer(gameBoard[j][i])) {
                     count = 0;
                 }

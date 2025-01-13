@@ -48,6 +48,8 @@ namespace Eter {
 	private:
 	#pragma region Methods
 		int Random(const std::pair<int, int>& distance);
+		void addBorderToMatrix(Eter::BoardMatrix& board);
+		bool checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded);
 	#pragma endregion Methods
 
 	#pragma region Variables

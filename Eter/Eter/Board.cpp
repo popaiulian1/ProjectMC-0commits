@@ -92,7 +92,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 			std::cout << "\n" << border << "\nInvalid move->Tile is a pit\n" << border << "\n";
 			throw std::invalid_argument("Tile is a pit");
 		}
-		else if (!m_board[adjustedLine][adjustedColumn].has_value())
+		else if (!m_board[adjustedLine][adjustedColumn].has_value() || m_board[adjustedLine][adjustedColumn].value().GetValue().size() == 0)
 		{
 			m_board[adjustedLine][adjustedColumn] = Piece(value, true, playerName, false, false);
 		}
@@ -166,6 +166,10 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 						std::cout << "\033[1;31m" << line.value().GetTopValue().GetValue() << "\033[0m ";
 					}
 				}
+			}
+			else if (line.has_value() && line.value().IsPit())
+			{
+				std::cout << "P ";
 			}
 			else
 			{

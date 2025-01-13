@@ -57,9 +57,9 @@ namespace Eter {
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 		bool PowerExplosionAvailability() const;
 		void exportBoardToJson(const std::string& filename) const;
+		void IncreaseBoardForNegativeIndexes(const Position& pos);
 
 	private:
-		void IncreaseBoardForNegativeIndexes(const Position& pos);
 		BoardMatrix m_board;
 		size_t m_maxSize;
 		lastMove m_lastMove;

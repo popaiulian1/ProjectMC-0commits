@@ -53,7 +53,7 @@ Eter::Piece& Eter::Piece::operator=(const Piece& other)
 		m_username = other.m_username;
 		m_isIllusion = other.m_isIllusion;
 		m_eterCard = other.m_eterCard;
-		m_eterCard = other.m_isEliminated;
+		m_isEliminated = other.m_isEliminated;
 	}
 	return *this;
 }

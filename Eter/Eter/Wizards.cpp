@@ -319,23 +319,43 @@ void Eter::Wizards::coverOpponentCard(int row, int col, std::vector<Piece>& play
 
 void Eter::Wizards::createPit(int row, int col)
 {
-	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize()) {
-		std::cout << "Invalid position for creating a pit.\n";
-		return;
-	}
-
 	auto& gameBoard = m_board->GetBoardReference();
 
-	if (gameBoard[row][col].has_value()) {
-		std::cout << "The position (" << row << ", " << col << ") is already occupied. Cannot create a pit here.\n";
+	if (row < 0 || col < 0) {
+		m_board->IncreaseBoardForNegativeIndexes({ row, col });
+		gameBoard = m_board->GetBoardReference();
+	}
+
+	if (row >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board->GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (col >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board->GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
+		}
+	}
+
+	int adjustedLine = row, adjustedColumn = col;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
 		return;
 	}
 
-	gameBoard[row][col].emplace(); // Create an empty Tile in-place
-	gameBoard[row][col]->SetAsPit(); // Set it as a pit
+	if (gameBoard[adjustedLine][adjustedColumn].has_value()) {
+		std::cout << "The position (" << adjustedLine << ", " << adjustedColumn
+			<< ") is already occupied. Cannot create a pit here.\n";
+		return;
+	}
 
-	std::cout << "A pit has been created at position (" << row << ", " << col << ").\n";
+	// Create the pit
+	gameBoard[adjustedLine][adjustedColumn].emplace(); // Create an empty Tile in-place
+	gameBoard[adjustedLine][adjustedColumn]->SetAsPit(); // Set it as a pit
 
+	std::cout << "A pit has been created at position (" << adjustedLine << ", "<< adjustedColumn << ").\n";
 }
 
 
@@ -404,23 +424,43 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 
 void Eter::Wizards::gainExtraEtherCard(int row, int col)
 {
-	if (row < 0 || row >= m_board->GetCurrentSize() || col < 0 || col >= m_board->GetCurrentSize()) {
-		std::cout << "Invalid position (" << row << ", " << col << "). Please choose a valid position.\n";
-		return;
-	}
 	auto& gameBoard = m_board->GetBoardReference();
 
-	if (gameBoard[row][col].has_value()) {
-		std::cout << "Position (" << row << ", " << col << ") is not empty. Please choose an empty position.\n";
+	if (row < 0 || col < 0) {
+		m_board->IncreaseBoardForNegativeIndexes({ row, col });
+		gameBoard = m_board->GetBoardReference();
+	}
+
+	if (row >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board->GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (col >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board->GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
+		}
+	}
+
+	int adjustedLine = row, adjustedColumn = col;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
 		return;
 	}
 
-	Piece magePowerCard('E', false, this->GetUserName(), false, true);
+	if (gameBoard[adjustedLine][adjustedColumn].has_value()) {
+		std::cout << "The position (" << adjustedLine << ", " << adjustedColumn
+			<< ") is already occupied. Cannot place eter card here.\n";
+		return;
+	}
+
+	Piece magePowerCard('E', false, GetUserName(), false, true);
 
 	// Placing the Eter card
-	Tile newTile;
-	newTile.SetValue(magePowerCard);
-	gameBoard[row][col] = newTile;
+	gameBoard[adjustedLine][adjustedColumn].emplace();
+	gameBoard[adjustedLine][adjustedColumn]->SetValue(magePowerCard);
 
 	std::cout << "Mage Power card has been placed as an ETER card at (" << row << ", " << col << ").\n";
 }
@@ -517,35 +557,38 @@ void Eter::Wizards::moveEdgeRowCol() {
 			return;
 		}
 
+		// Check for pits in destination row before moving
 		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-			if (!gameBoard[destRow][col].has_value())
-				gameBoard[destRow][col] = Tile();
-		}
-
-		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-			if (gameBoard[destRow][col].value().IsPit()) {
+			if (gameBoard[destRow][col].has_value() && gameBoard[destRow][col]->IsPit()) {
 				std::cout << "Destination row contains a pit. Cannot move row.\n";
 				return;
 			}
 		}
 
-		//for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-		//	gameBoard[destRow][col] = gameBoard[srcRow][col];
-		//	gameBoard[srcRow][col] = Tile(); // Clear the source row
-		//}
-
+		// Store the source row temporarily
+		std::vector<std::optional<Tile>> tempRow;
 		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
-			if (gameBoard[destRow][col].has_value() && gameBoard[srcRow][col].has_value()) {
-				std::swap(gameBoard[destRow][col], gameBoard[srcRow][col]);
+			if (gameBoard[srcRow][col].has_value()) {
+				tempRow.push_back(std::move(gameBoard[srcRow][col]));
 			}
-			else if (gameBoard[destRow][col].has_value()) {
+			else {
+				tempRow.push_back(std::nullopt);
+			}
+		}
+
+		// Move destination row to source if it has any pieces
+		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+			if (gameBoard[destRow][col].has_value()) {
 				gameBoard[srcRow][col] = std::move(gameBoard[destRow][col]);
-				gameBoard[destRow][col] = std::nullopt;
 			}
-			else if (gameBoard[srcRow][col].has_value()) {
-				gameBoard[destRow][col] = std::move(gameBoard[srcRow][col]);
+			else {
 				gameBoard[srcRow][col] = std::nullopt;
 			}
+		}
+
+		// Move stored source row to destination
+		for (int col = 0; col < m_board->GetCurrentSize(); ++col) {
+			gameBoard[destRow][col] = std::move(tempRow[col]);
 		}
 
 		std::cout << "Row " << srcRow << " successfully moved to " << destRow << ".\n";
@@ -574,41 +617,44 @@ void Eter::Wizards::moveEdgeRowCol() {
 			return;
 		}
 
+		// Check for pits in destination column before moving
 		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
-			if(!gameBoard[row][destCol].has_value())
-				gameBoard[row][destCol] = Tile();
-		}
-
-		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
-			if (gameBoard[row][destCol].value().IsPit()) {
+			if (gameBoard[row][destCol].has_value() && gameBoard[row][destCol]->IsPit()) {
 				std::cout << "Destination column contains a pit. Cannot move column.\n";
 				return;
 			}
 		}
 
-		//for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
-		//	gameBoard[row][destCol] = gameBoard[row][srcCol];
-		//	gameBoard[row][srcCol] = Tile(); // Clear the source column
-		//}
-
+		// Store the source column temporarily
+		std::vector<std::optional<Tile>> tempCol;
 		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
-			if (gameBoard[row][srcCol].has_value() && gameBoard[row][destCol].has_value()) {
-				std::swap(gameBoard[row][destCol], gameBoard[row][srcCol]);
+			if (gameBoard[row][srcCol].has_value()) {
+				tempCol.push_back(std::move(gameBoard[row][srcCol]));
 			}
-			else if (gameBoard[row][srcCol].has_value()) {
-				gameBoard[row][destCol] = std::move(gameBoard[row][srcCol]);
+			else {
+				tempCol.push_back(std::nullopt);
+			}
+		}
+
+		// Move destination column to source if it has any pieces
+		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+			if (gameBoard[row][destCol].has_value()) {
+				gameBoard[row][srcCol] = std::move(gameBoard[row][destCol]);
+			}
+			else {
 				gameBoard[row][srcCol] = std::nullopt;
 			}
-			else if (gameBoard[row][destCol].has_value()) {
-				gameBoard[row][srcCol] = std::move(gameBoard[row][destCol]);
-				gameBoard[row][destCol] = std::nullopt;
-			}
+		}
+
+		// Move stored source column to destination
+		for (int row = 0; row < m_board->GetCurrentSize(); ++row) {
+			gameBoard[row][destCol] = std::move(tempCol[row]);
 		}
 
 		std::cout << "Column " << srcCol << " successfully moved to " << destCol << ".\n";
 	}
-	else 
+	else {
 		std::cout << "Invalid option. Please choose 'row' or 'column'.\n";
-	
+	}
 }
 

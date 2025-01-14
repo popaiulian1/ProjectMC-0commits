@@ -158,14 +158,11 @@ void Eter::WizardDuelMode::SetWizzardType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
+	int mageTypePlayer1 = Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	while (mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
-
-	int mageTypePlayer1 = 3;
-	int mageTypePlayer2 = 3;
+		mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
@@ -329,16 +326,28 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		std::cout << "Choose your power: \n";
 		std::cout << "1. Eliminate opponent card.\n";
 		std::cout << "2. Eliminate a row or a column.\n";
+		static bool firePower1used = false;
+		static bool firePower2used = false;
 
 		int power;
 		std::cin >> power;
 
+		if ((power == 1 && firePower1used) || (power == 2 && firePower2used))
+		{
+			std::cout << "You have already used this power.\n";
+			break;
+		}
+
 		const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
-		if (power == 1)
+		if (power == 1) {
 			m_currentWizard->fireMasterPower(power, row, column);
-		else if (power == 2)
+			firePower1used = true;
+		}
+		else if (power == 2) {
 			m_currentWizard->fireMasterPower(power, row, column);
+			firePower2used = true;
+		}
 
 		auto wizardBoard = m_currentWizard->GetBoardWizard();
 		GameBoard.SetBoard(wizardBoard->GetBoard());
@@ -349,17 +358,28 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		std::cout << "Choose your power: \n";
 		std::cout << "1. Cover opponent card.\n";
 		std::cout << "2. Create pit.\n";
+		static bool earthPower1used = false;
+		static bool earthPower2used = false;
 
 		int power;
 		std::cin >> power;
 
+		if ((power == 1 && earthPower1used) || (power == 2 && earthPower2used)) {
+			std::cout << "You have already used this power.\n";
+			break;
+		}
+
 		const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
-		if (power == 1)
+		if (power == 1) {
 			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
-		else if (power == 2)
+			earthPower1used = true;
+		}
+		else if (power == 2) {
 			m_currentWizard->earthMasterPower(power, row, column, m_currentPlayer->GetPiecesReference());
-
+			earthPower2used = true;
+		}
+			
 		auto wizardBoard = m_currentWizard->GetBoardWizard();
 		GameBoard.SetBoard(wizardBoard->GetBoard());
 
@@ -370,17 +390,28 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		std::cout << "Choose your power: \n";
 		std::cout << "1. Move own stack.\n";
 		std::cout << "2. Gain extra ether card.\n";
+		static bool airPower1used = false;
+		static bool airPower2used = false;
 
 		int power;
 		std::cin >> power;
 
+		if ((power == 1 && airPower1used) || (power == 2 && airPower2used)) {
+			std::cout << "You have already used this power.\n";
+			break;
+		}
+
 		const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
 		int row = Position.first, column = Position.second;
-		if (power == 1)
+		if (power == 1) {
 			m_currentWizard->airMasterPower(power, row, column);
-		else if (power == 2)
+			airPower1used = true;
+		}
+		else if (power == 2) {
 			m_currentWizard->airMasterPower(power, row, column);
-
+			airPower2used = true;
+		}
+			
 		auto wizardBoard = m_currentWizard->GetBoardWizard();
 		GameBoard.SetBoard(wizardBoard->GetBoard());
 
@@ -391,9 +422,16 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		std::cout << "Choose your power: \n";
 		std::cout << "1. Move opponent stack.\n";
 		std::cout << "2. Move EdgeRowCol.\n";
+		static bool waterPower1used = false;
+		static bool waterPower2used = false;
 
 		int power;
 		std::cin >> power;
+
+		if ((power == 1 && waterPower1used) || (power == 2 && waterPower2used)) {
+			std::cout << "You have already used this power.\n";
+			break;
+		}
 
 		const std::pair<int, int>& Position1 = m_currentPlayer->Play(firstMove);
 		int srcRow = Position1.first, srcColumn = Position1.second;
@@ -401,11 +439,15 @@ void Eter::WizardDuelMode::HandleWizzardType()
 		const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play(firstMove);
 		int destRow = Position2.first, destColumn = Position2.second;
 
-		if (power == 1)
+		if (power == 1) {
 			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
-		else if (power == 2)
+			waterPower1used = true;
+		}
+		else if (power == 2) {
 			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
-
+			waterPower2used = true;
+		}
+			
 		auto wizardBoard = m_currentWizard->GetBoardWizard();
 		GameBoard.SetBoard(wizardBoard->GetBoard());
 

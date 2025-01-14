@@ -39,11 +39,23 @@ namespace Eter {
 		
 		//Constructors
 		Elemental() = default;
-		Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard);
+		Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard, std::string username);
 		Elemental(const Elemental& other);
 		Elemental(Elemental&& other) = default;
 		Elemental& operator=(const Elemental& other) = default;
 		~Elemental() = default;
+
+		//Getters
+		const bool GetElementalCardUsed() const;
+		const ElementalCardName GetNameCard() const;
+		const std::string GetUsername() const;
+
+
+		//Setters
+		void SetElementalCardUsed(const bool ElementalCardUsed);
+		void SetNameCard(const ElementalCardName nameCard);
+		void SetUsername(const std::string username);
+	
 
 		//Methods
 		void Destruction(const Player& opponent, const Board& board);
@@ -67,12 +79,15 @@ namespace Eter {
 		bool isRowFull(const Board& board, int rowIndex);
 		bool isColumnFull(const Board& board, int colIndex);
 
+		const std::string toSringElementalCardName(ElementalCardName nameCard);
+
 
 
 	private:
 		Board m_board;
 		bool m_ElementalCardUsed;
 		ElementalCardName m_nameCard;
+		std::string m_username;
 	};
 }
 

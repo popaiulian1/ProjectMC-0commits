@@ -3,11 +3,51 @@
 #include "Board.h"
 #include "Tile.h"
 
-Eter::Elemental::Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard) : m_board{ board }, m_ElementalCardUsed{ ElementalCardUsed }, m_nameCard{ nameCard }
+Eter::Elemental::Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard, std::string username) : 
+	m_board{ board }, 
+	m_ElementalCardUsed{ ElementalCardUsed }, 
+	m_nameCard{ nameCard },
+	m_username{ username }
 {}
 
-Eter::Elemental::Elemental(const Elemental& other) : m_board{ other.m_board }, m_ElementalCardUsed{ other.m_ElementalCardUsed }, m_nameCard{ other.m_nameCard }
+Eter::Elemental::Elemental(const Elemental& other) : 
+	m_board{ other.m_board }, 
+	m_ElementalCardUsed{ other.m_ElementalCardUsed }, 
+	m_nameCard{ other.m_nameCard },
+	m_username{ other.m_username }
 {}
+
+#pragma region Getters and Setters
+const bool Eter::Elemental::GetElementalCardUsed() const
+{
+	return m_ElementalCardUsed;
+}
+
+const Eter::ElementalCardName Eter::Elemental::GetNameCard() const
+{
+	return m_nameCard;
+}
+
+const std::string Eter::Elemental::GetUsername() const
+{
+	return m_username;
+}
+
+void Eter::Elemental::SetElementalCardUsed(const bool ElementalCardUsed)
+{
+	m_ElementalCardUsed = ElementalCardUsed;
+}
+
+void Eter::Elemental::SetNameCard(const ElementalCardName nameCard)
+{
+	m_nameCard = nameCard;
+}
+
+void Eter::Elemental::SetUsername(const std::string username)
+{
+	m_username = username;
+}
+#pragma endregion Getters and Setters
 
 void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Change positions of 2 different cards or stacks of cards.
 {
@@ -328,7 +368,7 @@ void Eter::Elemental::shiftRowToLeft(Board& board, int index)
 	}
 
 	for (int col = 0; col < size - 1; ++col) {
-		gameBoard[index][col] = gameBoard[index][col + 1];
+		//gameBoard[index][col] = gameBoard[index][col + 1];
 	}
 
 	gameBoard[index][size - 1].reset();
@@ -356,7 +396,7 @@ void Eter::Elemental::shiftRowToRight(Board& board, int index)
 	}
 
 	for (int col = size - 1; col > 0; --col) {
-		gameBoard[index][col] = gameBoard[index][col - 1];
+		//gameBoard[index][col] = gameBoard[index][col - 1];
 	}
 
 	gameBoard[index][0].reset();
@@ -381,7 +421,7 @@ void Eter::Elemental::shiftColUp(Board& board, int index)
 	}
 
 	for (int row = 1; row < size; ++row) {
-		gameBoard[row - 1][index] = gameBoard[row][index];
+		//gameBoard[row - 1][index] = gameBoard[row][index];
 	}
 
 	gameBoard[size - 1][index].reset();
@@ -406,7 +446,7 @@ void Eter::Elemental::shiftColDown(Board& board, int index)
 	}
 
 	for (int row = size - 2; row >= 0; --row) {
-		gameBoard[row + 1][index] = gameBoard[row][index];
+		//gameBoard[row + 1][index] = gameBoard[row][index];
 	}
 
 	gameBoard[0][index].reset();
@@ -436,6 +476,62 @@ bool Eter::Elemental::isColumnFull(const Board& board, int colIndex)
 		}
 	}
 	return true;
+}
+
+const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard)
+{
+	switch (nameCard) {
+	case ElementalCardName::CONTROLLED_EXPLOSION:
+		return "Controlled Explosion";
+	case ElementalCardName::DESTRUCTION:
+		return "Destruction";
+	case ElementalCardName::FLAME:
+		return "Flame";
+	case ElementalCardName::FIRE:
+		return "Fire";
+	case ElementalCardName::ASH:
+		return "Ash";
+	case ElementalCardName::SPARK:
+		return "Spark";
+	case ElementalCardName::SQUALL:
+		return "Squall";
+	case ElementalCardName::GALE:
+		return "Gale";
+	case ElementalCardName::HURRICANE:
+		return "Hurricane";
+	case ElementalCardName::GUST:
+		return "Gust";
+	case ElementalCardName::MIRAGE:
+		return "Mirage";
+	case ElementalCardName::STORM:
+		return "Storm";
+	case ElementalCardName::TIDE:
+		return "Tide";
+	case ElementalCardName::MIST:
+		return "Mist";
+	case ElementalCardName::WAVE:
+		return "Wave";
+	case ElementalCardName::WHIRLPOOL:
+		return "Whirlpool";
+	case ElementalCardName::BLIZZARD:
+		return "Blizzard";
+	case ElementalCardName::WATERFALL:
+		return "Waterfall";
+	case ElementalCardName::SUPPORT:
+		return "Support";
+	case ElementalCardName::EARTHQUAKE:
+		return "Earthquake";
+	case ElementalCardName::CRUMBLE:
+		return "Crumble";
+	case ElementalCardName::BORDER:
+		return "Border";
+	case ElementalCardName::AVALANCHE:
+		return "Avalanche";
+	case ElementalCardName::ROCK:
+		return "Rock";
+	}
+	
+
 }
 
 void Eter::Elemental::Hurricane(Board& board)

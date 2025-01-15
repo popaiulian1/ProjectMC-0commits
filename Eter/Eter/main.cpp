@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Game.h"
 #include "WizardDuelMode.h"
+#include "ElementalBattleMode.h"
 #include "json.hpp"
 #include <fstream>
 
@@ -31,13 +32,15 @@ void jsonTestWrite() {
 
 	std::ofstream output("exampleExporting.json");
 	output << j.dump(4) << std::endl;
-
 }
 
 int main() {
 
-	Eter::WizardDuelMode game;
+	Eter::ElementalBattleMode game;
 	game.StartGame();
+
+	/*Eter::WizardDuelMode game;
+	game.StartGame();*/
 
 	/*Eter::Game game;
 	game.StartGame();*/

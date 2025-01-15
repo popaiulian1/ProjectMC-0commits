@@ -73,6 +73,7 @@ namespace Eter {
 		void Spark(Board& board, Player& player);
 		void Hurricane(Board& board);
 		void Gust(Board& board);
+		void Mirage(Board& board, Player& player);
 		
 		//Methods
 		void shiftRowToLeft(Board& board, int index);

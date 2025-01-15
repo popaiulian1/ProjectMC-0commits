@@ -102,6 +102,7 @@ void Eter::WizardDuelMode::UsernameHandling()
 {
 	std::string UsernamePlayer1;
 	std::string UsernamePlayer2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 	if (Player1.GetUserName() == "") {

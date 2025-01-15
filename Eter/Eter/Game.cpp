@@ -47,6 +47,7 @@ void Eter::Game::InitializePracticeGame()
 void Eter::Game::UsernameHandling()
 {
 	std::string username;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	if (m_player1.GetUserName() == "") {
 		std::cout << "Username of the first player is: ";

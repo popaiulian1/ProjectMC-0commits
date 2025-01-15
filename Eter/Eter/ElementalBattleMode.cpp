@@ -104,6 +104,7 @@ void Eter::ElementalBattleMode::StartGame()
 
 void Eter::ElementalBattleMode::UsernameHandling()
 {
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::string UsernamePlayer1;
 	std::string UsernamePlayer2;
 	auto& Player1 = this->GetPlayer1Reference();

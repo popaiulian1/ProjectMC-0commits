@@ -139,6 +139,7 @@
     <ClInclude Include="Elemental.h" />
     <ClInclude Include="ElementalBattleMode.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerExplosion.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="ElementalBattleMode.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerExplosion.cpp" />

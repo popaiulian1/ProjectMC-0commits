@@ -4,6 +4,7 @@
 #include "ElementalBattleMode.h"
 #include "json.hpp"
 #include <fstream>
+#include "MainMenu.h"
 
 void jsonTestRead() {
 	std::ifstream input("exampleImporting.json");
@@ -36,8 +37,11 @@ void jsonTestWrite() {
 
 int main() {
 
-	Eter::ElementalBattleMode game;
-	game.StartGame();
+	/*Eter::ElementalBattleMode game;
+	game.StartGame();*/
+
+	MainMenu menu;
+	menu.Start();
 
 	/*Eter::WizardDuelMode game;
 	game.StartGame();*/

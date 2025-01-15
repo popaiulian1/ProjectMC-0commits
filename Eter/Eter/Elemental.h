@@ -56,6 +56,7 @@ namespace Eter {
 		void SetElementalCardUsed(const bool ElementalCardUsed);
 		void SetNameCard(const ElementalCardName nameCard);
 		void SetUsername(const std::string username);
+		void SetBoardForElemental(const Board& board);
 	
 
 		//Methods for powers

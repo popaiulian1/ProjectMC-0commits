@@ -12,8 +12,8 @@ namespace Eter {
 			const Player& player1,
 			const Player& player2,
 			Board& board, 
-			Elemental& m_elementPlayer1,
-			Elemental& m_elementPlayer2,
+			Elemental& m_elementCard1,
+			Elemental& m_elementCard2,
 			const GameType& gameType
 		);
 		~ElementalBattleMode() = default;
@@ -30,15 +30,21 @@ namespace Eter {
 
 
 	#pragma region Setters
-		void SetElementPlayer1(const Elemental& element);
-		void SetElementPlayer2(const Elemental& element);
+		void SetElementCard1(const Elemental& element);
+		void SetElementCard2(const Elemental& element);
+
 	#pragma endregion Setters
 
 	#pragma region Methodes
 		void StartGame() override;
+		void PlayGame() override;
+		void Illusion(Player& player) override;
+		void PlayEterCard(Player& player);
 		void UsernameHandling();
 		void InitializeElementalBattleGame();
 		void SetElementalType();
+		void HandleElementalType();
+		void ElementalSelection(Elemental element);
 	#pragma endregion Methodes
 
 	private:
@@ -50,8 +56,8 @@ namespace Eter {
 
 	#pragma region Variables
 		static const size_t kDECK_SIZE_DUEL{ 10 };
-		Elemental m_elementPlayer1;
-		Elemental m_elementPlayer2;
+		Elemental m_elementCard1;
+		Elemental m_elementCard2;
 		Elemental* m_currentElement = nullptr;
 		Player* m_currentPlayer = nullptr;
 		size_t m_rounds = 1;

@@ -47,6 +47,10 @@ void Eter::Elemental::SetUsername(const std::string username)
 {
 	m_username = username;
 }
+void Eter::Elemental::SetBoardForElemental(const Board& board)
+{
+	m_board = board;
+}
 #pragma endregion Getters and Setters
 
 void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Change positions of 2 different cards or stacks of cards.

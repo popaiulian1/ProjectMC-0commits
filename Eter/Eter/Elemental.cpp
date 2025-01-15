@@ -585,6 +585,91 @@ void Eter::Elemental::Hurricane(Board& board)
 
 }
 
+void Eter::Elemental::Gust(Board& board)
+{
+	auto& gameBoard = board.GetBoardReference();
+
+	std::vector<std::pair<int, int>> cardsPositions;
+
+	// We stack the single cards position in cardsPositions
+	for (int row = 0; row < board.GetCurrentSize(); ++row) {
+		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value() && tileOptional->GetValue().size() ==1) {
+				Piece card = tileOptional->GetTopValue();
+				cardsPositions.emplace_back(row, col);
+				std::cout << "Option " << cardsPositions.size() << ": " << card.GetValue() << " at row '" << row << "' and column '" << col << "'.\n";
+			}
+		}
+	}
+
+	if (cardsPositions.empty()) {
+		std::cout << "No single cards placed on tiles were found.\n";
+		return;
+	}
+
+	std::cout << "What card would you like to move? (select from the options)\n";
+	int option;
+	std::cin >> option;
+
+	if (option < 1 || option>static_cast<int>(cardsPositions.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	auto [currentRow, currentCol] = cardsPositions[option - 1];
+
+	std::cout << "In what direction would you like to move the card(right, left, up, down)? The card must have a higher value than the one already placed.\n";
+	std::string move;
+	std::cin >> move;
+
+	int newRow = currentRow, newCol = currentCol;
+
+	if (move == "right") {
+		newCol++;
+	}
+	else if (move == "left") {
+		newCol--;
+	}
+	else if (move == "up") {
+		newRow--;
+	}
+	else if (move == "down") {
+		newRow++;
+	}
+	else {
+		std::cout << "Invalid direction. Operation canceled.\n";
+		return;
+	}
+
+	if (newRow < 0 || newRow >= board.GetCurrentSize() || newCol < 0 || newCol >= board.GetCurrentSize()) {
+		std::cout << "Invalid move. The card would move out of bounds. Operation canceled.\n";
+		return;
+	}
+
+	auto& destTileOptional = gameBoard[newRow][newCol];
+
+	if (destTileOptional.has_value()) {
+		Piece destCard = destTileOptional->GetTopValue();
+		Piece movingCard = gameBoard[currentRow][currentCol]->GetTopValue();
+
+		if (destCard.GetValue() >= movingCard.GetValue()) {
+			std::cout << "Invalid move. The destination card does not have a lower value. Operation canceled.\n";
+			return;
+		}
+	}
+	else {
+		std::cout << "Invalid move. The destination must contain a card. Operation canceled.\n";
+		return;
+	}
+
+	destTileOptional->SetValue(gameBoard[currentRow][currentCol]->GetTopValue());
+	gameBoard[currentRow][currentCol].reset();
+
+	std::cout << "Card successfully moved to (" << newRow << ", " << newCol << ").\n";
+
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

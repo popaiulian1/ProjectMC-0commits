@@ -45,6 +45,7 @@ namespace Eter {
 		Elemental& operator=(const Elemental& other) = default;
 		~Elemental() = default;
 
+
 		//Getters
 		const bool GetElementalCardUsed() const;
 		const ElementalCardName GetNameCard() const;
@@ -57,7 +58,7 @@ namespace Eter {
 		void SetUsername(const std::string username);
 	
 
-		//Methods
+		//Methods for powers
 		void Destruction(const Player& opponent, const Board& board);
 		void Squall(Player& opponent, Board& board);
 		void Gale(Board& board, Player& player1, Player& player2);
@@ -71,14 +72,15 @@ namespace Eter {
 		void Ash(Board& board, Player& player);
 		void Spark(Board& board, Player& player);
 		void Hurricane(Board& board);
+		void Gust(Board& board);
 		
+		//Methods
 		void shiftRowToLeft(Board& board, int index);
 		void shiftRowToRight(Board& board, int index);
 		void shiftColUp(Board& board, int index);
 		void shiftColDown(Board& board, int index);
 		bool isRowFull(const Board& board, int rowIndex);
 		bool isColumnFull(const Board& board, int colIndex);
-
 		const std::string toSringElementalCardName(ElementalCardName nameCard);
 
 

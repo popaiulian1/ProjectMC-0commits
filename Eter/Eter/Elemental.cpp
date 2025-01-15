@@ -815,6 +815,106 @@ void Eter::Elemental::Wave(Board& board, Player& player)
 
 }
 
+void Eter::Elemental::Whirlpool(Board& board) {
+	auto& gameBoard = board.GetBoardReference();
+
+	std::cout << "What tile would you like to fill? Tile must be empty and have cards at positions up and down, or left and right. Enter row and column:\n";
+	int row, col;
+	std::cin >> row >> col;
+
+	if (row < 0 || row >= board.GetCurrentSize() || col < 0 || col >= board.GetCurrentSize() || gameBoard[row][col].has_value()) {
+		std::cout << "Invalid position or the tile is not empty.\n";
+		return;
+	}
+
+	std::cout << "Do you want to use adjacent positions on the same row (horizontal) or the same column (vertical)? Enter 'row' or 'column':\n";
+	std::string choice;
+	std::cin >> choice;
+
+	Piece* card1 = nullptr;
+	Piece* card2 = nullptr;
+	int adjRow1 = -1, adjCol1 = -1, adjRow2 = -1, adjCol2 = -1;
+
+	//Validating options
+	if (choice == "row") {
+		if (col > 0 && gameBoard[row][col - 1].has_value() && !gameBoard[row][col - 1]->GetValueRef().empty()) {
+			card1 = &gameBoard[row][col - 1]->GetValueRef().back();
+			adjRow1 = row;
+			adjCol1 = col - 1;
+		}
+		if (col < board.GetCurrentSize() - 1 && gameBoard[row][col + 1].has_value() && !gameBoard[row][col + 1]->GetValueRef().empty()) {
+			card2 = &gameBoard[row][col + 1]->GetValueRef().back();
+			adjRow2 = row;
+			adjCol2 = col + 1;
+		}
+	}
+	else if (choice == "column") {
+		if (row > 0 && gameBoard[row - 1][col].has_value() && !gameBoard[row - 1][col]->GetValueRef().empty()) {
+			card1 = &gameBoard[row - 1][col]->GetValueRef().back();
+			adjRow1 = row - 1;
+			adjCol1 = col;
+		}
+		if (row < board.GetCurrentSize() - 1 && gameBoard[row + 1][col].has_value() && !gameBoard[row + 1][col]->GetValueRef().empty()) {
+			card2 = &gameBoard[row + 1][col]->GetValueRef().back();
+			adjRow2 = row + 1;
+			adjCol2 = col;
+		}
+	}
+	else {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	if (!card1 || !card2) {
+		std::cout << "There are not two cards in a straight line adjacent to the target tile.\n";
+		return;
+	}
+
+	//Comparing the cards
+	Piece* topCard = nullptr;
+	Piece* bottomCard = nullptr;
+
+	if (card1->GetValue() > card2->GetValue()) {
+		topCard = card1;
+		bottomCard = card2;
+	}
+	else if (card1->GetValue() < card2->GetValue()) {
+		topCard = card2;
+		bottomCard = card1;
+	}
+	else {
+		std::cout << "The cards have equal values (" << card1->GetValue() << "). Which card should be on top? (1 for first, 2 for second):\n";
+		std::cout << "Card 1: owner is " << card1->GetUserName() << "\n";
+		std::cout << "Card 2: owner is " << card2->GetUserName() << "\n";
+		int cardChoice;
+		std::cin >> cardChoice;
+		if (cardChoice == 1) {
+			topCard = card1;
+			bottomCard = card2;
+		}
+		else {
+			topCard = card2;
+			bottomCard = card1;
+		}
+	}
+
+	//Placing the cards
+	auto& stack1 = gameBoard[adjRow1][adjCol1]->GetValueRef();
+	stack1.pop_back();
+	if (stack1.empty()) gameBoard[adjRow1][adjCol1].reset();
+
+	auto& stack2 = gameBoard[adjRow2][adjCol2]->GetValueRef();
+	stack2.pop_back();
+	if (stack2.empty()) gameBoard[adjRow2][adjCol2].reset();
+
+	auto& destStack = gameBoard[row][col]->GetValueRef();
+	destStack.push_back(*bottomCard);
+	destStack.push_back(*topCard);
+
+	std::cout << "Whirlpool executed successfully. Cards moved to (" << row << ", " << col << ").\n";
+}
+
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

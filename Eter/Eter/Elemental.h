@@ -74,6 +74,7 @@ namespace Eter {
 		void Hurricane(Board& board);
 		void Gust(Board& board);
 		void Mirage(Board& board, Player& player);
+		void Wave(Board& board, Player& player);
 		
 		//Methods
 		void shiftRowToLeft(Board& board, int index);

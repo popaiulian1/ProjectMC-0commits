@@ -730,6 +730,91 @@ void Eter::Elemental::Mirage(Board& board, Player& player)
 
 }
 
+void Eter::Elemental::Wave(Board& board, Player& player)
+{
+	auto& gameBoard = board.GetBoardReference();
+	std::cout << "Select the position of the card/stack you want to move to a free adiacent tile.(row,column)\n";
+	int srcRow, srcCol;
+	std::cin >> srcRow >> srcCol;
+	if (srcRow<0 || srcRow>board.GetCurrentSize() || srcCol<0 || srcCol>board.GetCurrentSize()) {
+		std::cout << "Invalid position.\n";
+		return;
+	}
+	auto& srcTile = gameBoard[srcRow][srcCol];
+	if (!srcTile.has_value()) {
+		std::cout << "No card/stack found at the selected position.\n";
+		return;
+	}
+	std::cout << "In what direction would you like to move the card/stack (right, left, up, down, up-left, up-right, down-left, down-right)? The card must have a higher value than the one already placed.\n";
+	std::string move;
+	std::cin >> move;
+
+	int newRow = srcRow, newCol = srcCol;
+
+	if (move == "right") {
+		newCol++;
+	}
+	else if (move == "left") {
+		newCol--;
+	}
+	else if (move == "up") {
+		newRow--;
+	}
+	else if (move == "down") {
+		newRow++;
+	}
+	else if(move=="up-left"){
+		newRow--;
+		newCol--;
+	}
+	else if (move == "up-right"){
+		newRow--;
+		newCol++;
+	}
+	else if (move == "down-left") {
+		newRow++;
+		newCol--;
+	}
+	else if (move == "down-right") {
+		newRow++;
+		newCol++;
+	}
+	else {
+		std::cout << "Invalid direction. Operation canceled.\n";
+		return;
+	}
+
+	if (newRow < 0 || newRow >= board.GetCurrentSize() || newCol < 0 || newCol >= board.GetCurrentSize() || gameBoard[newRow][newCol].has_value()) {
+		std::cout << "Invalid move. The card would move out of bounds or the destination tile is not empty. Operation canceled.\n";
+		return;
+	}
+
+	//Moving the card/stack
+	gameBoard[newRow][newCol] = srcTile; 
+	srcTile.reset(); 
+	std::cout << "Card/stack moved to (" << newRow << ", " << newCol << ").\n";
+
+	//Placing a new card to the now empty space
+	std::cout << "Choose a card from your hand to play on the now empty space at (" << srcRow << ", " << srcCol << "):\n";
+	player.PrintPieces();
+
+	int choice;
+	std::cin >> choice;
+
+	auto& hand = player.GetPiecesReference();
+	if (choice < 1 || choice > static_cast<int>(hand.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+	Piece chosenCard = hand[choice - 1];
+	chosenCard.SetIsPlaced(true);
+	hand.erase(hand.begin() + (choice - 1));
+
+	srcTile->SetValue(chosenCard);
+	std::cout << "Card from your hand placed successfully on (" << srcRow << ", " << srcCol << ").\n";
+
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

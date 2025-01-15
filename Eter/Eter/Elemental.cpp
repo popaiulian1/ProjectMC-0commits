@@ -670,6 +670,66 @@ void Eter::Elemental::Gust(Board& board)
 
 }
 
+void Eter::Elemental::Mirage(Board& board, Player& player)
+{
+	Piece illusionCard;
+	bool foundIllusion = false;
+	int illusionRow = -1, illusionCol = -1;
+	auto& gameBoard = board.GetBoardReference();
+	for (int row = 0; row < board.GetCurrentSize(); ++row) {
+		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value()) {
+				auto &stack = tileOptional->GetValueRef();
+				for (size_t i = 0; i < stack.size() - 1; ++i)
+					if (stack[i].GetUserName() == player.GetUserName() && stack[i].GetIsIllusion()) {
+						illusionCard = stack[i];
+						stack.erase(stack.begin() + i); //Eliminating the illusion
+						foundIllusion = true;
+						illusionRow = row;
+						illusionCol = col;
+						break;
+					}
+			}
+			if (foundIllusion) break;
+		}
+		if (foundIllusion) break;
+	}
+
+	if (!foundIllusion) {
+		std::cout << "No Illusion card found for the player on the board.\n";
+		return;
+	}
+
+	//Chosing and placing the new illusion
+	std::cout << "Choose a card from your hand to replace the Illusion:\n";
+	player.PrintPieces();
+
+	int choice;
+	std::cin >> choice;
+
+	auto& hand = player.GetPiecesReference();
+
+	if (choice < 1 || choice > static_cast<int>(hand.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	Piece chosenCard = hand[choice - 1];
+	chosenCard.SetIsIllusion(true);
+	chosenCard.SetIsPlaced(true);
+	hand.erase(hand.begin() + (choice - 1));
+
+	player.AddPiece(illusionCard);
+
+	// Placing the new illusion
+	auto& destinationTile = gameBoard[illusionRow][illusionCol];
+	destinationTile->SetValue(chosenCard);
+
+	std::cout << "Illusion replaced successfully! New card placed at (" << illusionRow << ", " << illusionCol << ").\n";
+
+}
+
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {
 	auto GameBoard = board.GetBoard();

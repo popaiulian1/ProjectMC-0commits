@@ -77,6 +77,7 @@ namespace Eter {
 		void Mirage(Board& board, Player& player);
 		void Wave(Board& board, Player& player);
 		void Whirlpool(Board& board);
+		void Blizzard(Board& board, int row, int column, Player& opponent); //TO DO: not finished
 		
 		//Methods
 		void shiftRowToLeft(Board& board, int index);

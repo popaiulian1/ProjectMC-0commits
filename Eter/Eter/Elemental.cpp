@@ -918,6 +918,48 @@ void Eter::Elemental::Whirlpool(Board& board) {
 	std::cout << "Whirlpool executed successfully. Cards moved to (" << row << ", " << col << ").\n";
 }
 
+void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
+{
+	auto gameBoard = board.GetBoard();
+
+	std::string input = "";
+	std::cout << "Choose between 'row' and 'column': ";
+	std::cin >> input;
+
+	enum rowOrColumn
+	{
+		row,
+		column
+	};
+
+	rowOrColumn choice;
+	if (input == "row") {
+		choice = rowOrColumn::row;
+	}
+	else if (input == "column") {
+		choice = rowOrColumn::column;
+	}
+
+	switch (choice)
+	{
+	case rowOrColumn::row :
+		//opponent can't play cards on the row
+		break;
+	case rowOrColumn::column :
+		//TO DO: opponent can't play cards on the column
+		break;
+	}
+
+	bool freeTile = false;
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			//TO DO: if not the blocked row or column
+			if (tile.value().GetTopValue().GetValue() != NULL)
+				freeTile = true;
+		}
+	}
+}
+
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {

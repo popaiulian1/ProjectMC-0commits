@@ -44,6 +44,7 @@ namespace Eter {
 	};
 
 	void to_json(nlohmann::json& j, const Piece& p);
+	void from_json(const nlohmann::json& j, Piece& p);
 }
 
 

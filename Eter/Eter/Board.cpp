@@ -53,6 +53,11 @@ size_t Eter::Board::GetCurrentSize() const
 	return m_board.size();
 }
 
+Eter::lastMove Eter::Board::GetLastMove() const
+{
+	return m_lastMove;
+}
+
 void Eter::Board::SetBoard(const BoardMatrix& board)
 {
 	m_board = board;
@@ -122,6 +127,7 @@ void Eter::Board::SetTileValue(const Position& pos, const char& value, const std
 			std::cout << "\n" << border << "\nInvalid move->Tile value is bigger than card played\n" << border << "\n";
 		}
 	}
+	SetLastMove(playerName, adjustedLine, adjustedColumn);
 }
 
 void Eter::Board::SetLastMove(const std::string& playerUsername, size_t row, size_t column)
@@ -258,40 +264,40 @@ bool Eter::Board::PowerExplosionAvailability() const
 	return false;
 }
 
-void Eter::Board::exportBoardToJson(const std::string& filename) const
-{
-	nlohmann::json j_board;
-
-	j_board["maxSize"] = m_maxSize;
-	j_board["currentSize"] = m_board.size();
-	j_board["lastMove"] = {
-		{"playerUsername", m_lastMove.m_playerUsername },
-		{ "row", m_lastMove.m_row },
-		{ "column", m_lastMove.m_column}
-	};
-
-	j_board["board"] = nlohmann::json::array();
-
-	for (const auto& row : m_board)
-	{
-		nlohmann::json j_row = nlohmann::json::array();
-		for (const auto& tile : row) {
-			if (tile.has_value()) {
-				j_row.push_back(tile.value());
-			}
-			else {
-				j_row.push_back(nullptr);
-			}
-		}
-		j_board["board"].push_back(j_row);
-	}
-
-	//Write to file here
-	std::ofstream file(filename);
-	if (file.is_open()) {
-		file << j_board.dump(4);
-	}
-}
+//void Eter::Board::exportBoardToJson(const std::string& filename) const
+//{
+//	nlohmann::json j_board;
+//
+//	j_board["maxSize"] = m_maxSize;
+//	j_board["currentSize"] = m_board.size();
+//	j_board["lastMove"] = {
+//		{"playerUsername", m_lastMove.m_playerUsername },
+//		{ "row", m_lastMove.m_row },
+//		{ "column", m_lastMove.m_column}
+//	};
+//
+//	j_board["board"] = nlohmann::json::array();
+//
+//	for (const auto& row : m_board)
+//	{
+//		nlohmann::json j_row = nlohmann::json::array();
+//		for (const auto& tile : row) {
+//			if (tile.has_value()) {
+//				j_row.push_back(tile.value());
+//			}
+//			else {
+//				j_row.push_back(nullptr);
+//			}
+//		}
+//		j_board["board"].push_back(j_row);
+//	}
+//
+//	//Write to file here
+//	std::ofstream file(filename);
+//	if (file.is_open()) {
+//		file << j_board.dump(4);
+//	}
+//}
 
 std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 {
@@ -310,4 +316,35 @@ std::ostream& Eter::operator<<(std::ostream& os, const Board& board)
 		os << std::endl;
 	}
 	return os;
+}
+
+void Eter::to_json(nlohmann::json& j, const Board& b)
+{
+	j = nlohmann::json{
+		{"maxSize", b.GetMaxSize()},
+		{"currentSize", b.GetCurrentSize()},
+		{"lastMove", {
+			{"playerUsername", b.GetLastMove().m_playerUsername},
+			{"row", b.GetLastMove().m_row},
+			{"column", b.GetLastMove().m_column}
+		}},
+		{"board", nlohmann::json::array()}
+	};
+
+	for (const auto& row : b.GetBoard())
+	{
+		nlohmann::json j_row = nlohmann::json::array();
+		for (const auto& tile : row)
+		{
+			if (tile.has_value())
+			{
+				j_row.push_back(tile.value());
+			}
+			else
+			{
+				j_row.push_back(nullptr);
+			}
+		}
+		j["board"].push_back(j_row);
+	}
 }

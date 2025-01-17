@@ -1,10 +1,14 @@
 #pragma once
 #include "Player.h"
 #include "Board.h"
+#include "SaveGameUtils.h"
 #include <memory>
+#include <iostream>
+#include <regex>
 
 namespace Eter
 {
+
 	class Game
 	{
 	public:
@@ -46,7 +50,8 @@ namespace Eter
 		void TotalScore(Player& player, const Board& board);
 		virtual void Illusion(Player& player);
 		bool CheckCompleteRowOrColumn() const;
-		
+		void ExportToJson();
+		void CreateFromJson();
 		
 	private:
 		//Methods

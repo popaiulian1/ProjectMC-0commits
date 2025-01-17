@@ -75,7 +75,8 @@ namespace Eter {
 
 		//std::bitset<static_cast<size_t>(PlayerState::MAX_STATE)> m_states;  Compact storage for player states | IDEA TO IMPLEMENT
 	};
-}
 
+	void to_json(nlohmann::json& j, const Player& p);
+}
 
 

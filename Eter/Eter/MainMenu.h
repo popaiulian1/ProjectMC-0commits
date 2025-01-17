@@ -11,6 +11,9 @@ public:
 	void Start();
 	void PrintMenu();
 	void PrintGameTypeMenu();
-	void ChooseGameType(int input);
+	void CreateTheLoadedGame(const nlohmann::json& gameInfo);
+	void StartPractice(const nlohmann::json& gameInfo);
+	void StartWizardDuel(const nlohmann::json& gameInfo);
+	void StartElementalDuel(const nlohmann::json& gameInfo);
 };
 

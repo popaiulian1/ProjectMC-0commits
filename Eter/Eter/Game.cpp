@@ -1,6 +1,4 @@
 #include "Game.h"
-#include <iostream>
-#include <regex>
 
 Eter::Game::Game() : m_player1{ Player() }, m_player2{ Player() }, m_board{ Board(GameType::Practice) },
 	m_currentPlayer{ &m_player1 }, m_gameType{ GameType::Practice }, m_rounds{ 0 }, m_bluePlayerName{ m_player1.GetUserName() }
@@ -93,6 +91,7 @@ void Eter::Game::PlayGame()
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
+		std::cout << "d. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -113,6 +112,10 @@ void Eter::Game::PlayGame()
 		}
 		case 'c': {
 			std::cout << "To implement";
+			break;
+		}
+		case 'd': {
+			ExportToJson();
 			break;
 		}
 		default: {
@@ -209,6 +212,31 @@ bool Eter::Game::CheckCompleteRowOrColumn() const
 	}
 
 	return false;
+}
+
+void Eter::Game::ExportToJson()
+{
+	std::string filename = Eter::GenerateSaveFilename("practice");
+	std::ofstream file("./SaveGames/"+filename);
+
+	if (file.is_open()) {
+		nlohmann::json j_game;
+		j_game["board"] = m_board;
+		j_game["player1"] = m_player1;
+		j_game["player2"] = m_player2;
+		j_game["gameType"] = m_gameType;
+		j_game["rounds"] = m_rounds;
+		j_game["bluePlayerName"] = m_bluePlayerName;
+		j_game["currentPlayer"] = *m_currentPlayer;
+		j_game["firstMove"] = firstMove;
+		j_game["DECK_SIZE_PRACTICE"] = kDECK_SIZE_PRACTICE;
+		file << j_game.dump(4);
+		file.close();
+		std::cout << "Game saved to " << filename << std::endl;
+	}
+	else {
+		std::cerr << "Error opening file " << filename << std::endl;
+	}
 }
 
 void Eter::Game::addBorderToMatrix(Eter::BoardMatrix& board)

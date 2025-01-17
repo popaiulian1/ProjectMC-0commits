@@ -129,3 +129,13 @@ void Eter::to_json(nlohmann::json& j, const Piece& p)
 		{"isEliminated", p.GetIsEliminated()}
 	};
 }
+
+void Eter::from_json(const nlohmann::json& j, Piece& p)
+{
+	p.SetValue(j.at("value").get<char>());
+	p.SetIsPlaced(j.at("isPlaced").get<bool>());
+	p.SetUserName(j.at("username").get<std::string>());
+	p.SetIsIllusion(j.at("isIllusion").get<bool>());
+	p.SetEterCard(j.at("eterCard").get<bool>());
+	p.SetIsEliminated(j.at("isEliminated").get<bool>());
+}

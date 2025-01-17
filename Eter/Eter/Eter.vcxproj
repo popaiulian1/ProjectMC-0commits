@@ -143,6 +143,7 @@
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerExplosion.h" />
+    <ClInclude Include="SaveGameUtils.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="WizardDuelMode.h" />
     <ClInclude Include="Wizards.h" />

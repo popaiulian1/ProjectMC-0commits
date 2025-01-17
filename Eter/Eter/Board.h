@@ -5,7 +5,6 @@
 #include <ostream>
 #include <optional>
 #include "Tile.h"
-#include "json.hpp"
 //#include "Player.h"
 #include <fstream>
 
@@ -19,7 +18,8 @@ namespace Eter {
 
 	enum class GameType {
 		Practice,
-		Duel
+		Duel,
+		Elemental
 	};
 
 	struct lastMove { // Last Move a Player did on the board
@@ -45,6 +45,7 @@ namespace Eter {
 		BoardMatrix& GetBoardReference();
 		size_t GetMaxSize() const;
 		size_t GetCurrentSize() const;
+		lastMove GetLastMove() const;
 
 		//Setters
 		void SetBoard(const BoardMatrix& board);
@@ -56,7 +57,7 @@ namespace Eter {
 		void PrintBoardForFormatedOutput(const std::string& bluePlayerName) const;
 		bool CheckEmptyTiles(); // returns true if there is atleast one empty tile on the board.
 		bool PowerExplosionAvailability() const;
-		void exportBoardToJson(const std::string& filename) const;
+		//void exportBoardToJson(const std::string& filename) const;
 		void IncreaseBoardForNegativeIndexes(const Position& pos);
 
 	private:
@@ -64,4 +65,6 @@ namespace Eter {
 		size_t m_maxSize;
 		lastMove m_lastMove;
 	};
+
+	void to_json(nlohmann::json& j, const Board& b);
 }

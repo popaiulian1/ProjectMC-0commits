@@ -318,3 +318,25 @@ std::ostream& Eter::operator<<(std::ostream& os, const Player& player)
 
     return os;
 }
+
+void Eter::to_json(nlohmann::json& j, const Player& p)
+{
+    j = nlohmann::json{
+        {"username", p.GetUserName()},
+        {"score", p.GetScore()},
+        {"gamesWon", p.GetGamesWon()},
+        {"lastPlayedPiece", p.GetLastPlayedPiece()},
+        {"illusionPlayed", p.GetIllusionPlayed()},
+        {"powerExplosionAccess", p.GetPowerExplosionAccess()},
+        {"eterCardPlayed", p.GetEterCardPlayed()}
+    };
+
+	nlohmann::json j_pieces = nlohmann::json::array();
+
+	for (auto& piece : p.GetPieces())
+	{
+		j_pieces.emplace_back(piece);
+	}
+
+	j["pieces"] = j_pieces;
+}

@@ -137,6 +137,11 @@ void Eter::Board::SetLastMove(const std::string& playerUsername, size_t row, siz
 	m_lastMove.m_column = column;
 }
 
+void Eter::Board::SetMaxSize(const size_t& size)
+{
+	m_maxSize = size;
+}
+
 void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName) const
 {
 	std::string border1 = "<=======================================================================>";
@@ -346,5 +351,55 @@ void Eter::to_json(nlohmann::json& j, const Board& b)
 			}
 		}
 		j["board"].push_back(j_row);
+	}
+}
+
+void Eter::from_json(const nlohmann::json& j, Board& b)
+{
+	try {
+		std::cout << "Parsing JSON: " << j.dump(4) << std::endl;
+
+		// Validate JSON structure
+		if (!j.contains("boardInfo") || !j["boardInfo"].contains("board") || !j["boardInfo"]["board"].is_array()) {
+			throw std::runtime_error("'boardInfo.board' is missing or not an array");
+		}
+
+		BoardMatrix boardMatrix;
+
+		for (const auto& row : j.at("boardInfo").at("board")) {
+			if (!row.is_array()) {
+				throw std::runtime_error("Row is not an array");
+			}
+
+			BoardVector boardRow;
+			for (const auto& tile : row) {
+				if (tile.is_null()) {
+					boardRow.push_back(std::nullopt); // Handle null tiles
+				}
+				else if (tile.is_object()) {
+					std::cout << "Parsing Tile: " << tile.dump(4) << std::endl;
+					boardRow.push_back(tile.get<Tile>()); // Convert to Tile object
+				}
+				else {
+					throw std::runtime_error("Unexpected tile format");
+				}
+			}
+			boardMatrix.push_back(boardRow);
+		}
+
+		b.SetBoard(boardMatrix);
+
+		b.SetLastMove(
+			j.at("lastMove").at("playerUsername").get<std::string>(),
+			j.at("lastMove").at("row").get<size_t>(),
+			j.at("lastMove").at("column").get<size_t>()
+		);
+
+		b.SetMaxSize(j.at("boardInfo").at("maxSize").get<size_t>());
+		std::cout << "Board parsed successfully!" << std::endl;
+
+	}
+	catch (const std::exception& e) {
+		throw std::runtime_error(std::string("Error in from_json: ") + e.what());
 	}
 }

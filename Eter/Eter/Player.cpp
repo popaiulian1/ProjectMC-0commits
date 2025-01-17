@@ -340,3 +340,20 @@ void Eter::to_json(nlohmann::json& j, const Player& p)
 
 	j["pieces"] = j_pieces;
 }
+
+void Eter::from_json(const nlohmann::json& j, Player& p)
+{
+	p.SetUserName(j.at("username").get<std::string>());
+	p.SetScore(j.at("score").get<int>());
+	p.SetGamesWon(j.at("gamesWon").get<size_t>());
+	p.SetIllusionPlayed(j.at("illusionPlayed").get<bool>());
+	p.SetPowerExplosionAccess(j.at("powerExplosionAccess").get<bool>());
+	p.SetEterCardPlayed(j.at("eterCardPlayed").get<bool>());
+
+	std::vector<Piece> pieces;
+	for (const auto& piece : j.at("pieces")) {
+		pieces.push_back(piece.get<Piece>());
+	}
+
+	p.SetPieces(pieces);
+}

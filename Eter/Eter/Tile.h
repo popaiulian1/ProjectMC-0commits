@@ -42,5 +42,6 @@ namespace Eter
 	};
 
 	void to_json(nlohmann::json& j, const Tile& t);
+	void from_json(const nlohmann::json& j, Tile& t);
 }
 

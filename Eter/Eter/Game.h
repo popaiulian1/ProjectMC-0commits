@@ -51,7 +51,7 @@ namespace Eter
 		virtual void Illusion(Player& player);
 		bool CheckCompleteRowOrColumn() const;
 		void ExportToJson();
-		void CreateFromJson();
+		void CreateFromJson(const nlohmann::json& gameInfo);
 		
 	private:
 		//Methods

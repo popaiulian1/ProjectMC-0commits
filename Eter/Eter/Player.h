@@ -77,6 +77,7 @@ namespace Eter {
 	};
 
 	void to_json(nlohmann::json& j, const Player& p);
+	void from_json(const nlohmann::json& j, Player& p);
 }
 
 

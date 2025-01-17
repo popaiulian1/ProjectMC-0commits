@@ -88,3 +88,12 @@ void Eter::to_json(nlohmann::json& j, const Tile& t)
 		{"isPit", t.IsPit()}
 	};
 }
+
+void Eter::from_json(const nlohmann::json& j, Tile& t)
+{
+	t.SetValue(j.at("value").get<Piece>());
+	if (j.at("isPit").get<bool>())
+	{
+		t.SetAsPit();
+	}
+}

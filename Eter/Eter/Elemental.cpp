@@ -82,15 +82,15 @@ void Eter::Elemental::Mist(Player& player)
 	player.SetIllusionPlayed(false);
 }
 
-void Eter::Elemental::Earthquake(const Board& board)
+void Eter::Elemental::Earthquake(Board& board)
 {
-	auto GameBoard = board.GetBoard();
+	auto& GameBoard = board.GetBoardReference();
 	for (auto& row : GameBoard)
 	{
 		for (auto& tile : row)
 		{
 			if (tile.value().GetTopValue().GetValue() == '1')
-				tile.value().GetValue().pop_back();
+				tile.value().GetValueRef().pop_back();
 		}
 	}
 
@@ -152,22 +152,22 @@ void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 	}
 }
 
-void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerCard)
+void Eter::Elemental::Flame(Player& opponent, Board& board)
 {
 	bool illusionRevealed = false;
-	auto gameBoard = board.GetBoardReference();
+	auto& gameBoard = board.GetBoardReference();
 
-	for (int row = 0; row < board.GetCurrentSize(); ++row) {
-		for (int col = 0; col < board.GetCurrentSize(); ++col) {
-			auto &tileOptional = gameBoard[row][col];
+	for (int row = 0; row < gameBoard.size(); ++row) {
+		for (int col = 0; col < gameBoard[row].size(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
 
 			// First we verify if the optional has any values
 			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
-				Piece topPiece = tileOptional.value().GetTopValue();
-				if (topPiece.GetIsIllusion() && topPiece.GetUserName()==opponent.GetUserName()) {
+				Piece& topPiece = tileOptional.value().GetTopValueRef();
+				if (topPiece.GetIsIllusion() && topPiece.GetUserName() == opponent.GetUserName()) {
 					illusionRevealed = true;
 					std::cout << "Illusion revealed at position (" << row << ", " << col << ").\n";
-					topPiece.SetIsIllusion(false); 
+					topPiece.SetIsIllusion(false);
 					break;
 				}
 			}
@@ -179,30 +179,12 @@ void Eter::Elemental::Flame(Player& opponent, Board& board, const Piece& playerC
 		std::cout << "No opponent's illusions found.\n";
 	}
 
-	std::cout << "Choose a position to place your card on the playing field (row, column):\n";
-	int destRow, destCol;
-	std::cin >> destRow >> destCol;
-
-	if (destRow < 0 || destRow >= board.GetCurrentSize() || destCol < 0 || destCol >= board.GetCurrentSize()) {
-		std::cout << "Invalid position. Card placement failed.\n";
-		return;
-	}
-
-	auto& destTileOptional = board.GetBoardReference()[destRow][destCol];
-	if (!destTileOptional || !destTileOptional->GetValue().empty() || destTileOptional->IsPit()) {
-		std::cout << "The chosen position is occupied or a pit. Card placement failed.\n";
-		return;
-	}
-
-	destTileOptional->SetValue(playerCard);
-	std::cout << "Card successfully placed at (" << destRow << ", " << destCol << ").\n";
-
 	m_ElementalCardUsed = true;
 }
 
 void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 {
-	auto gameBoard = board.GetBoardReference();
+	auto& gameBoard = board.GetBoardReference();
 	std::unordered_map<char, int> cardCounts;
 
 	// Counting the visible cards on the board
@@ -211,7 +193,8 @@ void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 			auto& tileOptional = gameBoard[row][col];
 			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
 				char topCardValue = tileOptional->GetTopValue().GetValue();
-				++cardCounts[topCardValue];
+				if (!tileOptional->GetTopValue().GetEterCard())
+					++cardCounts[topCardValue];
 			}
 		}
 	}
@@ -229,7 +212,7 @@ void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 		for (int col = 0; col < board.GetCurrentSize(); ++col) {
 			auto& tileOptional = gameBoard[row][col];
 			if (tileOptional.has_value() && !tileOptional->GetValue().empty()) {
-				Piece topPiece = tileOptional.value().GetTopValue();
+				Piece& topPiece = tileOptional.value().GetTopValueRef();
 				if (topPiece.GetValue() == chosenValue) {
 					// Verify the owner
 					if (topPiece.GetUserName() == player1.GetUserName()) {
@@ -242,16 +225,17 @@ void Eter::Elemental::Fire(Board& board, Player& player1, Player& player2)
 
 					// Eliminating the card from the board
 					if (!tileOptional->GetValue().empty()) {
-						tileOptional->GetValue().pop_back(); 
+						if (!tileOptional->GetTopValue().GetEterCard())
+							tileOptional->GetValueRef().pop_back();
+						else {
+							std::cout << "Eter card is not removed\n";
+						}
 					}
-
 				}
 			}
 		}
 	}
-
 	std::cout << "All cards with value '" << chosenValue << "' have been returned to their owners.\n";
-
 }
 
 void Eter::Elemental::Ash(Board& board, Player& player)
@@ -1047,16 +1031,32 @@ void Eter::Elemental::Waterfall(Board& board)
 //	// cause a power explosion
 //}
 
-void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
+void Eter::Elemental::Destruction(const Player& opponent, Board& board) 
 {
-	auto GameBoard = board.GetBoard();
+	auto& GameBoard = board.GetBoardReference();
 
-	for (auto& row : GameBoard) {
-		for (auto& tile : row) {
-			if (tile.value().GetTopValue().GetValue() == opponent.GetLastPlayedPiece().GetValue())
-				tile.value().GetValue().pop_back();
+	size_t lastRow = board.GetLastMove().m_row;
+	size_t lastCol = board.GetLastMove().m_column;
+
+	auto& tile = GameBoard[lastRow][lastCol];
+	if (tile.has_value()) {
+		Tile& currentTile = tile.value();
+		if (currentTile.GetTopValue().GetUserName() == opponent.GetUserName()) {
+			if (currentTile.GetTopValue().GetEterCard()) {
+				std::cout << "You cannot remove an eter card!\n";
+				return;
+			}
+
+			currentTile.GetValueRef().pop_back();
+
+			if (currentTile.GetValue().empty())
+				tile.reset();
+
+			std::cout << "Successfully removed opponent's last piece.\n";
+			return;
 		}
 	}
+	std::cout << "Could not find opponent's last piece to destroy.\n";
 }
 
 void Eter::Elemental::Squall(Player& opponent, Board& board)

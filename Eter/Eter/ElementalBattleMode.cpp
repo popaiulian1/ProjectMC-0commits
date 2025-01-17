@@ -160,11 +160,14 @@ void Eter::ElementalBattleMode::SetElementalType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	int ElementalCardName1 = Random(std::make_pair(0, 23));
+	/*int ElementalCardName1 = Random(std::make_pair(0, 23));
 	int ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	while(ElementalCardName2 == ElementalCardName1)
-		ElementalCardName2 = Random(std::make_pair(0, 23));
+		ElementalCardName2 = Random(std::make_pair(0, 23));*/
+
+	int ElementalCardName1 = 3;
+	int ElementalCardName2 = 3;
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -352,18 +355,40 @@ void Eter::ElementalBattleMode::HandleElementalType(){
 
 void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 {
+
+	auto& GameBoard = this->GetBoardReference();
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+
 	switch (elemental.GetNameCard())
 	{
 	case Eter::ElementalCardName::CONTROLLED_EXPLOSION:
 		std::cout << "CONTROLLED_EXPLOSION";
 		break;
+
 	case Eter::ElementalCardName::DESTRUCTION:
-		std::cout << "DESTRUCTION";
+		if(m_currentPlayer->GetUserName() == Player1.GetUserName())
+			elemental.Destruction(Player2, GameBoard);
+		else
+			elemental.Destruction(Player1, GameBoard);
 		break;
+
 	case Eter::ElementalCardName::FLAME:
-		std::cout << "FLAME";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName()) {
+			elemental.Flame(Player2, GameBoard);
+			GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName());
+			GameBoard.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		}
+		else
+		{
+			elemental.Flame(Player1, GameBoard);
+			GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName());
+			GameBoard.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		}
 		break;
+
 	case Eter::ElementalCardName::FIRE:
+		elemental.Fire(GameBoard, Player1, Player2);
 		std::cout << "FIRE";
 		break;
 	case Eter::ElementalCardName::ASH:

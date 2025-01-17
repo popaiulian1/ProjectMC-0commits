@@ -61,8 +61,8 @@ namespace Eter {
 
 		//Methods for powers
 		//void ControlledExplosion(); // TO DO
-		void Destruction(const Player& opponent, const Board& board);
-		void Flame(Player& opponent, Board& board, const Piece& playerCard);
+		void Destruction(const Player& opponent, Board& board);
+		void Flame(Player& opponent, Board& board);
 		void Fire(Board& board, Player& player1, Player& player2);
 		void Ash(Board& board, Player& player);
 		void Spark(Board& board, Player& player);
@@ -79,7 +79,7 @@ namespace Eter {
 		//void Blizzard(Board& board, int row, int column, Player& opponent); //TO DO
 		void Waterfall(Board& board);
 		//void Support(); // TO DO
-		void Earthquake(const Board& board);
+		void Earthquake(Board& board);
 		//void Crumble(); // TO DO
 		//void Border(); // TO DO
 		//void Avalanche(Board& board); // TO DO

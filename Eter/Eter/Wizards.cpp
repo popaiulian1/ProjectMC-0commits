@@ -325,7 +325,6 @@ void Eter::Wizards::createPit(int row, int col)
 		m_board->IncreaseBoardForNegativeIndexes({ row, col });
 		gameBoard = m_board->GetBoardReference();
 	}
-
 	if (row >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board->GetMaxSize()) {
 		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
 	}

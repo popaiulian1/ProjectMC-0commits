@@ -159,11 +159,15 @@ void Eter::WizardDuelMode::SetWizzardType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	int mageTypePlayer1 = Random(std::make_pair(0, 3));
+	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	while (mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));
+		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
+
+	int mageTypePlayer1 = 2;
+	int mageTypePlayer2 = 2;
+
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());

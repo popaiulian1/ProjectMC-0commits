@@ -96,28 +96,28 @@ void Eter::Elemental::Earthquake(const Board& board)
 
 }
 
-void Eter::Elemental::Avalanche(Board& board)
-{
-	int rowIndex1, columnIndex1, rowIndex2, columnIndex2;
-	while (!neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2)) {
-
-		std::cout << "Choose by indices 2 neighboring cards/stacs\n\n";
-		std::cout << "First card/stack row index: ";
-		std::cin >> rowIndex1;
-		std::cout << "First card/stack column index: ";
-		std::cin >> columnIndex1;
-		std::cout << "Second card/stack row index: ";
-		std::cin >> rowIndex2;
-		std::cout << "Second card/stack column index: ";
-		std::cin >> columnIndex2;
-
-		if (neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2) == false) {
-			std::cout << "Error: Non-neighboars Tiles!";
-		}
-	}
-
-	// Shift cards/stacs horizontally/vertically
-}
+//void Eter::Elemental::Avalanche(Board& board)
+//{
+//	int rowIndex1, columnIndex1, rowIndex2, columnIndex2;
+//	while (!neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2)) {
+//
+//		std::cout << "Choose by indices 2 neighboring cards/stacs\n\n";
+//		std::cout << "First card/stack row index: ";
+//		std::cin >> rowIndex1;
+//		std::cout << "First card/stack column index: ";
+//		std::cin >> columnIndex1;
+//		std::cout << "Second card/stack row index: ";
+//		std::cin >> rowIndex2;
+//		std::cout << "Second card/stack column index: ";
+//		std::cin >> columnIndex2;
+//
+//		if (neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2) == false) {
+//			std::cout << "Error: Non-neighboars Tiles!";
+//		}
+//	}
+//
+//	// Shift cards/stacs horizontally/vertically
+//}
 
 void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 {
@@ -948,47 +948,47 @@ void Eter::Elemental::Whirlpool(Board& board) {
 	std::cout << "Whirlpool executed successfully. Cards moved to (" << row << ", " << col << ").\n";
 }
 
-void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
-{
-	auto gameBoard = board.GetBoard();
-
-	std::string input = "";
-	std::cout << "Choose between 'row' and 'column': ";
-	std::cin >> input;
-
-	enum rowOrColumn
-	{
-		row,
-		column
-	};
-
-	rowOrColumn choice;
-	if (input == "row") {
-		choice = rowOrColumn::row;
-	}
-	else if (input == "column") {
-		choice = rowOrColumn::column;
-	}
-
-	switch (choice)
-	{
-	case rowOrColumn::row :
-		//opponent can't play cards on the row
-		break;
-	case rowOrColumn::column :
-		//TO DO: opponent can't play cards on the column
-		break;
-	}
-
-	bool freeTile = false;
-	for (auto& row : gameBoard) {
-		for (auto& tile : row) {
-			//TO DO: if not the blocked row or column
-			if (tile.value().GetTopValue().GetValue() != NULL)
-				freeTile = true;
-		}
-	}
-}
+//void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
+//{
+//	auto gameBoard = board.GetBoard();
+//
+//	std::string input = "";
+//	std::cout << "Choose between 'row' and 'column': ";
+//	std::cin >> input;
+//
+//	enum rowOrColumn
+//	{
+//		row,
+//		column
+//	};
+//
+//	rowOrColumn choice;
+//	if (input == "row") {
+//		choice = rowOrColumn::row;
+//	}
+//	else if (input == "column") {
+//		choice = rowOrColumn::column;
+//	}
+//
+//	switch (choice)
+//	{
+//	case rowOrColumn::row :
+//		//opponent can't play cards on the row
+//		break;
+//	case rowOrColumn::column :
+//		//TO DO: opponent can't play cards on the column
+//		break;
+//	}
+//
+//	bool freeTile = false;
+//	for (auto& row : gameBoard) {
+//		for (auto& tile : row) {
+//			//TO DO: if not the blocked row or column
+//			if (tile.value().GetTopValue().GetValue() != NULL)
+//				freeTile = true;
+//		}
+//	}
+//}
 
 void Eter::Elemental::Waterfall(Board& board)
 {
@@ -1042,10 +1042,10 @@ void Eter::Elemental::Waterfall(Board& board)
 }
 
 
-void Eter::Elemental::ControlledExplosion()
-{
-	// cause a power explosion
-}
+//void Eter::Elemental::ControlledExplosion()
+//{
+//	// cause a power explosion
+//}
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {

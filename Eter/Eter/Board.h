@@ -51,6 +51,7 @@ namespace Eter {
 		void SetBoard(const BoardMatrix& board);
 		void SetTileValue(const Position& pos, const char& value, const std::string& playerName);
 		void SetLastMove(const std::string& playerUsername, size_t row, size_t column);
+		void SetMaxSize(const size_t& size);
 
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Board& board);
@@ -67,4 +68,5 @@ namespace Eter {
 	};
 
 	void to_json(nlohmann::json& j, const Board& b);
+	void from_json(const nlohmann::json& j, Board& b);
 }

@@ -221,15 +221,15 @@ void Eter::Game::ExportToJson()
 
 	if (file.is_open()) {
 		nlohmann::json j_game;
-		j_game["board"] = m_board;
-		j_game["player1"] = m_player1;
-		j_game["player2"] = m_player2;
-		j_game["gameType"] = m_gameType;
-		j_game["rounds"] = m_rounds;
-		j_game["bluePlayerName"] = m_bluePlayerName;
-		j_game["currentPlayer"] = *m_currentPlayer;
-		j_game["firstMove"] = firstMove;
-		j_game["DECK_SIZE_PRACTICE"] = kDECK_SIZE_PRACTICE;
+		j_game["boardInfo"] = m_board;
+		j_game["playerInfo"] = { m_player1, m_player2 };
+		j_game["gameInfo"] = {
+			{"gameType", m_gameType},
+			{"rounds", m_rounds},
+			{"bluePlayerName", m_bluePlayerName},
+			{"currentPlayer", *m_currentPlayer},
+			{"firstMove", firstMove},
+		};
 		file << j_game.dump(4);
 		file.close();
 		std::cout << "Game saved to " << filename << std::endl;
@@ -237,6 +237,35 @@ void Eter::Game::ExportToJson()
 	else {
 		std::cerr << "Error opening file " << filename << std::endl;
 	}
+}
+
+void Eter::Game::CreateFromJson(const nlohmann::json& gameInfo)
+{
+	std::cout << "\n\n == Loading == \n\n";
+	//create board
+	m_board = gameInfo.at("boardInfo").at("board").get<Board>();
+
+	//create players
+	nlohmann::json playerInfo = gameInfo.at("playerInfo");
+	m_player1 = playerInfo["player1"].get<Eter::Player>();
+	m_player2 = playerInfo["player2"].get<Eter::Player>();
+	
+	//create game info
+	nlohmann::json gameInfoJson = gameInfo.at("gameInfo");
+	m_gameType = gameInfoJson.at("gameType").get<GameType>();
+	m_rounds = gameInfoJson.at("rounds").get<size_t>();
+	m_bluePlayerName = gameInfoJson.at("bluePlayerName").get<std::string>();
+
+	if (gameInfoJson.at("currentPlayer").get<Player>().GetUserName() == m_player1.GetUserName())
+	{
+		m_currentPlayer = &m_player1;
+	}
+	else
+	{
+		m_currentPlayer = &m_player2;
+	}
+	firstMove = gameInfoJson.at("firstMove").get<bool>();
+	PlayGame();
 }
 
 void Eter::Game::addBorderToMatrix(Eter::BoardMatrix& board)

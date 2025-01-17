@@ -77,7 +77,7 @@ void MainMenu::PrintGameTypeMenu()
 void MainMenu::CreateTheLoadedGame(const nlohmann::json& gameInfo)
 {
 	int gameTypeSelect;
-	gameInfo["gameType"].get_to(gameTypeSelect);
+	gameInfo["gameInfo"].at("gameType").get_to(gameTypeSelect);
 
 	switch (gameTypeSelect)
 	{
@@ -98,7 +98,7 @@ void MainMenu::CreateTheLoadedGame(const nlohmann::json& gameInfo)
 void MainMenu::StartPractice(const nlohmann::json& gameInfo)
 {
 	Eter::Game game;
-	//game.CreateFromJson(gameInfo);
+	game.CreateFromJson(gameInfo);
 }
 
 void MainMenu::StartWizardDuel(const nlohmann::json& gameInfo)

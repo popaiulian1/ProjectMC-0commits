@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "Board.h"
 #include "Tile.h"
+#include <cmath>
 
 Eter::Elemental::Elemental(const Board board, bool ElementalCardUsed, ElementalCardName nameCard, std::string username) : 
 	m_board{ board }, 
@@ -93,6 +94,29 @@ void Eter::Elemental::Earthquake(const Board& board)
 		}
 	}
 
+}
+
+void Eter::Elemental::Avalanche(Board& board)
+{
+	int rowIndex1, columnIndex1, rowIndex2, columnIndex2;
+	while (!neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2)) {
+
+		std::cout << "Choose by indices 2 neighboring cards/stacs\n\n";
+		std::cout << "First card/stack row index: ";
+		std::cin >> rowIndex1;
+		std::cout << "First card/stack column index: ";
+		std::cin >> columnIndex1;
+		std::cout << "Second card/stack row index: ";
+		std::cin >> rowIndex2;
+		std::cout << "Second card/stack column index: ";
+		std::cin >> columnIndex2;
+
+		if (neighboringCardsStacs(rowIndex1, columnIndex1, rowIndex2, columnIndex2) == false) {
+			std::cout << "Error: Non-neighboars Tiles!";
+		}
+	}
+
+	// Shift cards/stacs horizontally/vertically
 }
 
 void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
@@ -480,6 +504,12 @@ bool Eter::Elemental::isColumnFull(const Board& board, int colIndex)
 		}
 	}
 	return true;
+}
+
+bool Eter::Elemental::neighboringCardsStacs(int rowIndex1, int colIndex1, int rowIndex2, int colIndex2)
+{
+	return (rowIndex1 == rowIndex2 && std::abs(colIndex1 - colIndex2) == 1) || 
+		   (colIndex1 == colIndex2 && std::abs(rowIndex1 - rowIndex2) == 1);
 }
 
 const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard)
@@ -960,6 +990,11 @@ void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& oppone
 	}
 }
 
+
+void Eter::Elemental::ControlledExplosion()
+{
+	// cause a power explosion
+}
 
 void Eter::Elemental::Destruction(const Player& opponent, const Board& board)
 {

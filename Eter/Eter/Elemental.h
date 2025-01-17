@@ -60,24 +60,31 @@ namespace Eter {
 	
 
 		//Methods for powers
+		void ControlledExplosion(); // TO DO
 		void Destruction(const Player& opponent, const Board& board);
-		void Squall(Player& opponent, Board& board);
-		void Gale(Board& board, Player& player1, Player& player2);
-		void Storm(int row, int column);
-		void Tide(int row1, int column1, int row2, int column2);
-		void Mist(Player& player);
-		void Earthquake(const Board& board);
-		void Rock(Board& board, Player& player, Player& opponent);
 		void Flame(Player& opponent, Board& board, const Piece& playerCard);
 		void Fire(Board& board, Player& player1, Player& player2);
 		void Ash(Board& board, Player& player);
 		void Spark(Board& board, Player& player);
+		void Squall(Player& opponent, Board& board);
+		void Gale(Board& board, Player& player1, Player& player2);
 		void Hurricane(Board& board);
 		void Gust(Board& board);
 		void Mirage(Board& board, Player& player);
+		void Storm(int row, int column);
+		void Tide(int row1, int column1, int row2, int column2);
+		void Mist(Player& player);
 		void Wave(Board& board, Player& player);
 		void Whirlpool(Board& board);
-		void Blizzard(Board& board, int row, int column, Player& opponent); //TO DO: not finished
+		void Blizzard(Board& board, int row, int column, Player& opponent); //TO DO
+		void Waterfall(); // TO DO
+		void Support(); // TO DO
+		void Earthquake(const Board& board);
+		void Crumble(); // TO DO
+		void Border(); // TO DO
+		void Avalanche(Board& board); // TO DO
+		void Rock(Board& board, Player& player, Player& opponent);
+		
 		
 		//Methods
 		void shiftRowToLeft(Board& board, int index);
@@ -86,6 +93,7 @@ namespace Eter {
 		void shiftColDown(Board& board, int index);
 		bool isRowFull(const Board& board, int rowIndex);
 		bool isColumnFull(const Board& board, int colIndex);
+		bool neighboringCardsStacs(int rowIndex1, int colIndex1, int rowIndex2, int colIndex2);
 		const std::string toSringElementalCardName(ElementalCardName nameCard);
 
 

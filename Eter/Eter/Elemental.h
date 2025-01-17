@@ -50,6 +50,7 @@ namespace Eter {
 		const bool GetElementalCardUsed() const;
 		const ElementalCardName GetNameCard() const;
 		const std::string GetUsername() const;
+		const Board GetBoardForElemental() const;
 
 
 		//Setters

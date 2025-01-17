@@ -166,8 +166,8 @@ void Eter::ElementalBattleMode::SetElementalType()
 	while(ElementalCardName2 == ElementalCardName1)
 		ElementalCardName2 = Random(std::make_pair(0, 23));*/
 
-	int ElementalCardName1 = 3;
-	int ElementalCardName2 = 3;
+	int ElementalCardName1 = 19;
+	int ElementalCardName2 = 19;
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -359,6 +359,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 	auto& GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
+	elemental.SetBoardForElemental(GameBoard);
 
 	switch (elemental.GetNameCard())
 	{
@@ -391,6 +392,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		elemental.Fire(GameBoard, Player1, Player2);
 		std::cout << "FIRE";
 		break;
+
 	case Eter::ElementalCardName::ASH:
 		std::cout << "ASH";
 		break;
@@ -415,17 +417,29 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 	case Eter::ElementalCardName::STORM:
 		std::cout << "STORM";
 		break;
-	case Eter::ElementalCardName::TIDE:
-		std::cout << "TIDE";
+	case Eter::ElementalCardName::TIDE: {
+		std::cout << "Choose position for the first tile:\n";
+		const std::pair<int, int>& PositionforTile1 = m_currentPlayer->Play(firstMove);
+
+		std::cout << "Choose position for the second tile:\n";
+		const std::pair<int, int>& PositionforTile2 = m_currentPlayer->Play(firstMove);
+		elemental.Tide(PositionforTile1.first, PositionforTile1.second, PositionforTile2.first, PositionforTile2.second);
+
+		auto elementBoard = elemental.GetBoardForElemental();
+		GameBoard.SetBoard(elementBoard.GetBoard());
 		break;
-	case Eter::ElementalCardName::MIST:
-		std::cout << "MIST";
+	}
+	case Eter::ElementalCardName::MIST: {
+		elemental.Mist(*m_currentPlayer);
+		if(!m_currentPlayer->GetIllusionPlayed())
+			Illusion(*m_currentPlayer);
 		break;
+	}
 	case Eter::ElementalCardName::WAVE:
-		std::cout << "WAVE";
+		elemental.Wave(GameBoard, *m_currentPlayer);
 		break;
 	case Eter::ElementalCardName::WHIRLPOOL:
-		std::cout << "WHIRLPOOL";
+		elemental.Whirlpool(GameBoard);
 		break;
 	case Eter::ElementalCardName::BLIZZARD:
 		std::cout << "BLIZZARD";
@@ -437,7 +451,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		std::cout << "SUPPORT";
 		break;
 	case Eter::ElementalCardName::EARTHQUAKE:
-		std::cout << "EARTHQUAKE";
+		elemental.Earthquake(GameBoard);
 		break;
 	case Eter::ElementalCardName::CRUMBLE:
 		std::cout << "CRUMBLE";

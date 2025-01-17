@@ -34,6 +34,11 @@ const std::string Eter::Elemental::GetUsername() const
 	return m_username;
 }
 
+const Eter::Board Eter::Elemental::GetBoardForElemental() const
+{
+	return m_board;
+}
+
 void Eter::Elemental::SetElementalCardUsed(const bool ElementalCardUsed)
 {
 	m_ElementalCardUsed = ElementalCardUsed;
@@ -56,29 +61,51 @@ void Eter::Elemental::SetBoardForElemental(const Board& board)
 
 void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Change positions of 2 different cards or stacks of cards.
 {
+	auto& GameBoard = m_board.GetBoardReference();
+
 	//row1, column1 -> coordinates of the first tile
 	//row2, column2 -> coordinates of the second tile
 	if (row1 < 0 || row1 >= m_board.GetCurrentSize())
 	{
-		throw std::out_of_range{ "Invalid row index!" };
+		std::cout << "Invalid row index!\n";
 	}
 	else if (row2 < 0 || row2 >= m_board.GetCurrentSize())
 	{
-		throw std::out_of_range{ "Invalid row index!" };
+		std::cout << "Invalid row index!\n";
 	}
 	else if (column1 < 0 || column1 >= m_board.GetCurrentSize()) {
-		throw std::out_of_range{ "Invalid column index!" };
+		std::cout << "Invalid row index!\n";
 	}
 	else if (column2 < 0 || column2 >= m_board.GetCurrentSize()) {
-		throw std::out_of_range{ "Invalid column index!" };
+		std::cout << "Invalid row index!\n";
+	}
+
+	if (!GameBoard[row1][column1].has_value()) {
+		std::cout << "Empty tile!";
+		return;
+	}
+
+	if (!GameBoard[row2][column2].has_value()) {
+		std::cout << "Empty tile!";
+		return;
 	}
 
 	//swap between card / stack of cards.
-	std::swap(m_board.GetBoardReference()[row1][column1], m_board.GetBoardReference()[row2][column2]);
+	std::swap(GameBoard[row1][column1], GameBoard[row2][column2]);
 }
 
 void Eter::Elemental::Mist(Player& player)
 {
+	for (auto row : m_board.GetBoard()) {
+		for (auto tile : row) {
+			if (tile.has_value()) {
+				if (tile.value().GetTopValue().GetIsIllusion()) {
+					std::cout << "There an illusion on the board";
+					return;
+				}
+			}
+		}
+	}
 	player.SetIllusionPlayed(false);
 }
 
@@ -88,9 +115,12 @@ void Eter::Elemental::Earthquake(Board& board)
 	for (auto& row : GameBoard)
 	{
 		for (auto& tile : row)
-		{
-			if (tile.value().GetTopValue().GetValue() == '1')
-				tile.value().GetValueRef().pop_back();
+		{	
+			if (tile.has_value()) {
+				Piece TopValue = tile.value().GetTopValue();
+				if (TopValue.GetValue() == '1')
+					tile.value().GetValueRef().pop_back();
+			}
 		}
 	}
 
@@ -828,9 +858,8 @@ void Eter::Elemental::Wave(Board& board, Player& player)
 	chosenCard.SetIsPlaced(true);
 	hand.erase(hand.begin() + (choice - 1));
 
-	srcTile->SetValue(chosenCard);
+	gameBoard[srcRow][srcCol] = Tile(chosenCard);
 	std::cout << "Card from your hand placed successfully on (" << srcRow << ", " << srcCol << ").\n";
-
 }
 
 void Eter::Elemental::Whirlpool(Board& board) {
@@ -919,11 +948,11 @@ void Eter::Elemental::Whirlpool(Board& board) {
 	//Placing the cards
 	auto& stack1 = gameBoard[adjRow1][adjCol1]->GetValueRef();
 	stack1.pop_back();
-	if (stack1.empty()) gameBoard[adjRow1][adjCol1].reset();
+	if (stack1.empty()) gameBoard[adjRow1][adjCol1] = Tile();
 
 	auto& stack2 = gameBoard[adjRow2][adjCol2]->GetValueRef();
 	stack2.pop_back();
-	if (stack2.empty()) gameBoard[adjRow2][adjCol2].reset();
+	if (stack2.empty()) gameBoard[adjRow2][adjCol2] = Tile();
 
 	auto& destStack = gameBoard[row][col]->GetValueRef();
 	destStack.push_back(*bottomCard);

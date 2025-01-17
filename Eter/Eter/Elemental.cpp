@@ -990,6 +990,57 @@ void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& oppone
 	}
 }
 
+void Eter::Elemental::Waterfall(Board& board)
+{
+	auto& gameBoard = board.GetBoardReference();
+	std::cout << "Choose the column you want to apply the power to (column index). Keep in mind the column must have at leat 3 positions occupied.\n";
+	int col;
+	std::cin >> col;
+	if (col<0 || col> board.GetCurrentSize())
+	{
+		std::cout << "Position invalid.\n";;
+		return;
+	}
+
+	//Verify there are at least 3 positions occupied
+	int occupied = 0;
+	for (int row = 0; row < board.GetCurrentSize(); ++row)
+		if (gameBoard[row][col].has_value())
+			occupied++;
+
+	if (occupied <3)
+	{
+		std::cout << "Condition of at least 3 positions of the column to be occupied is not valid.\n";
+		return;
+
+	}
+
+	// Find the bottom-most occupied tile
+	int bottomRow = -1;
+	for (int row = board.GetCurrentSize() - 1; row >= 0; --row) {
+		if (gameBoard[row][col].has_value()) {
+			bottomRow = row;
+			break;
+		}
+	}
+
+	// Combine all stacks into the bottom-most stack
+	auto& bottomTile = gameBoard[bottomRow][col];
+	auto& bottomStack = bottomTile->GetValueRef();
+
+	for (int row = bottomRow - 1; row >= 0; --row) {
+		auto& currentTile = gameBoard[row][col];
+		if (currentTile.has_value()) {
+			auto& currentStack = currentTile->GetValueRef();
+			bottomStack.insert(bottomStack.end(), currentStack.begin(), currentStack.end()); // Add current stack to bottom stack
+			currentTile.reset(); // Clear the current tile
+		}
+	}
+
+	std::cout << "Waterfall power applied successfully! Cards in column " << col << " have been merged into stacks moving downward.\n";
+	
+}
+
 
 void Eter::Elemental::ControlledExplosion()
 {

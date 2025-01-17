@@ -247,7 +247,7 @@ bool Eter::Player::HasWon(const Board& board)
         for (size_t i = 0; i < gameBoard[0].size(); i++) {
             for (size_t j = 0; j < maxSize; j++) {
                 // Vertical check
-                if (gameBoard[i][j].has_value() && gameBoard[i][j].value().IsPit())
+                if (gameBoard[j][i].has_value() && gameBoard[j][i].value().IsPit())
                     return false;
 
                 if (!isTileOwnedByPlayer(gameBoard[j][i])) {

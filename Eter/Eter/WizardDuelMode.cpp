@@ -325,8 +325,8 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	case MageType::FIRE: {
 
 		std::cout << "Choose your power: \n";
-		std::cout << "1. Eliminate opponent card.\n";
-		std::cout << "2. Eliminate a row or a column.\n";
+		std::cout << "1. Remove from play an opponent card that covers one of your cards.\n";
+		std::cout << "2. Remove from play a row or column of 3 or more cards. The removed row or column must contain at least one of your cards. The power impacts single cards and stacks.\n";
 		static bool firePower1used = false;
 		static bool firePower2used = false;
 
@@ -357,8 +357,8 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	}
 	case MageType::EARTH: {
 		std::cout << "Choose your power: \n";
-		std::cout << "1. Cover opponent card.\n";
-		std::cout << "2. Create pit.\n";
+		std::cout << "1. Cover an opponent card with your card of a lower value.\n";
+		std::cout << "2. The chosen empty space on the playing field becomes a pit.\n";
 		static bool earthPower1used = false;
 		static bool earthPower2used = false;
 
@@ -389,8 +389,8 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	case MageType::AIR: {
 
 		std::cout << "Choose your power: \n";
-		std::cout << "1. Move own stack.\n";
-		std::cout << "2. Gain extra ether card.\n";
+		std::cout << "1.On his turn, the player may move his card (or a stack of cards with his card on top) to a different, empty space.\n";
+		std::cout << "2. Gain an extra ETER card.\n";
 		static bool airPower1used = false;
 		static bool airPower2used = false;
 
@@ -421,8 +421,8 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	case MageType::WATER: {
 
 		std::cout << "Choose your power: \n";
-		std::cout << "1. Move opponent stack.\n";
-		std::cout << "2. Move EdgeRowCol.\n";
+		std::cout << "1. Move opponent stack or card to an empty space.\n";
+		std::cout << "2. Take any row or column of 3 or more cards at the edge of the playing field and move it to a different edge.This redefines the shape of the playing field.\n";
 		static bool waterPower1used = false;
 		static bool waterPower2used = false;
 

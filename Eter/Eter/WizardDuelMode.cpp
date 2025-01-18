@@ -165,8 +165,8 @@ void Eter::WizardDuelMode::SetWizzardType()
 	while (mageTypePlayer2 == mageTypePlayer1)
 		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
 
-	int mageTypePlayer1 = 2;
-	int mageTypePlayer2 = 2;
+	int mageTypePlayer1 = 3;
+	int mageTypePlayer2 = 3;
 
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
@@ -469,7 +469,7 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	case MageType::AIR: {
 
 		std::cout << "Choose your power: \n";
-		std::cout << "1.On his turn, the player may move his card (or a stack of cards with his card on top) to a different, empty space.\n";
+		std::cout << "1. On his turn, the player may move his card (or a stack of cards with his card on top) to a different, empty space.\n";
 		std::cout << "2. Gain an extra ETER card.\n";
 		static bool airPower1used = false;
 		static bool airPower2used = false;
@@ -481,14 +481,21 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			std::cout << "You have already used this power.\n";
 			break;
 		}
-
-		const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
-		int row = Position.first, column = Position.second;
-		if (power == 1) {
+		if (power == 1)
+		{
+			std::cout << "Enter the positions of your own card or stack you plan to move.\n";
+			const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
+		    int row = Position.first, column = Position.second;
 			m_currentWizard->airMasterPower(power, row, column);
 			airPower1used = true;
+
+
 		}
+		
 		else if (power == 2) {
+			std::cout << "Enter the positions you want to place the Eter card on.\n";
+			const std::pair<int, int>& Position = m_currentPlayer->Play(firstMove);
+			int row = Position.first, column = Position.second;
 			m_currentWizard->airMasterPower(power, row, column);
 			airPower2used = true;
 		}
@@ -514,18 +521,21 @@ void Eter::WizardDuelMode::HandleWizzardType()
 			break;
 		}
 
-		const std::pair<int, int>& Position1 = m_currentPlayer->Play(firstMove);
-		int srcRow = Position1.first, srcColumn = Position1.second;
+		if (power == 1)
+		{
+            std::cout << "Enter the positions of the opponent card or stack you want to move.\n";
+		    const std::pair<int, int>& Position1 = m_currentPlayer->Play(firstMove);
+		    int srcRow = Position1.first, srcColumn = Position1.second;
 
-		const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play(firstMove);
-		int destRow = Position2.first, destColumn = Position2.second;
-
-		if (power == 1) {
-			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
+            std::cout << "Enter the positions of the empty space you want the card or the stack to be moved..\n";
+		    const std::pair<uint8_t, uint8_t>& Position2 = m_currentPlayer->Play(firstMove);
+		    int destRow = Position2.first, destColumn = Position2.second;
+            m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
 			waterPower1used = true;
+
 		}
 		else if (power == 2) {
-			m_currentWizard->waterMasterPower(power, srcRow, srcColumn, destRow, destColumn);
+			m_currentWizard->waterMasterPower(power, 0, 0, 0, 0);
 			waterPower2used = true;
 		}
 			

@@ -103,11 +103,13 @@ void Eter::Wizards::fireMasterPower(int powerIndex, int row, int col)
 		if (input == "row")
 			eliminateRow(row);
 
-
 		else if (input == "column")
 			eliminateCol(col);
-		else
+		else {
 			std::cout << "Invalid input. Please type 'row' or 'column'.\n";
+		    return;
+		}
+			
 
 
 	}
@@ -129,12 +131,37 @@ void Eter::Wizards::airMasterPower(int powerIndex, int row, int col)
 
 		int destrow, destcol;
 		std::cout << "At what row and column would you like to place your card or deck of cards?\n";
-		std::cin >> destrow >> destcol;
-		if (destrow < 0 || destrow >= m_board->GetCurrentSize() || destcol < 0 || destcol >= m_board->GetCurrentSize()) {
-			std::cout << "Invalid destination position (" << destrow << ", " << destcol << ").\n";
-			return;
+		std::cout << "Row index: ";
+		std::cin >> destrow;
+		std::cout << "\n";
+		std::cout << "Col index: ";
+		std::cin>>destcol;
+		std::cout << "\n";
+		auto& gameBoard = m_board->GetBoardReference();
+
+	if (destrow < 0 || destcol < 0) {
+		m_board->IncreaseBoardForNegativeIndexes({ destrow, destcol });
+		gameBoard = m_board->GetBoardReference();
+	}
+	if (destrow >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board->GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (destcol >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board->GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
 		}
-        moveOwnStack(row, col, destrow, destcol);
+	}
+
+	int adjustedLine = destrow, adjustedColumn = destcol;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
+		return;
+	}
+        moveOwnStack(row, col, adjustedLine, adjustedColumn);
 	}
 		
 	else if (powerIndex == 2)
@@ -391,10 +418,6 @@ void Eter::Wizards::moveOwnStack(int srcRow, int srcCol, int destRow, int destCo
 		std::cout << "Invalid source position (" << srcRow << ", " << srcCol << ").\n";
 		return;
 	}
-	if (destRow < 0 || destRow >= m_board->GetCurrentSize() || destCol < 0 || destCol >= m_board->GetCurrentSize()) {
-		std::cout << "Invalid destination position (" << destRow << ", " << destCol << ").\n";
-		return;
-	}
 	
 	auto& gameBoard = m_board->GetBoardReference();
 
@@ -498,17 +521,35 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 		std::cout << "Invalid source position (" << srcRow << ", " << srcCol << ").\n";
 		return;
 	}
-	if (destRow < 0 || destRow >= m_board->GetCurrentSize() || destCol < 0 || destCol >= m_board->GetCurrentSize()) {
-		std::cout << "Invalid destination position (" << destRow << ", " << destCol << ").\n";
-		return;
+	auto& gameBoard = m_board->GetBoardReference();
+	if (destRow < 0 || destCol < 0) {
+		m_board->IncreaseBoardForNegativeIndexes({ destRow, destCol });
+		gameBoard = m_board->GetBoardReference();
+	}
+	if (destRow >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board->GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (destCol >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board->GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
+		}
 	}
 
-	auto& gameBoard = m_board->GetBoardReference();
+	int adjustedLine = destRow, adjustedColumn = destCol;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
 
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
+		return;
+	}
 	if (!gameBoard[srcRow][srcCol].has_value()) {
 		std::cout << "No stack found at source position (" << srcRow << ", " << srcCol << ").\n";
 		return;
 	}
+	destRow = adjustedLine;
+	destCol = adjustedColumn;
 
 	Tile& srcTile = gameBoard[srcRow][srcCol].value();
 
@@ -554,24 +595,25 @@ void Eter::Wizards::moveOpponentStack(int srcRow, int srcCol, int destRow, int d
 void Eter::Wizards::moveEdgeRowCol() {
 	auto& gameBoard = m_board->GetBoardReference();
 	std::cout << "Would you like to move a row or a column?\n";
+	std::cout << "Enter 'row' / 'column'.\n";
 	std::string option;
 	std::cin >> option;
 
 	if (option == "row") {
-		std::cout << "Which row would you like to move? (Must be an edge row: 0 or " << m_board->GetCurrentSize() - 1 << ")\n";
+		std::cout << "Which row would you like to move? (Must be an edge row: 0 or " << m_board->GetMaxSize()-1 << ")\n";
 		int srcRow;
 		std::cin >> srcRow;
 
-		if (srcRow != 0 && srcRow != m_board->GetCurrentSize() - 1) {
+		if (srcRow != 0 || srcRow != m_board->GetMaxSize()-1) {
 			std::cout << "Invalid row. Only edge rows can be moved.\n";
 			return;
 		}
 
-		std::cout << "Where would you like to move it? (0 for top, " << m_board->GetCurrentSize() - 1 << " for bottom)\n";
+		std::cout << "Where would you like to move it? (0 for top, " << m_board->GetMaxSize()-1 << " for bottom)\n";
 		int destRow;
 		std::cin >> destRow;
 
-		if (destRow != 0 && destRow != m_board->GetCurrentSize() - 1) {
+		if (destRow != 0 || destRow != m_board->GetMaxSize()-1 || m_board->GetMaxSize()-1!= m_board->GetCurrentSize()-1) {
 			std::cout << "Invalid destination row. You can only move to the edges.\n";
 			return;
 		}
@@ -618,20 +660,20 @@ void Eter::Wizards::moveEdgeRowCol() {
 		std::cout << "Row " << srcRow << " successfully moved to " << destRow << ".\n";
 	}
 	else if (option == "column") {
-		std::cout << "Which column would you like to move? (Must be an edge column: 0 or " << m_board->GetCurrentSize() - 1 << ")\n";
+		std::cout << "Which column would you like to move? (Must be an edge column: 0 or " << m_board->GetMaxSize()-1 << ")\n";
 		int srcCol;
 		std::cin >> srcCol;
 
-		if (srcCol != 0 && srcCol != m_board->GetCurrentSize() - 1) {
+		if (srcCol != 0 || srcCol != m_board->GetMaxSize()-1) {
 			std::cout << "Invalid column. Only edge columns can be moved.\n";
 			return;
 		}
 
-		std::cout << "Where would you like to move it? (0 for left, " << m_board->GetCurrentSize() - 1 << " for right)\n";
+		std::cout << "Where would you like to move it? (0 for left, " << m_board->GetMaxSize()-1 << " for right)\n";
 		int destCol;
 		std::cin >> destCol;
 
-		if (destCol != 0 && destCol != m_board->GetCurrentSize() - 1) {
+		if (destCol != 0 || destCol != m_board->GetMaxSize()-1) {
 			std::cout << "Invalid destination column. You can only move to the edges.\n";
 			return;
 		}

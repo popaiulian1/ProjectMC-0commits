@@ -166,8 +166,8 @@ void Eter::ElementalBattleMode::SetElementalType()
 	while(ElementalCardName2 == ElementalCardName1)
 		ElementalCardName2 = Random(std::make_pair(0, 23));*/
 
-	int ElementalCardName1 = 19;
-	int ElementalCardName2 = 19;
+	int ElementalCardName1 = 4;
+	int ElementalCardName2 = 4;
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));

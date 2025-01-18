@@ -166,8 +166,9 @@ void Eter::ElementalBattleMode::SetElementalType()
 	while(ElementalCardName2 == ElementalCardName1)
 		ElementalCardName2 = Random(std::make_pair(0, 23));*/
 
-	int ElementalCardName1 = 4;
-	int ElementalCardName2 = 4;
+
+	int ElementalCardName1 = 23;
+	int ElementalCardName2 = 23;
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -390,7 +391,6 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 
 	case Eter::ElementalCardName::FIRE:
 		elemental.Fire(GameBoard, Player1, Player2);
-		std::cout << "FIRE";
 		break;
 
 	case Eter::ElementalCardName::ASH:
@@ -445,7 +445,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		std::cout << "BLIZZARD";
 		break;
 	case Eter::ElementalCardName::WATERFALL:
-		std::cout << "WATERFALL";
+		elemental.Waterfall(GameBoard);
 		break;
 	case Eter::ElementalCardName::SUPPORT:
 		std::cout << "SUPPORT";
@@ -463,7 +463,10 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		std::cout << "AVALANCHE";
 		break;
 	case Eter::ElementalCardName::ROCK:
-		std::cout << "ROCK";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			elemental.Rock(GameBoard, Player1, Player2);
+		else
+			elemental.Rock(GameBoard, Player2, Player1);
 		break;
 	default:
 		std::cout << "Invalid option. Please choose a valid option.\n";

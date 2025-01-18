@@ -27,6 +27,7 @@ namespace Eter {
 	#pragma region Getters
 		Wizards GetWizardPlayer1() const;
 		Wizards GetWizardPlayer2() const;
+
 	#pragma endregion Getters
 
 	#pragma region Setters

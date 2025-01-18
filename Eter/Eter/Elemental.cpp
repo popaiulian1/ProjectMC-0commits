@@ -80,13 +80,13 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 		std::cout << "Invalid row index!\n";
 	}
 
-	if (!GameBoard[row1][column1].has_value()) {
+	if (!GameBoard[row1][column1].has_value() || !GameBoard[row2][column2].has_value()) {
 		std::cout << "Empty tile!";
 		return;
 	}
 
-	if (!GameBoard[row2][column2].has_value()) {
-		std::cout << "Empty tile!";
+	if (!GameBoard[row1][column1].value().GetTopValue().GetEterCard() || !GameBoard[row2][column2].value().GetTopValue().GetEterCard()) {
+		std::cout << "You cannot move the eter card!";
 		return;
 	}
 
@@ -119,11 +119,11 @@ void Eter::Elemental::Earthquake(Board& board)
 			if (tile.has_value()) {
 				Piece TopValue = tile.value().GetTopValue();
 				if (TopValue.GetValue() == '1')
-					tile.value().GetValueRef().pop_back();
+					if(!TopValue.GetEterCard())
+						tile.value().GetValueRef().pop_back();
 			}
 		}
 	}
-
 }
 
 //void Eter::Elemental::Avalanche(Board& board)
@@ -151,9 +151,9 @@ void Eter::Elemental::Earthquake(Board& board)
 
 void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 {
-	auto gameBoard = board.GetBoardReference();
+	auto& gameBoard = board.GetBoardReference();
 
-	if (opponent.GetIllusionPlayed() == NULL) {
+	if (opponent.GetIllusionPlayed() == false) {
 		std::cerr << "ROCK: No illusion to be covered!";
 		return;
 	}
@@ -175,8 +175,10 @@ void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 			auto& currentTile = gameBoard[row][column];
 			if (currentTile.value().GetTopValue().GetIsIllusion() == true && currentTile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
 				auto& targetTile = gameBoard[row][column].value();
-				//TO DO-> GEORGE: put the chosen piece on board over the illusion one
 
+				char cardValue = player.ChoosePiece();
+				targetTile.GetValueRef().push_back(Piece(cardValue, false, player.GetUserName(), false, false, false));
+				break;
 			}
 		}
 	}
@@ -788,11 +790,18 @@ void Eter::Elemental::Wave(Board& board, Player& player)
 		std::cout << "Invalid position.\n";
 		return;
 	}
+
 	auto& srcTile = gameBoard[srcRow][srcCol];
 	if (!srcTile.has_value()) {
 		std::cout << "No card/stack found at the selected position.\n";
 		return;
 	}
+
+	if (srcTile.value().GetTopValue().GetEterCard()) {
+		std::cout << "You cannot move the Eter card.\n";
+		return;
+	}
+
 	std::cout << "In what direction would you like to move the card/stack (right, left, up, down, up-left, up-right, down-left, down-right)? The card must have a higher value than the one already placed.\n";
 	std::string move;
 	std::cin >> move;
@@ -888,11 +897,21 @@ void Eter::Elemental::Whirlpool(Board& board) {
 			card1 = &gameBoard[row][col - 1]->GetValueRef().back();
 			adjRow1 = row;
 			adjCol1 = col - 1;
+
+			if (card1->GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
 		}
 		if (col < board.GetCurrentSize() - 1 && gameBoard[row][col + 1].has_value() && !gameBoard[row][col + 1]->GetValueRef().empty()) {
 			card2 = &gameBoard[row][col + 1]->GetValueRef().back();
 			adjRow2 = row;
 			adjCol2 = col + 1;
+
+			if (card2->GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
 		}
 	}
 	else if (choice == "column") {
@@ -963,7 +982,7 @@ void Eter::Elemental::Whirlpool(Board& board) {
 
 //void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
 //{
-//	auto gameBoard = board.GetBoard();
+//	auto gameBoard = board.GetBoardReference();
 //
 //	std::string input = "";
 //	std::cout << "Choose between 'row' and 'column': ";
@@ -1018,14 +1037,22 @@ void Eter::Elemental::Waterfall(Board& board)
 	//Verify there are at least 3 positions occupied
 	int occupied = 0;
 	for (int row = 0; row < board.GetCurrentSize(); ++row)
-		if (gameBoard[row][col].has_value())
+		if (gameBoard[row][col].has_value()) {
+			if (gameBoard[row][col].value().GetTopValue().GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
+			if (!gameBoard[row][col].value().GetTopValue().GetIsIllusion()) {
+				std::cout << "The card is an illusion card and cannot be affected.\n";
+				return;
+			}
 			occupied++;
-
+		}
+			
 	if (occupied <3)
 	{
 		std::cout << "Condition of at least 3 positions of the column to be occupied is not valid.\n";
 		return;
-
 	}
 
 	// Find the bottom-most occupied tile
@@ -1051,7 +1078,6 @@ void Eter::Elemental::Waterfall(Board& board)
 	}
 
 	std::cout << "Waterfall power applied successfully! Cards in column " << col << " have been merged into stacks moving downward.\n";
-	
 }
 
 

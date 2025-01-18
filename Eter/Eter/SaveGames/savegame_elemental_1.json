@@ -10,11 +10,13 @@
                             "isEliminated": false,
                             "isIllusion": false,
                             "isPlaced": true,
-                            "username": "mar",
+                            "username": "ea",
                             "value": 1
                         }
                     ]
                 },
+                null,
+                null,
                 null
             ],
             [
@@ -27,23 +29,61 @@
                             "isEliminated": false,
                             "isIllusion": false,
                             "isPlaced": true,
-                            "username": "pope",
+                            "username": "oio",
                             "value": 1
+                        }
+                    ]
+                },
+                null,
+                null
+            ],
+            [
+                null,
+                null,
+                {
+                    "isPit": false,
+                    "value": [
+                        {
+                            "eterCard": false,
+                            "isEliminated": false,
+                            "isIllusion": false,
+                            "isPlaced": true,
+                            "username": "ea",
+                            "value": 2
+                        }
+                    ]
+                },
+                null
+            ],
+            [
+                null,
+                null,
+                null,
+                {
+                    "isPit": false,
+                    "value": [
+                        {
+                            "eterCard": false,
+                            "isEliminated": false,
+                            "isIllusion": false,
+                            "isPlaced": true,
+                            "username": "oio",
+                            "value": 2
                         }
                     ]
                 }
             ]
         ],
-        "currentSize": 2,
+        "currentSize": 4,
         "lastMove": {
             "column": 0,
-            "playerUsername": "mar",
+            "playerUsername": "ea",
             "row": 0
         },
         "maxSize": 4
     },
     "gameInfo": {
-        "bluePlayerName": "pope",
+        "bluePlayerName": "oio",
         "currentPlayer": {
             "eterCardPlayed": false,
             "gamesWon": 0,
@@ -72,14 +112,6 @@
                     "isPlaced": false,
                     "username": "",
                     "value": 1
-                },
-                {
-                    "eterCard": false,
-                    "isEliminated": false,
-                    "isIllusion": false,
-                    "isPlaced": false,
-                    "username": "",
-                    "value": 2
                 },
                 {
                     "eterCard": false,
@@ -132,32 +164,21 @@
             ],
             "powerExplosionAccess": false,
             "score": 0,
-            "username": "pope"
+            "username": "oio"
         },
-        "currentWizard": {
-            "etherCards": 1,
-            "mageType": "AIR",
-            "magicPowerUsed": false,
-            "name": "Unknown",
-            "username": "pope"
+        "elementCard1": {
+            "ElementalCardUsed": false,
+            "nameCard": "Rock",
+            "username": ""
+        },
+        "elementCard2": {
+            "ElementalCardUsed": false,
+            "nameCard": "Rock",
+            "username": ""
         },
         "firstMove": false,
-        "gameType": 1,
-        "rounds": 1,
-        "wizardPlayer1": {
-            "etherCards": 1,
-            "mageType": "AIR",
-            "magicPowerUsed": false,
-            "name": "Unknown",
-            "username": "pope"
-        },
-        "wizardPlayer2": {
-            "etherCards": 1,
-            "mageType": "AIR",
-            "magicPowerUsed": false,
-            "name": "Unknown",
-            "username": "mar"
-        }
+        "gameType": 2,
+        "rounds": 1
     },
     "playerInfo": {
         "player1": {
@@ -211,14 +232,6 @@
                     "isIllusion": false,
                     "isPlaced": false,
                     "username": "",
-                    "value": 2
-                },
-                {
-                    "eterCard": false,
-                    "isEliminated": false,
-                    "isIllusion": false,
-                    "isPlaced": false,
-                    "username": "",
                     "value": 3
                 },
                 {
@@ -248,7 +261,7 @@
             ],
             "powerExplosionAccess": false,
             "score": 0,
-            "username": "pope"
+            "username": "oio"
         },
         "player2": {
             "eterCardPlayed": false,
@@ -301,14 +314,6 @@
                     "isIllusion": false,
                     "isPlaced": false,
                     "username": "",
-                    "value": 2
-                },
-                {
-                    "eterCard": false,
-                    "isEliminated": false,
-                    "isIllusion": false,
-                    "isPlaced": false,
-                    "username": "",
                     "value": 3
                 },
                 {
@@ -338,7 +343,7 @@
             ],
             "powerExplosionAccess": false,
             "score": 0,
-            "username": "mar"
+            "username": "ea"
         }
     }
 }

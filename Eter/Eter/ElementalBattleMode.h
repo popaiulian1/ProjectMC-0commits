@@ -45,6 +45,8 @@ namespace Eter {
 		void SetElementalType();
 		void HandleElementalType();
 		void ElementalSelection(Elemental element);
+		void CreateFromJsonElemental(const nlohmann::json& gameInfo);
+		void ExportToJsonElemental();
 	#pragma endregion Methodes
 
 	private:
@@ -58,7 +60,6 @@ namespace Eter {
 		static const size_t kDECK_SIZE_DUEL{ 10 };
 		Elemental m_elementCard1;
 		Elemental m_elementCard2;
-		Elemental* m_currentElement = nullptr;
 		Player* m_currentPlayer = nullptr;
 		size_t m_rounds = 1;
 		bool firstMove = true;

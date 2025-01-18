@@ -110,5 +110,5 @@ void MainMenu::StartWizardDuel(const nlohmann::json& gameInfo)
 void MainMenu::StartElementalDuel(const nlohmann::json& gameInfo)
 {
 	Eter::ElementalBattleMode game;
-	//game.CreateFromJson(gameInfo);
+	game.CreateFromJsonElemental(gameInfo);
 }

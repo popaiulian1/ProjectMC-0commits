@@ -528,7 +528,7 @@ bool Eter::Elemental::neighboringCardsStacs(int rowIndex1, int colIndex1, int ro
 		   (colIndex1 == colIndex2 && std::abs(rowIndex1 - rowIndex2) == 1);
 }
 
-const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard)
+const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard) const
 {
 	switch (nameCard) {
 	case ElementalCardName::CONTROLLED_EXPLOSION:
@@ -1182,4 +1182,72 @@ void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of
 	}
 }
 
+void Eter::to_json(nlohmann::json& j, const Elemental& elemental)
+{
+	//there was a problem with the json library, 
+	// it was not able to serialize the enum type so i have to do this ugly workaround"
 
+	j = nlohmann::json{ 
+		{"ElementalCardUsed", elemental.GetElementalCardUsed()},
+		{"nameCard", elemental.toSringElementalCardName(elemental.GetNameCard())},
+		{"username", elemental.GetUsername()} 
+	};
+}
+
+void Eter::from_json(const nlohmann::json& j, Elemental& e)
+{
+	std::string nameCard = j.at("nameCard");
+	Eter::ElementalCardName cardName;
+	if (nameCard == "Controlled Explosion")
+		cardName = Eter::ElementalCardName::CONTROLLED_EXPLOSION;
+	else if (nameCard == "Destruction")
+		cardName = Eter::ElementalCardName::DESTRUCTION;
+	else if (nameCard == "Flame")
+		cardName = Eter::ElementalCardName::FLAME;
+	else if (nameCard == "Fire")
+		cardName = Eter::ElementalCardName::FIRE;
+	else if (nameCard == "Ash")
+		cardName = Eter::ElementalCardName::ASH;
+	else if (nameCard == "Spark")
+		cardName = Eter::ElementalCardName::SPARK;
+	else if (nameCard == "Squall")
+		cardName = Eter::ElementalCardName::SQUALL;
+	else if (nameCard == "Gale")
+		cardName = Eter::ElementalCardName::GALE;
+	else if (nameCard == "Hurricane")
+		cardName = Eter::ElementalCardName::HURRICANE;
+	else if (nameCard == "Gust")
+		cardName = Eter::ElementalCardName::GUST;
+	else if (nameCard == "Mirage")
+		cardName = Eter::ElementalCardName::MIRAGE;
+	else if (nameCard == "Storm")
+		cardName = Eter::ElementalCardName::STORM;
+	else if (nameCard == "Tide")
+		cardName = Eter::ElementalCardName::TIDE;
+	else if (nameCard == "Mist")
+		cardName = Eter::ElementalCardName::MIST;
+	else if (nameCard == "Wave")
+		cardName = Eter::ElementalCardName::WAVE;
+	else if (nameCard == "Whirlpool")
+		cardName = Eter::ElementalCardName::WHIRLPOOL;
+	else if (nameCard == "Blizzard")
+		cardName = Eter::ElementalCardName::BLIZZARD;
+	else if (nameCard == "Waterfall")
+		cardName = Eter::ElementalCardName::WATERFALL;
+	else if (nameCard == "Support")
+		cardName = Eter::ElementalCardName::SUPPORT;
+	else if (nameCard == "Earthquake")
+		cardName = Eter::ElementalCardName::EARTHQUAKE;
+	else if (nameCard == "Crumble")
+		cardName = Eter::ElementalCardName::CRUMBLE;
+	else if (nameCard == "Border")
+		cardName = Eter::ElementalCardName::BORDER;
+	else if (nameCard == "Avalanche")
+		cardName = Eter::ElementalCardName::AVALANCHE;
+	else if (nameCard == "Rock")
+		cardName = Eter::ElementalCardName::ROCK;
+
+	e.SetElementalCardUsed(j.at("ElementalCardUsed"));
+	e.SetNameCard(cardName);
+	e.SetUsername(j.at("username"));
+}

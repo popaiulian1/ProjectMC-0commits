@@ -206,6 +206,9 @@ void Eter::WizardDuelMode::CreateFromJsonWizard(const nlohmann::json& gameInfo)
 	m_wizardPlayer1 = gameInfoJson.at("wizardPlayer1").get<Wizards>();
 	m_wizardPlayer2 = gameInfoJson.at("wizardPlayer2").get<Wizards>();
 
+	m_wizardPlayer1.SetBoardForMage(&m_board);
+	m_wizardPlayer2.SetBoardForMage(&m_board);
+
 	if (gameInfoJson.at("currentWizard").get<Wizards>().GetUserName() == m_player1.GetUserName())
 	{
 		m_currentPlayer = &m_player2;

@@ -50,6 +50,7 @@ namespace Eter {
 		void SetPowerExplosionAccess(const bool& powerExplosionAccess);
 		void SetGamesWon(const size_t& gamesWon);
 		void SetEterCardPlayed(const bool& eterCardPlayed);
+		void SetLastPlayedPiece(const Piece& lastPlayedPiece);
 		 
 		//Methods
 		std::pair<int, int> Play(bool& firstMove); //takes row and column index for piece position to be played (Iulian) -> modified to int because it the compiler did not take negative values somehow???

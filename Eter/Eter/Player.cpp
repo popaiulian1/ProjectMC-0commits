@@ -120,6 +120,11 @@ void Eter::Player::SetEterCardPlayed(const bool& eterCardPlayed)
 	m_eterCardPlayed = eterCardPlayed;
 }
 
+void Eter::Player::SetLastPlayedPiece(const Piece& lastPlayedPiece)
+{
+	m_lastPlayedPiece = lastPlayedPiece;
+}
+
 
 //Methods
 std::pair<int, int> Eter::Player::Play(bool& firstMove)
@@ -218,7 +223,17 @@ bool Eter::Player::HasWon(const Board& board)
 
     // Lambda to check if the tile's top piece belongs to this player
     auto isTileOwnedByPlayer = [this](const std::optional<Tile>& tile) {
-        return tile.has_value() && tile->GetTopValue().GetUserName() == this->GetUserName();
+        if (tile.has_value()) {
+            if (!tile->GetValue().empty())
+            {
+                if (tile->GetTopValue().GetUserName() == this->GetUserName())
+                {
+                    return true;
+                }
+            }
+
+        }
+        return false;
     };
     
     // Check for horizontal, vertical, and diagonal lines
@@ -343,12 +358,15 @@ void Eter::to_json(nlohmann::json& j, const Player& p)
 
 void Eter::from_json(const nlohmann::json& j, Player& p)
 {
+	std::cout<<j.dump(4);
+
 	p.SetUserName(j.at("username").get<std::string>());
 	p.SetScore(j.at("score").get<int>());
 	p.SetGamesWon(j.at("gamesWon").get<size_t>());
 	p.SetIllusionPlayed(j.at("illusionPlayed").get<bool>());
 	p.SetPowerExplosionAccess(j.at("powerExplosionAccess").get<bool>());
 	p.SetEterCardPlayed(j.at("eterCardPlayed").get<bool>());
+	p.SetLastPlayedPiece(j.at("lastPlayedPiece").get<Piece>());
 
 	std::vector<Piece> pieces;
 	for (const auto& piece : j.at("pieces")) {

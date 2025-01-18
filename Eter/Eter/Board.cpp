@@ -357,16 +357,9 @@ void Eter::to_json(nlohmann::json& j, const Board& b)
 void Eter::from_json(const nlohmann::json& j, Board& b)
 {
 	try {
-		std::cout << "Parsing JSON: " << j.dump(4) << std::endl;
-
-		// Validate JSON structure
-		if (!j.contains("boardInfo") || !j["boardInfo"].contains("board") || !j["boardInfo"]["board"].is_array()) {
-			throw std::runtime_error("'boardInfo.board' is missing or not an array");
-		}
-
 		BoardMatrix boardMatrix;
 
-		for (const auto& row : j.at("boardInfo").at("board")) {
+		for (const auto& row : j.at("board")) {
 			if (!row.is_array()) {
 				throw std::runtime_error("Row is not an array");
 			}
@@ -374,11 +367,12 @@ void Eter::from_json(const nlohmann::json& j, Board& b)
 			BoardVector boardRow;
 			for (const auto& tile : row) {
 				if (tile.is_null()) {
-					boardRow.push_back(std::nullopt); // Handle null tiles
+					boardRow.push_back(Tile()); // Handle null tiles
 				}
 				else if (tile.is_object()) {
 					std::cout << "Parsing Tile: " << tile.dump(4) << std::endl;
-					boardRow.push_back(tile.get<Tile>()); // Convert to Tile object
+					Tile newTile(tile.get<Eter::Tile>());
+					boardRow.push_back(newTile); // Convert to Tile object
 				}
 				else {
 					throw std::runtime_error("Unexpected tile format");
@@ -395,8 +389,7 @@ void Eter::from_json(const nlohmann::json& j, Board& b)
 			j.at("lastMove").at("column").get<size_t>()
 		);
 
-		b.SetMaxSize(j.at("boardInfo").at("maxSize").get<size_t>());
-		std::cout << "Board parsed successfully!" << std::endl;
+		b.SetMaxSize(j.at("maxSize").get<size_t>());
 
 	}
 	catch (const std::exception& e) {

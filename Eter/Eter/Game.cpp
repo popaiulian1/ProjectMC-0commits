@@ -222,7 +222,7 @@ void Eter::Game::ExportToJson()
 	if (file.is_open()) {
 		nlohmann::json j_game;
 		j_game["boardInfo"] = m_board;
-		j_game["playerInfo"] = { m_player1, m_player2 };
+		j_game["playerInfo"] = { {"player1", m_player1}, {"player2", m_player2}};
 		j_game["gameInfo"] = {
 			{"gameType", m_gameType},
 			{"rounds", m_rounds},
@@ -243,12 +243,17 @@ void Eter::Game::CreateFromJson(const nlohmann::json& gameInfo)
 {
 	std::cout << "\n\n == Loading == \n\n";
 	//create board
-	m_board = gameInfo.at("boardInfo").at("board").get<Board>();
+	m_board = gameInfo.at("boardInfo").get<Board>();
+	std::cout << "\n\n == Board loaded == \n\n";
 
 	//create players
+	std::cout << "\n\n === Loading Players === \n\n";
 	nlohmann::json playerInfo = gameInfo.at("playerInfo");
-	m_player1 = playerInfo["player1"].get<Eter::Player>();
-	m_player2 = playerInfo["player2"].get<Eter::Player>();
+	std::cout << "\n\n === Loading Player1 === \n\n";
+	std::cout << "\n\n" << playerInfo.dump(4) << "\n\n";
+	m_player1 = playerInfo.at("player1").get<Eter::Player>();
+	std::cout << "\n\n === Loading Player2 === \n\n";
+	m_player2 = playerInfo.at("player2").get<Eter::Player>();
 	
 	//create game info
 	nlohmann::json gameInfoJson = gameInfo.at("gameInfo");
@@ -258,11 +263,11 @@ void Eter::Game::CreateFromJson(const nlohmann::json& gameInfo)
 
 	if (gameInfoJson.at("currentPlayer").get<Player>().GetUserName() == m_player1.GetUserName())
 	{
-		m_currentPlayer = &m_player1;
+		m_currentPlayer = &m_player2;
 	}
 	else
 	{
-		m_currentPlayer = &m_player2;
+		m_currentPlayer = &m_player1;
 	}
 	firstMove = gameInfoJson.at("firstMove").get<bool>();
 	PlayGame();

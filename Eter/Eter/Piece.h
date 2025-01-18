@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <json.hpp>
+#include <iostream>
 
 namespace Eter {
 

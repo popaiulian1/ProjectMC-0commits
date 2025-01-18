@@ -357,6 +357,7 @@ void Eter::to_json(nlohmann::json& j, const Board& b)
 void Eter::from_json(const nlohmann::json& j, Board& b)
 {
 	try {
+
 		BoardMatrix boardMatrix;
 
 		for (const auto& row : j.at("board")) {

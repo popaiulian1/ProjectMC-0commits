@@ -104,7 +104,7 @@ void MainMenu::StartPractice(const nlohmann::json& gameInfo)
 void MainMenu::StartWizardDuel(const nlohmann::json& gameInfo)
 {
 	Eter::WizardDuelMode game;
-	//game.CreateFromJson(gameInfo);
+	game.CreateFromJsonWizard(gameInfo);
 }
 
 void MainMenu::StartElementalDuel(const nlohmann::json& gameInfo)

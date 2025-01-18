@@ -1,0 +1,344 @@
+{
+    "boardInfo": {
+        "board": [
+            [
+                {
+                    "isPit": false,
+                    "value": [
+                        {
+                            "eterCard": false,
+                            "isEliminated": false,
+                            "isIllusion": false,
+                            "isPlaced": true,
+                            "username": "mar",
+                            "value": 1
+                        }
+                    ]
+                },
+                null
+            ],
+            [
+                null,
+                {
+                    "isPit": false,
+                    "value": [
+                        {
+                            "eterCard": false,
+                            "isEliminated": false,
+                            "isIllusion": false,
+                            "isPlaced": true,
+                            "username": "pope",
+                            "value": 1
+                        }
+                    ]
+                }
+            ]
+        ],
+        "currentSize": 2,
+        "lastMove": {
+            "column": 0,
+            "playerUsername": "mar",
+            "row": 0
+        },
+        "maxSize": 4
+    },
+    "gameInfo": {
+        "bluePlayerName": "pope",
+        "currentPlayer": {
+            "eterCardPlayed": false,
+            "gamesWon": 0,
+            "illusionPlayed": false,
+            "lastPlayedPiece": {
+                "eterCard": false,
+                "isEliminated": false,
+                "isIllusion": false,
+                "isPlaced": false,
+                "username": "",
+                "value": 1
+            },
+            "pieces": [
+                {
+                    "eterCard": true,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 4
+                }
+            ],
+            "powerExplosionAccess": false,
+            "score": 0,
+            "username": "pope"
+        },
+        "currentWizard": {
+            "etherCards": 1,
+            "mageType": "AIR",
+            "magicPowerUsed": false,
+            "name": "Unknown",
+            "username": "pope"
+        },
+        "firstMove": false,
+        "gameType": 1,
+        "rounds": 1,
+        "wizardPlayer1": {
+            "etherCards": 1,
+            "mageType": "AIR",
+            "magicPowerUsed": false,
+            "name": "Unknown",
+            "username": "pope"
+        },
+        "wizardPlayer2": {
+            "etherCards": 1,
+            "mageType": "AIR",
+            "magicPowerUsed": false,
+            "name": "Unknown",
+            "username": "mar"
+        }
+    },
+    "playerInfo": {
+        "player1": {
+            "eterCardPlayed": false,
+            "gamesWon": 0,
+            "illusionPlayed": false,
+            "lastPlayedPiece": {
+                "eterCard": false,
+                "isEliminated": false,
+                "isIllusion": false,
+                "isPlaced": false,
+                "username": "",
+                "value": 1
+            },
+            "pieces": [
+                {
+                    "eterCard": true,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 4
+                }
+            ],
+            "powerExplosionAccess": false,
+            "score": 0,
+            "username": "pope"
+        },
+        "player2": {
+            "eterCardPlayed": false,
+            "gamesWon": 0,
+            "illusionPlayed": false,
+            "lastPlayedPiece": {
+                "eterCard": false,
+                "isEliminated": false,
+                "isIllusion": false,
+                "isPlaced": false,
+                "username": "",
+                "value": 1
+            },
+            "pieces": [
+                {
+                    "eterCard": true,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 1
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 2
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 3
+                },
+                {
+                    "eterCard": false,
+                    "isEliminated": false,
+                    "isIllusion": false,
+                    "isPlaced": false,
+                    "username": "",
+                    "value": 4
+                }
+            ],
+            "powerExplosionAccess": false,
+            "score": 0,
+            "username": "mar"
+        }
+    }
+}

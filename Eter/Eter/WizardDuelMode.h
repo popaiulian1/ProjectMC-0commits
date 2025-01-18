@@ -43,6 +43,8 @@ namespace Eter {
 		void SetWizzardType();
 		void PlayEterCard(Player& Player);
 		void HandleWizzardType();
+		void CreateFromJsonWizard(const nlohmann::json& gameInfo);
+		void ExportToJsonWizard();
 	#pragma endregion Methods
 
 	private:

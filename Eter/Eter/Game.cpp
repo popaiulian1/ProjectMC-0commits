@@ -241,18 +241,12 @@ void Eter::Game::ExportToJson()
 
 void Eter::Game::CreateFromJson(const nlohmann::json& gameInfo)
 {
-	std::cout << "\n\n == Loading == \n\n";
 	//create board
 	m_board = gameInfo.at("boardInfo").get<Board>();
-	std::cout << "\n\n == Board loaded == \n\n";
 
 	//create players
-	std::cout << "\n\n === Loading Players === \n\n";
 	nlohmann::json playerInfo = gameInfo.at("playerInfo");
-	std::cout << "\n\n === Loading Player1 === \n\n";
-	std::cout << "\n\n" << playerInfo.dump(4) << "\n\n";
 	m_player1 = playerInfo.at("player1").get<Eter::Player>();
-	std::cout << "\n\n === Loading Player2 === \n\n";
 	m_player2 = playerInfo.at("player2").get<Eter::Player>();
 	
 	//create game info
@@ -375,7 +369,7 @@ Eter::Board Eter::Game::GetBoard() const
 	return m_board;
 }
 
-Eter::Board& Eter::Game::GetBoardReference()
+Eter::Board& Eter::Game::GetBoardReference()	
 {
 	return m_board;
 }

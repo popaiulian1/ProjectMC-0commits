@@ -3,6 +3,7 @@
 #include "WizardDuelMode.h"
 #include "Game.h"
 #include "ElementalBattleMode.h"
+#include "WizzardAndElementalMode.h"
 class MainMenu
 {
 public:

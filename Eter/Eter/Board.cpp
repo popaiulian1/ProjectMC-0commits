@@ -14,6 +14,10 @@ Eter::Board::Board(const GameType& gameType)
 	{
 		m_maxSize = kBOARD_SIZE_DUEL;
 	}
+	else if (gameType == GameType::Elemental) 
+	{
+		m_maxSize = kBOARD_SIZE_DUEL;
+	}
 	else
 	{
 		throw std::invalid_argument("Invalid game type");

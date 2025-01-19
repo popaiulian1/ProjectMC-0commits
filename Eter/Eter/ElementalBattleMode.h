@@ -3,10 +3,10 @@
 #include "Game.h"
 
 namespace Eter {
-	class ElementalBattleMode : public Eter::Elemental, public Eter::Game
+	class ElementalBattleMode : virtual public Eter::Game, public Eter::Elemental
 	{
 	public:
-	#pragma region Constructors
+		// Constructors
 		ElementalBattleMode() : Elemental(), Game() {};
 		ElementalBattleMode(
 			const Player& player1,
@@ -20,22 +20,17 @@ namespace Eter {
 		ElementalBattleMode(ElementalBattleMode&& other) noexcept;
 		ElementalBattleMode(const ElementalBattleMode& other);
 		ElementalBattleMode& operator=(const ElementalBattleMode& other);
-	#pragma endregion Constructors
-
-
-	#pragma region Getters
+	
+		// Getters
 		Elemental GetElementPlayer1() const;
 		Elemental GetElementPlayer2() const;
-	#pragma endregion Getters
 
-
-	#pragma region Setters
+		// Setters
 		void SetElementCard1(const Elemental& element);
 		void SetElementCard2(const Elemental& element);
 
-	#pragma endregion Setters
 
-	#pragma region Methodes
+		// Methods
 		void StartGame() override;
 		void PlayGame() override;
 		void Illusion(Player& player) override;
@@ -45,25 +40,25 @@ namespace Eter {
 		void SetElementalType();
 		void HandleElementalType();
 		void ElementalSelection(Elemental element);
+
 		void CreateFromJsonElemental(const nlohmann::json& gameInfo);
 		void ExportToJsonElemental();
-	#pragma endregion Methodes
+
+
 
 	private:
-	#pragma region Methodes
+		// Methods
 		int Random(const std::pair<int, int>& distance);
 		void addBorderToMatrix(Eter::BoardMatrix& board);
 		bool checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded);
-	#pragma region Methodes
 
-	#pragma region Variables
+		// Variables
 		static const size_t kDECK_SIZE_DUEL{ 10 };
 		Elemental m_elementCard1;
 		Elemental m_elementCard2;
 		Player* m_currentPlayer = nullptr;
 		size_t m_rounds = 1;
 		bool firstMove = true;
-	#pragma endregion Variables
 	};
 }
 

@@ -88,7 +88,7 @@ void Eter::ElementalBattleMode::StartGame()
 	if (GetGameType() != Eter::GameType::Elemental)
 		SetGameType(Eter::GameType::Elemental);
 
-	SetBoard(Board(Eter::GameType::Duel));
+	SetBoard(Board(Eter::GameType::Elemental));
 	auto GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
@@ -160,15 +160,12 @@ void Eter::ElementalBattleMode::SetElementalType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int ElementalCardName1 = Random(std::make_pair(0, 23));
+	int ElementalCardName1 = Random(std::make_pair(0, 23));
 	int ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	while(ElementalCardName2 == ElementalCardName1)
-		ElementalCardName2 = Random(std::make_pair(0, 23));*/
+		ElementalCardName2 = Random(std::make_pair(0, 23));
 
-
-	int ElementalCardName1 = 23;
-	int ElementalCardName2 = 23;
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -197,7 +194,7 @@ void Eter::ElementalBattleMode::PlayGame(){
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
-		std::cout << "d. Play mage\n";
+		std::cout << "d. Play elemental\n";
 		std::cout << "e. Play eter card\n";
 		std::cout << "f. Save Game\n";
 		std::cout << "________________________________________________\n";
@@ -446,8 +443,8 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 	case Eter::ElementalCardName::WHIRLPOOL:
 		elemental.Whirlpool(GameBoard);
 		break;
-	case Eter::ElementalCardName::BLIZZARD:
-		std::cout << "BLIZZARD";
+	case Eter::ElementalCardName::BLIZZARD: 
+		elemental.Blizzard(GameBoard);
 		break;
 	case Eter::ElementalCardName::WATERFALL:
 		elemental.Waterfall(GameBoard);

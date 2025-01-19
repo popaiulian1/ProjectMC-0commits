@@ -117,6 +117,8 @@ void Eter::Elemental::Earthquake(Board& board)
 		for (auto& tile : row)
 		{	
 			if (tile.has_value()) {
+				if (tile.value().IsPit())
+					continue;
 				Piece TopValue = tile.value().GetTopValue();
 				if (TopValue.GetValue() == '1')
 					if(!TopValue.GetEterCard())
@@ -980,47 +982,70 @@ void Eter::Elemental::Whirlpool(Board& board) {
 	std::cout << "Whirlpool executed successfully. Cards moved to (" << row << ", " << col << ").\n";
 }
 
-//void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
-//{
-//	auto gameBoard = board.GetBoardReference();
-//
-//	std::string input = "";
-//	std::cout << "Choose between 'row' and 'column': ";
-//	std::cin >> input;
-//
-//	enum rowOrColumn
-//	{
-//		row,
-//		column
-//	};
-//
-//	rowOrColumn choice;
-//	if (input == "row") {
-//		choice = rowOrColumn::row;
-//	}
-//	else if (input == "column") {
-//		choice = rowOrColumn::column;
-//	}
-//
-//	switch (choice)
-//	{
-//	case rowOrColumn::row :
-//		//opponent can't play cards on the row
-//		break;
-//	case rowOrColumn::column :
-//		//TO DO: opponent can't play cards on the column
-//		break;
-//	}
-//
-//	bool freeTile = false;
-//	for (auto& row : gameBoard) {
-//		for (auto& tile : row) {
-//			//TO DO: if not the blocked row or column
-//			if (tile.value().GetTopValue().GetValue() != NULL)
-//				freeTile = true;
-//		}
-//	}
-//}
+void Eter::Elemental::Blizzard(Board& board)
+{
+	auto gameBoard = board.GetBoardReference();
+
+	std::string input = "";
+	std::cout << "Choose between 'row' and 'column': ";
+	std::cin >> input;
+
+	enum rowOrColumn
+	{
+		row,
+		column
+	};
+
+	rowOrColumn choice;
+	if (input == "row") {
+		choice = rowOrColumn::row;
+	}
+	else if (input == "column") {
+		choice = rowOrColumn::column;
+	}
+
+	switch (choice)
+	{
+	case rowOrColumn::row: {
+		std::cout << "What row would you like to block?\n";
+		int srcRow;
+		std::cin >> srcRow;
+
+		int freeSpaces = 0;
+		for (int row = 0; row < gameBoard.size(); ++row)
+			for (int column = 0; column < gameBoard[row].size(); ++column)
+				if(row != srcRow)
+					if (!gameBoard[row][column].has_value())
+						++freeSpaces;
+
+		if (freeSpaces == 0) {
+			std::cout << "There are no free spaces to move the cards to.\n";
+			return;
+		}
+
+		for (int row = 0; row < gameBoard.size(); ++row)
+			for (int column = 0; column < gameBoard[row].size(); ++column)
+				if (row == srcRow)
+					if (!gameBoard[row][column].has_value()) {
+						gameBoard[row][column] = Tile();
+						//gameBoard[row][column].value().SetTileBlocked(true);
+					}
+		break;
+	}
+	case rowOrColumn::column :
+		//TO DO: opponent can't play cards on the column
+		break;
+	}
+
+	bool freeTile = false;
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			//TO DO: if not the blocked row or column
+			if (tile.value().GetTopValue().GetValue() != NULL)
+				freeTile = true;
+		}
+	}
+}
 
 void Eter::Elemental::Waterfall(Board& board)
 {

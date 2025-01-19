@@ -11,9 +11,9 @@ namespace Eter
 	public:
 		
 		//Constructors
-		Tile() : m_value{ std::deque<Piece>() }, m_isPit{false} {};
+		Tile() : m_value{ std::deque<Piece>() }, m_isPit{ false } /*/m_isTileBlocked { false }*/ {};
 		~Tile() = default;
-		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{tile.m_isPit} {}
+		Tile(const Tile& tile) : m_value(tile.m_value), m_isPit{ tile.m_isPit } /*m_isTileBlocked{false}*/ {}
 		Tile(const Piece& piece); // Constructor to initialize with a Piece
 		Tile(const char& value); // Constructor to initialize with a char no username provided add MANUALLY!!!
 		Tile(Tile&&) noexcept = default;
@@ -29,16 +29,19 @@ namespace Eter
 		//Setter
 		void SetValue(const Piece& piece);
 		void SetAsPit();
+		//void SetTileBlocked(bool isBlocked);
 
 		//Methods
 		friend std::ostream& operator<<(std::ostream& os, const Tile& tile); // Print top piece value
 		void RemoveStack();
 		Tile& operator=(const Piece& piece);
 		bool IsPit() const;
+		//bool IsTileBlocked() const;
 
 	private:
 		std::deque<Piece> m_value;
 		bool m_isPit = false;
+		//bool m_isTileBlocked = false;
 	};
 
 	void to_json(nlohmann::json& j, const Tile& t);

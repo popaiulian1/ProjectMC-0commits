@@ -160,14 +160,11 @@ void Eter::ElementalBattleMode::SetElementalType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int ElementalCardName1 = Random(std::make_pair(0, 23));
+	int ElementalCardName1 = Random(std::make_pair(0, 23));
 	int ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	while(ElementalCardName2 == ElementalCardName1)
-		ElementalCardName2 = Random(std::make_pair(0, 23));*/
-
-	int ElementalCardName1 = 4;
-	int ElementalCardName2 = 18;
+		ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -495,11 +492,12 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 
 	case Eter::ElementalCardName::BLIZZARD: 
 		std::cout << "BLIZZARD: Place this card onto any space and choose a row or column that it will impact.The opponent cannot play any cards onto the chosen row / column during his next turn.Condition - your opponent must have a free space to play a card.Remove this card from play after the next opponent turn. \n";
-		elemental.Blizzard(GameBoard);
+		//elemental.Blizzard(GameBoard);
 		break;
 
 	case Eter::ElementalCardName::SUPPORT:
-		std::cout << "SUPPORT: Value of a chosen card in your deck is increased by +1 (cannot be used on a ‘4’ card).\n";
+		std::cout << "SUPPORT: Value of a chosen card on the board is increased by +1 (cannot be used on a '4' card).\n";
+		elemental.Support(GameBoard);
 		break;
 
 	case Eter::ElementalCardName::EARTHQUAKE:
@@ -508,7 +506,8 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 
 	case Eter::ElementalCardName::CRUMBLE:
-		std::cout << "CRUMBLE: Value of a card is decreased by 1 (cannot be used on a ‘1’ card).Place your marker on the card.If the chosen card is ever covered or returned to your hand, the marker is removed.In case of a tie, the marker(if present on the playing field), is worth - 1 point.\n";
+		std::cout << "CRUMBLE: Value of a card on the board is decreased by 1 (cannot be used on a ‘1’ card).\n";
+		elemental.Crumble(GameBoard);
 		break;
 
 	case Eter::ElementalCardName::BORDER:

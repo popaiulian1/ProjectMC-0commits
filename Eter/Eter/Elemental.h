@@ -78,13 +78,13 @@ namespace Eter {
 		void Mist(Player& player);
 		void Wave(Board& board, Player& player);
 		void Whirlpool(Board& board);
-		void Blizzard(Board& board); //TO DO
+		//void Blizzard(Board& board); 
 		void Waterfall(Board& board);
-		void Support(Player& player); 
+		void Support(Board& board); 
 		void Earthquake(Board& board);
-		//void Crumble(); // TO DO
-		//void Border(); // TO DO
-		//void Avalanche(Board& board); // TO DO
+		void Crumble(Board& board); 
+		//void Border(); 
+		void Avalanche(Board& board); // TO DO
 		void Rock(Board& board, Player& player, Player& opponent);
 		
 		

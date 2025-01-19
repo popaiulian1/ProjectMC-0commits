@@ -273,29 +273,68 @@ void Eter::Elemental::Ash(Board& board, Player& player)
 	auto& playerPieces = player.GetPiecesReference();
 	auto& gameBoard = board.GetBoardReference();
 
-	// Verify if the player has eliminated cards 
-	auto it = std::find_if(playerPieces.begin(), playerPieces.end(), [](const Piece& piece) {
-		return piece.GetIsEliminated();
-	});
+	std::vector<Piece> eliminatedPieces;
+	for (auto& piece : playerPieces) {
+		if (piece.GetIsEliminated()==true) {
+			eliminatedPieces.push_back(piece);
+		}
+	}
 
-	if (it != playerPieces.end()) {
-		Piece& eliminatedPiece = *it;
+	if (eliminatedPieces.empty()) {
+		std::cout << "No eliminated cards available to play.\n";
+		return;
+	}
+
+	std::cout << "Choose a card to place on the board:\n";
+	for (size_t i = 0; i < eliminatedPieces.size(); ++i) {
+		std::cout << i + 1 << ": '" << eliminatedPieces[i].GetValue() << "'\n";
+	}
+
+	std::cout << "Enter the option of the card you want to place.\n";
+	std::cout << "Choice: ";
+	int choice;
+	std::cin >> choice;
+	if (choice<0 || choice> eliminatedPieces.size())
+	{
+		std::cout << "Invalid option.\n";
+		return;
+	}
+
+	Piece& chosenPiece = eliminatedPieces[choice - 1];
+
 		std::cout << "Where yould you like to place your card(row, column)?\n";
 		int row, col;
 		std::cin >> row >> col;
-		if (row < 0 || row >= board.GetCurrentSize() || col < 0 || col >= board.GetCurrentSize() || gameBoard[row][col].has_value()) {
-			std::cout << "Invalid position. Card placement failed.\n";
+		if (row < 0 || col < 0) {
+			m_board.IncreaseBoardForNegativeIndexes({ row, col });
+			gameBoard = m_board.GetBoardReference();
+		}
+		if (row >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board.GetMaxSize()) {
+			gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+		}
+		if (col >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board.GetMaxSize()) {
+			for (auto& r : gameBoard) {
+				r.insert(r.end(), std::optional<Tile>());
+			}
+		}
+
+		int adjustedLine = row, adjustedColumn = col;
+		adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+		adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+		if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+			adjustedLine < 0 || adjustedColumn < 0) {
+			std::cout << "Invalid move->Tile position is out of bounds\n";
 			return;
 		}
-		gameBoard[row][col] = Tile(eliminatedPiece);
 
-		eliminatedPiece.SetIsEliminated(false);
-		eliminatedPiece.SetIsPlaced(true);
+		gameBoard[adjustedLine][adjustedColumn] = Tile(chosenPiece);
 
-		std::cout << "Card '" << eliminatedPiece.GetValue() << "' placed at (" << row << ", " << col << ").\n";
-	}
-	else 
-		std::cout << "No eliminated cards available to play.\n";
+		chosenPiece.SetIsEliminated(false);
+		chosenPiece.SetIsPlaced(true);
+
+		std::cout << "Card '" << chosenPiece.GetValue() << "' placed at (" << adjustedLine << ", " << adjustedColumn << ").\n";
+	
 	
 }
 
@@ -345,21 +384,43 @@ void Eter::Elemental::Spark(Board& board, Player& player)
 	std::cout << "Choose a card to move by entering the corresponding number: ";
 	std::cin >> option;
 	int row, col;
-	std::cout << "Choose the row and the column you whant to place the card at.";
+	std::cout << "Choose the row and the column you whant to place the card at.\n";
 	std::cout << "Row: ";
 	std::cin >> row;
 	std::cout << "Column: ";
 	std::cin >> col;
+	std::cout << "\n";
 
 	if (option < 1 || option>static_cast<int>(cards.size())) {
 		std::cout << "Invalid choice. Operation canceled.\n";
 		return;
 	}
-	if (row < 0 || row >= board.GetCurrentSize() || col < 0 || col >= board.GetCurrentSize() || gameBoard[row][col].has_value()) {
-		std::cout << "Invalid position. Card placement failed.\n";
+
+	//Validation rows and cols
+	if (row < 0 || col < 0) {
+		m_board.IncreaseBoardForNegativeIndexes({ row, col });
+		gameBoard = m_board.GetBoardReference();
+	}
+
+	if (row >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board.GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (col >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board.GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
+		}
+	}
+
+	int adjustedLine = row, adjustedColumn = col;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
 		return;
 	}
-    auto& destTileOptional = board.GetBoardReference()[row][col];
+    auto& destTileOptional = board.GetBoardReference()[adjustedLine][adjustedColumn];
 	if (destTileOptional && destTileOptional->IsPit()) {
 		std::cout << "The chosen position is a pit. Card placement failed.\n";
 		return;
@@ -383,112 +444,129 @@ void Eter::Elemental::Spark(Board& board, Player& player)
 		sourceTile.reset();
 	}
 
-
+	destTileOptional = Tile();
 	destTileOptional->SetValue(chosenCard);
 	std::cout << "Card successfully placed at (" << row << ", " << col << ").\n";
 
 }
 
-void Eter::Elemental::shiftRowToLeft(Board& board, int index)
+void Eter::Elemental::shiftRowToLeft(Board& board, int index, Player& player1, Player& player2)
 {
 	auto& gameBoard = board.GetBoardReference();
-	int size = board.GetCurrentSize();
+	int size = gameBoard[index].size();
 
-	Player player1;
-	Player player2;
-
-	auto& firstTile = gameBoard[index][0];
-	if (firstTile.has_value()) {
-		auto& stack = firstTile->GetValueRef();
-		for (auto& piece : stack) {
-			if (piece.GetUserName() == player1.GetUserName())
-				player1.AddPiece(piece);
-			else
-				player2.AddPiece(piece);
-		}
-		firstTile->RemoveStack(); 
+	if (index < 0 || index >= size) {
+		std::cout << "Invalid row index. Operation canceled.\n";
+		return;
 	}
 
-	for (int col = 0; col < size - 1; ++col) {
-		//gameBoard[index][col] = gameBoard[index][col + 1];
+	if (gameBoard[index][0].has_value()) {
+		auto& firstTile = gameBoard[index][0];
+		auto& stack = firstTile->GetValueRef();
+
+		for (auto& piece : stack) {
+			piece.SetIsEliminated(true);
+			if (piece.GetUserName() == player1.GetUserName()) {
+				player1.AddPiece(piece);
+			}
+			else if (piece.GetUserName() == player2.GetUserName()) {
+				player2.AddPiece(piece);
+			}
+		}
+
+		firstTile.reset(); 
+	}
+
+	for (int col = 1; col < size; ++col) {
+		if (gameBoard[index][col].has_value()) {
+            gameBoard[index][col - 1] = std::move(gameBoard[index][col]);
+        } else {
+            gameBoard[index][col - 1].reset();
+        }
+
+		
 	}
 
 	gameBoard[index][size - 1].reset();
-	std::cout << "Row successfully shifted to left.\n";
+
+	std::cout << "Row successfully shifted to the left.\n";
 }
 
-void Eter::Elemental::shiftRowToRight(Board& board, int index)
+
+
+void Eter::Elemental::shiftRowToRight(Board& board, int index, Player& player1, Player& player2)
 {
 	auto& gameBoard = board.GetBoardReference();
-	int size = board.GetCurrentSize();
+	int size = gameBoard[index].size();
 
-	Player player1;
-	Player player2;
+	if (index < 0 || index >= size) {
+		std::cout << "Invalid row index. Operation canceled.\n";
+		return;
+	}
 
 	auto& lastTile = gameBoard[index][size - 1];
 	if (lastTile.has_value()) {
 		auto& stack = lastTile->GetValueRef();
 		for (auto& piece : stack) {
 			if (piece.GetUserName() == player1.GetUserName())
-				player1.AddPiece(piece);
+				piece.SetIsEliminated(true), player1.AddPiece(piece);
 			else
-				player2.AddPiece(piece);
+				piece.SetIsEliminated(true), player2.AddPiece(piece);
 		}
 		lastTile->RemoveStack(); 
 	}
 
 	for (int col = size - 1; col > 0; --col) {
-		//gameBoard[index][col] = gameBoard[index][col - 1];
+		gameBoard[index][col] = gameBoard[index][col - 1];
 	}
 
 	gameBoard[index][0].reset();
 	std::cout << "Row successfully shifted to right.\n";
 }
 
-void Eter::Elemental::shiftColUp(Board& board, int index)
+void Eter::Elemental::shiftColUp(Board& board, int index, Player& player1, Player& player2)
 {
 	auto& gameBoard = board.GetBoardReference();
-	int size = board.GetCurrentSize();
-	Player player1, player2; 
+	int size = board.GetCurrentSize(); 
 
 	auto topTile = gameBoard[0][index];
 	if (topTile.has_value()) {
 		auto& stack = topTile->GetValueRef();
 		for (auto& piece : stack) {
 			if (piece.GetUserName() == player1.GetUserName())
-				player1.AddPiece(piece); 
+				piece.SetIsEliminated(true), player1.AddPiece(piece);
 			else
-				player2.AddPiece(piece); 
+				piece.SetIsEliminated(true), player2.AddPiece(piece);
 		}
 	}
 
 	for (int row = 1; row < size; ++row) {
-		//gameBoard[row - 1][index] = gameBoard[row][index];
+		gameBoard[row - 1][index] = gameBoard[row][index];
 	}
 
 	gameBoard[size - 1][index].reset();
 
 }
 
-void Eter::Elemental::shiftColDown(Board& board, int index)
+void Eter::Elemental::shiftColDown(Board& board, int index, Player& player1, Player& player2)
 {
 	auto& gameBoard = board.GetBoardReference();
 	int size = board.GetCurrentSize();
-	Player player1, player2; 
 
 	auto bottomTile = gameBoard[size - 1][index];
 	if (bottomTile.has_value()) {
 		auto& stack = bottomTile->GetValueRef();
 		for (auto& piece : stack) {
+			piece.SetIsEliminated(true);
 			if (piece.GetUserName() == player1.GetUserName())
-				player1.AddPiece(piece);  
+				 player1.AddPiece(piece);
 			else
-				player2.AddPiece(piece); 
+				 player2.AddPiece(piece);
 		}
 	}
 
 	for (int row = size - 2; row >= 0; --row) {
-		//gameBoard[row + 1][index] = gameBoard[row][index];
+		gameBoard[row + 1][index] = gameBoard[row][index];
 	}
 
 	gameBoard[0][index].reset();
@@ -496,7 +574,7 @@ void Eter::Elemental::shiftColDown(Board& board, int index)
 
 bool Eter::Elemental::isRowFull(const Board& board, int rowIndex)
 {
-    auto gameBoard = board.GetBoard();
+	auto gameBoard = board.GetBoard();
 	int size = board.GetCurrentSize();
 
 	for (int col = 0; col < size; ++col) {
@@ -582,7 +660,7 @@ const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName na
 
 }
 
-void Eter::Elemental::Hurricane(Board& board)
+void Eter::Elemental::Hurricane(Board& board, Player& player1, Player& player2)
 {
 	std::cout << "What would you like to shift? (column or row)\n";
 	std::string option;
@@ -601,15 +679,15 @@ void Eter::Elemental::Hurricane(Board& board)
 		std::cout << "Wold you like to shift the row to the left or to the right? (left/ right)\n";
 		std::cin >> option;
 		if (option == "right")
-			shiftRowToRight(board, src);
+			shiftRowToRight(board, src,player1, player2);
 		else if (option == "left")
-			shiftRowToLeft(board, src);
+			shiftRowToLeft(board, src, player1, player2);
 		else
 			std::cout << "Invalid option.";
 		
 
 	}
-	else if (option == "col")
+	else if (option == "column")
 	{
 		std::cout << "Enter the positions of the full column you want to shift: \n";
 		std::cin >> src;
@@ -621,9 +699,9 @@ void Eter::Elemental::Hurricane(Board& board)
 		std::cout << "Wold you like to shift the column upwards or downwards? (up/ down)\n";
 		std::cin >> option;
 		if (option == "up")
-			shiftColUp(board, src);
+			shiftColUp(board, src,  player1,  player2);
 		else if (option == "down")
-			shiftColDown(board, src);
+			shiftColDown(board, src,  player1, player2);
 		else
 			std::cout << "Invalid option.";
 
@@ -640,8 +718,8 @@ void Eter::Elemental::Gust(Board& board)
 	std::vector<std::pair<int, int>> cardsPositions;
 
 	// We stack the single cards position in cardsPositions
-	for (int row = 0; row < board.GetCurrentSize(); ++row) {
-		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+	for (int row = 0; row < gameBoard.size(); ++row) {
+		for (int col = 0; col < gameBoard[row].size(); ++col) {
 			auto& tileOptional = gameBoard[row][col];
 			if (tileOptional.has_value() && tileOptional->GetValue().size() ==1) {
 				Piece card = tileOptional->GetTopValue();
@@ -690,12 +768,30 @@ void Eter::Elemental::Gust(Board& board)
 		return;
 	}
 
-	if (newRow < 0 || newRow >= board.GetCurrentSize() || newCol < 0 || newCol >= board.GetCurrentSize()) {
-		std::cout << "Invalid move. The card would move out of bounds. Operation canceled.\n";
+	if (newRow < 0 || newCol < 0) {
+		m_board.IncreaseBoardForNegativeIndexes({ newRow, newCol });
+		gameBoard = m_board.GetBoardReference();
+	}
+	if (newRow >= (int)gameBoard.size() - 1 && gameBoard.size() < m_board.GetMaxSize()) {
+		gameBoard.insert(gameBoard.end(), std::vector<std::optional<Tile>>(gameBoard[0].size()));
+	}
+	if (newCol >= (int)gameBoard[0].size() - 1 && gameBoard[0].size() < m_board.GetMaxSize()) {
+		for (auto& r : gameBoard) {
+			r.insert(r.end(), std::optional<Tile>());
+		}
+	}
+
+	int adjustedLine = newRow, adjustedColumn = newCol;
+	adjustedLine < 0 ? adjustedLine += 1 : adjustedLine;
+	adjustedColumn < 0 ? adjustedColumn += 1 : adjustedColumn;
+
+	if (adjustedLine >= gameBoard.size() || adjustedColumn >= gameBoard[0].size() ||
+		adjustedLine < 0 || adjustedColumn < 0) {
+		std::cout << "Invalid move->Tile position is out of bounds\n";
 		return;
 	}
 
-	auto& destTileOptional = gameBoard[newRow][newCol];
+	auto& destTileOptional = gameBoard[adjustedLine][adjustedColumn];
 
 	if (destTileOptional.has_value()) {
 		Piece destCard = destTileOptional->GetTopValue();
@@ -714,32 +810,32 @@ void Eter::Elemental::Gust(Board& board)
 	destTileOptional->SetValue(gameBoard[currentRow][currentCol]->GetTopValue());
 	gameBoard[currentRow][currentCol].reset();
 
-	std::cout << "Card successfully moved to (" << newRow << ", " << newCol << ").\n";
+	std::cout << "Card successfully moved to (" << adjustedLine << ", " << adjustedColumn << ").\n";
 
 }
 
-void Eter::Elemental::Mirage(Board& board, Player& player)
-{
+void Eter::Elemental::Mirage(Board& board, Player& player) {
 	Piece illusionCard;
 	bool foundIllusion = false;
 	int illusionRow = -1, illusionCol = -1;
 	auto& gameBoard = board.GetBoardReference();
-	for (int row = 0; row < board.GetCurrentSize(); ++row) {
-		for (int col = 0; col < board.GetCurrentSize(); ++col) {
+
+	// Găsim cartea de iluzie pe tablă
+	for (int row = 0; row < gameBoard.size(); ++row) {
+		for (int col = 0; col < gameBoard[row].size(); ++col) {
 			auto& tileOptional = gameBoard[row][col];
 			if (tileOptional.has_value()) {
-				auto &stack = tileOptional->GetValueRef();
-				for (size_t i = 0; i < stack.size() - 1; ++i)
-					if (stack[i].GetUserName() == player.GetUserName() && stack[i].GetIsIllusion()) {
-						illusionCard = stack[i];
-						stack.erase(stack.begin() + i); //Eliminating the illusion
-						foundIllusion = true;
-						illusionRow = row;
-						illusionCol = col;
-						break;
-					}
+				auto& stack = tileOptional->GetValueRef();
+				if (!stack.empty() && stack.back().GetUserName() == player.GetUserName() && stack.back().GetIsIllusion()) {
+					// Salvăm iluzia și o eliminăm de pe tablă
+					illusionCard = stack.back();
+					stack.pop_back();
+					foundIllusion = true;
+					illusionRow = row;
+					illusionCol = col;
+					break;
+				}
 			}
-			if (foundIllusion) break;
 		}
 		if (foundIllusion) break;
 	}
@@ -749,7 +845,9 @@ void Eter::Elemental::Mirage(Board& board, Player& player)
 		return;
 	}
 
-	//Chosing and placing the new illusion
+	std::cout << "Illusion card found at row " << illusionRow << ", column " << illusionCol << ".\n";
+
+	// Alegem o nouă carte din mână
 	std::cout << "Choose a card from your hand to replace the Illusion:\n";
 	player.PrintPieces();
 
@@ -760,23 +858,34 @@ void Eter::Elemental::Mirage(Board& board, Player& player)
 
 	if (choice < 1 || choice > static_cast<int>(hand.size())) {
 		std::cout << "Invalid choice. Operation canceled.\n";
+		// Reintroducem iluzia în mână, dacă utilizatorul a anulat operațiunea
+		player.AddPiece(illusionCard);
 		return;
 	}
 
+	// Alegem cartea dorită și o configurăm ca iluzie
 	Piece chosenCard = hand[choice - 1];
 	chosenCard.SetIsIllusion(true);
 	chosenCard.SetIsPlaced(true);
-	hand.erase(hand.begin() + (choice - 1));
+	chosenCard.SetUserName(player.GetUserName());
 
+	// Eliminăm cartea selectată din mână și reintroducem iluzia
+	hand.erase(hand.begin() + (choice - 1));
 	player.AddPiece(illusionCard);
 
-	// Placing the new illusion
+	player.SetIllusionPlayed(false);
+	// Plasăm noua iluzie pe tablă
 	auto& destinationTile = gameBoard[illusionRow][illusionCol];
+	if (!destinationTile.has_value()) {
+		destinationTile.emplace();
+	}
 	destinationTile->SetValue(chosenCard);
+	player.SetIllusionPlayed(true);
 
 	std::cout << "Illusion replaced successfully! New card placed at (" << illusionRow << ", " << illusionCol << ").\n";
-
 }
+
+
 
 void Eter::Elemental::Wave(Board& board, Player& player)
 {
@@ -1088,22 +1197,58 @@ void Eter::Elemental::Destruction(const Player& opponent, Board& board)
 	std::cout << "Could not find opponent's last piece to destroy.\n";
 }
 
-void Eter::Elemental::Squall(Player& opponent, Board& board)
-{
-	auto gameBoard = board.GetBoard();
+void Eter::Elemental::Squall(Player& opponent, Board& board) {
+	auto& gameBoard = board.GetBoardReference();
+	std::vector<std::pair<int, int>> opponentTilePositions;
 
-	for (auto& row : gameBoard) {
-		for (auto& tile : row) {
-			if (tile.has_value()) {
-				if (tile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
-					Piece removedPiece(tile.value().GetTopValue()); //add the future removed piece back in the opponents deck
-					opponent.AddPiece(removedPiece);
-
-					tile.value().GetValue().pop_back(); //remove the piece from the board
-				}
+	for (int row = 0; row < gameBoard.size(); ++row) {
+		for (int col = 0; col < gameBoard[row].size(); ++col) {
+			if (gameBoard[row][col].has_value() &&
+				gameBoard[row][col]->GetTopValue().GetUserName() == opponent.GetUserName()) {
+				opponentTilePositions.emplace_back(row, col);
 			}
 		}
 	}
+	if (opponentTilePositions.empty()) {
+		std::cout << "No visible cards of the opponent found on the playing field.\n";
+		return;
+	}
+
+	std::cout << "Choose a card to return to the opponent's hand from the following positions:\n";
+	for (size_t i = 0; i < opponentTilePositions.size(); ++i) {
+		int row = opponentTilePositions[i].first;
+		int col = opponentTilePositions[i].second;
+		std::cout << i + 1 << ". Position (" << row << ", " << col << ") - Card: "
+			<< gameBoard[row][col]->GetTopValue().GetUserName() << "\n";
+	}
+
+	std::cout << "Enter the number of the card to return: ";
+	int choice;
+	std::cin >> choice;
+
+	if (choice < 1 || choice > static_cast<int>(opponentTilePositions.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	int chosenRow = opponentTilePositions[choice - 1].first;
+	int chosenCol = opponentTilePositions[choice - 1].second;
+	auto& selectedTile = gameBoard[chosenRow][chosenCol];
+	auto& stack = selectedTile->GetValueRef();
+
+	Piece removedPiece(stack.back());
+    removedPiece.SetIsEliminated(true);
+	opponent.AddPiece(removedPiece);
+	
+
+	stack.pop_back();
+
+	if (stack.empty()) {
+		gameBoard[chosenRow][chosenCol] = std::nullopt;
+	}
+
+	std::cout << "Card from position (" << chosenRow << ", " << chosenCol
+		<< ") successfully returned to the opponent's hand.\n";
 }
 
 void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
@@ -1113,19 +1258,18 @@ void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
 	for (auto& row : gameBoard) {
 		for (auto& tile : row) {
 			if (tile.has_value()) {
-				Tile& currentTile = tile.value();
+				auto& currentTile = tile.value();
+				auto& stack = currentTile.GetValueRef();
 
-				if (currentTile.GetValue().size() > 1) {
-					std::deque<Piece> pieceStack = currentTile.GetValue();
-					Piece topPiece = pieceStack.back();
-
-					currentTile.RemoveStack();
-					currentTile.SetValue(topPiece);
-
+				if (stack.size() > 1) {
+					Piece topPiece = stack.back();
+					stack.pop_back();
 					//returning the other pieces to their owner
-					while (!pieceStack.empty()) {
-						Piece currentPiece = pieceStack.back();
-						pieceStack.pop_back();
+					while (!stack.empty()) {
+						Piece currentPiece = stack.back();
+						stack.pop_back();
+
+						currentPiece.SetIsEliminated(true);
 						
 						if (currentPiece.GetUserName() == player1.GetUserName()) {
 							player1.AddPiece(currentPiece);
@@ -1134,6 +1278,8 @@ void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
 							player2.AddPiece(currentPiece);
 						}
 					}
+					currentTile.RemoveStack();
+					currentTile.SetValue(topPiece);
 				}
 			}
 		}
@@ -1141,19 +1287,44 @@ void Eter::Elemental::Gale(Board& board, Player& player1, Player& player2)
 
 }
 
-void Eter::Elemental::Storm(int row, int column) //Remove from play any stack of minimum 2 cards
+void Eter::Elemental::Storm(Board& board) //Remove from play any stack of minimum 2 cards
 {
-	uint8_t StackSize = m_board.GetBoardReference()[row][column].value().GetValue().size();
-	if (StackSize >= 2)
-	{
-		while (!m_board.GetBoard().empty())
-			m_board.GetBoardReference().pop_back();
-		m_ElementalCardUsed = true;
+	auto& gameBoard = board.GetBoardReference();
+	std::vector<std::pair<int, int>> eligibleTiles;
+
+	for (int row = 0; row < gameBoard.size(); ++row) {
+		for (int col = 0; col < gameBoard[row].size(); ++col) {
+			auto& tileOptional = gameBoard[row][col];
+			if (tileOptional.has_value()) {
+				auto& stack = tileOptional->GetValueRef();
+				if (stack.size() >= 2) {
+					eligibleTiles.emplace_back(row, col);
+					std::cout << "Option " << eligibleTiles.size() << ": Stack at row "
+						<< row << ", column " << col << " with " << stack.size() << " cards.\n";
+				}
+			}
+		}
 	}
-	else
-	{
-		throw std::out_of_range{ "The stack has less then 2 cards!" };
+
+	if (eligibleTiles.empty()) {
+		std::cout << "No eligible stacks found. Operation canceled.\n";
+		return;
 	}
+
+	int choice;
+	std::cout << "Choose a stack to remove (enter the option number): ";
+	std::cin >> choice;
+
+	if (choice < 1 || choice > static_cast<int>(eligibleTiles.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	auto [row, col] = eligibleTiles[choice - 1];
+	auto& selectedTile = gameBoard[row][col];
+
+	selectedTile.reset();
+
 }
 
 

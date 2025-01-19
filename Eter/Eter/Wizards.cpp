@@ -7,15 +7,19 @@
 
 //Constructors & Destructor
 Eter::Wizards::Wizards() :
-	m_name("Unknown"), m_mageType(MageType::FIRE), m_magicPowerUsed(false), m_etherCards(1), m_board(nullptr), m_username("Unknown") {}
+	m_name("Unknown"), m_mageType(MageType::FIRE), m_magicPowerUsed(false),
+	m_etherCards(1), m_board(nullptr), m_username("Unknown") {}
 
 
 Eter::Wizards::Wizards(std::string wizardName, MageType type, Board* gameBoard, std::string username) :
-	m_name(wizardName), m_mageType(type), m_magicPowerUsed(false), m_etherCards(1), m_board(gameBoard), m_username(username) {}
+	m_name(wizardName), m_mageType(type), m_magicPowerUsed(false),
+	m_etherCards(1), m_board(gameBoard), m_username(username) {}
 
 
 Eter::Wizards::Wizards(const Wizards& other) :
-	m_name(other.m_name), m_mageType(other.m_mageType), m_magicPowerUsed(other.m_magicPowerUsed), m_etherCards(other.m_etherCards), m_board(other.m_board) {}
+	m_name(other.m_name), m_mageType(other.m_mageType), 
+	m_magicPowerUsed(other.m_magicPowerUsed), m_etherCards(other.m_etherCards), 
+	m_board(other.m_board) {}
 
 const std::string& Eter::Wizards::GetUserName() const
 {
@@ -48,6 +52,21 @@ const Eter::Board* Eter::Wizards::GetBoardWizard() const
 	return m_board;
 }
 
+const std::string& Eter::Wizards::GetName() const
+{
+	return m_name;
+}
+
+const int& Eter::Wizards::GetEtherCards() const
+{
+	return m_etherCards;
+}
+
+const bool& Eter::Wizards::GetMagicPowerUsed() const
+{
+	return m_magicPowerUsed;
+}
+
 void Eter::Wizards::SetMageType(const Eter::MageType& type)
 {
 	m_mageType = type;
@@ -61,6 +80,16 @@ void Eter::Wizards::SetUserName(const std::string& username)
 void Eter::Wizards::SetBoardForMage(Board* board)
 {
 	m_board = board;
+}
+
+void Eter::Wizards::SetEtherCards(int etherCards)
+{
+	m_etherCards = etherCards;
+}
+
+void Eter::Wizards::SetMagicPowerUsed(bool magicPowerUsed)
+{
+	m_magicPowerUsed = magicPowerUsed;
 }
 
 // Determination of Power 
@@ -699,3 +728,34 @@ void Eter::Wizards::moveEdgeRowCol() {
 	}
 }
 
+void Eter::to_json(nlohmann::json& j, const Wizards& w)
+{
+	j = nlohmann::json{
+		{"name", w.GetName()},
+		{"mageType", w.toStringMageType(w.GetMageType())},
+		{"magicPowerUsed", w.GetMagicPowerUsed()},
+		{"etherCards", w.GetEtherCards()},
+		{"username", w.GetUserName()}
+	};
+}
+
+void Eter::from_json(const nlohmann::json& j, Wizards& w)
+{
+	std::string mageType = j.at("mageType").get<std::string>();
+	MageType type;
+	if (mageType == "FIRE")
+		type = MageType::FIRE;
+	else if (mageType == "EARTH")
+		type = MageType::EARTH;
+	else if (mageType == "AIR")
+		type = MageType::AIR;
+	else if (mageType == "WATER")
+		type = MageType::WATER;
+	else
+		type = MageType::FIRE;
+
+
+	w = Wizards(j.at("name").get<std::string>(), type, nullptr, j.at("username").get<std::string>());
+	w.SetMagicPowerUsed(j.at("magicPowerUsed").get<bool>());
+	w.SetEtherCards(j.at("etherCards").get<int>());
+}

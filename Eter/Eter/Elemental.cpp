@@ -80,13 +80,13 @@ void Eter::Elemental::Tide(int row1, int column1, int row2, int column2) //Chang
 		std::cout << "Invalid row index!\n";
 	}
 
-	if (!GameBoard[row1][column1].has_value()) {
+	if (!GameBoard[row1][column1].has_value() || !GameBoard[row2][column2].has_value()) {
 		std::cout << "Empty tile!";
 		return;
 	}
 
-	if (!GameBoard[row2][column2].has_value()) {
-		std::cout << "Empty tile!";
+	if (!GameBoard[row1][column1].value().GetTopValue().GetEterCard() || !GameBoard[row2][column2].value().GetTopValue().GetEterCard()) {
+		std::cout << "You cannot move the eter card!";
 		return;
 	}
 
@@ -117,13 +117,15 @@ void Eter::Elemental::Earthquake(Board& board)
 		for (auto& tile : row)
 		{	
 			if (tile.has_value()) {
+				if (tile.value().IsPit())
+					continue;
 				Piece TopValue = tile.value().GetTopValue();
 				if (TopValue.GetValue() == '1')
-					tile.value().GetValueRef().pop_back();
+					if(!TopValue.GetEterCard())
+						tile.value().GetValueRef().pop_back();
 			}
 		}
 	}
-
 }
 
 //void Eter::Elemental::Avalanche(Board& board)
@@ -151,9 +153,9 @@ void Eter::Elemental::Earthquake(Board& board)
 
 void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 {
-	auto gameBoard = board.GetBoardReference();
+	auto& gameBoard = board.GetBoardReference();
 
-	if (opponent.GetIllusionPlayed() == NULL) {
+	if (opponent.GetIllusionPlayed() == false) {
 		std::cerr << "ROCK: No illusion to be covered!";
 		return;
 	}
@@ -175,8 +177,10 @@ void Eter::Elemental::Rock(Board& board, Player& player, Player& opponent)
 			auto& currentTile = gameBoard[row][column];
 			if (currentTile.value().GetTopValue().GetIsIllusion() == true && currentTile.value().GetTopValue().GetUserName() == opponent.GetUserName()) {
 				auto& targetTile = gameBoard[row][column].value();
-				//TO DO-> GEORGE: put the chosen piece on board over the illusion one
 
+				char cardValue = player.ChoosePiece();
+				targetTile.GetValueRef().push_back(Piece(cardValue, false, player.GetUserName(), false, false, false));
+				break;
 			}
 		}
 	}
@@ -604,7 +608,7 @@ bool Eter::Elemental::neighboringCardsStacs(int rowIndex1, int colIndex1, int ro
 		   (colIndex1 == colIndex2 && std::abs(rowIndex1 - rowIndex2) == 1);
 }
 
-const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard)
+const std::string Eter::Elemental::toSringElementalCardName(ElementalCardName nameCard) const
 {
 	switch (nameCard) {
 	case ElementalCardName::CONTROLLED_EXPLOSION:
@@ -897,11 +901,18 @@ void Eter::Elemental::Wave(Board& board, Player& player)
 		std::cout << "Invalid position.\n";
 		return;
 	}
+
 	auto& srcTile = gameBoard[srcRow][srcCol];
 	if (!srcTile.has_value()) {
 		std::cout << "No card/stack found at the selected position.\n";
 		return;
 	}
+
+	if (srcTile.value().GetTopValue().GetEterCard()) {
+		std::cout << "You cannot move the Eter card.\n";
+		return;
+	}
+
 	std::cout << "In what direction would you like to move the card/stack (right, left, up, down, up-left, up-right, down-left, down-right)? The card must have a higher value than the one already placed.\n";
 	std::string move;
 	std::cin >> move;
@@ -997,11 +1008,21 @@ void Eter::Elemental::Whirlpool(Board& board) {
 			card1 = &gameBoard[row][col - 1]->GetValueRef().back();
 			adjRow1 = row;
 			adjCol1 = col - 1;
+
+			if (card1->GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
 		}
 		if (col < board.GetCurrentSize() - 1 && gameBoard[row][col + 1].has_value() && !gameBoard[row][col + 1]->GetValueRef().empty()) {
 			card2 = &gameBoard[row][col + 1]->GetValueRef().back();
 			adjRow2 = row;
 			adjCol2 = col + 1;
+
+			if (card2->GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
 		}
 	}
 	else if (choice == "column") {
@@ -1070,47 +1091,70 @@ void Eter::Elemental::Whirlpool(Board& board) {
 	std::cout << "Whirlpool executed successfully. Cards moved to (" << row << ", " << col << ").\n";
 }
 
-//void Eter::Elemental::Blizzard(Board& board, int row, int column, Player& opponent)
-//{
-//	auto gameBoard = board.GetBoard();
-//
-//	std::string input = "";
-//	std::cout << "Choose between 'row' and 'column': ";
-//	std::cin >> input;
-//
-//	enum rowOrColumn
-//	{
-//		row,
-//		column
-//	};
-//
-//	rowOrColumn choice;
-//	if (input == "row") {
-//		choice = rowOrColumn::row;
-//	}
-//	else if (input == "column") {
-//		choice = rowOrColumn::column;
-//	}
-//
-//	switch (choice)
-//	{
-//	case rowOrColumn::row :
-//		//opponent can't play cards on the row
-//		break;
-//	case rowOrColumn::column :
-//		//TO DO: opponent can't play cards on the column
-//		break;
-//	}
-//
-//	bool freeTile = false;
-//	for (auto& row : gameBoard) {
-//		for (auto& tile : row) {
-//			//TO DO: if not the blocked row or column
-//			if (tile.value().GetTopValue().GetValue() != NULL)
-//				freeTile = true;
-//		}
-//	}
-//}
+void Eter::Elemental::Blizzard(Board& board)
+{
+	auto gameBoard = board.GetBoardReference();
+
+	std::string input = "";
+	std::cout << "Choose between 'row' and 'column': ";
+	std::cin >> input;
+
+	enum rowOrColumn
+	{
+		row,
+		column
+	};
+
+	rowOrColumn choice;
+	if (input == "row") {
+		choice = rowOrColumn::row;
+	}
+	else if (input == "column") {
+		choice = rowOrColumn::column;
+	}
+
+	switch (choice)
+	{
+	case rowOrColumn::row: {
+		std::cout << "What row would you like to block?\n";
+		int srcRow;
+		std::cin >> srcRow;
+
+		int freeSpaces = 0;
+		for (int row = 0; row < gameBoard.size(); ++row)
+			for (int column = 0; column < gameBoard[row].size(); ++column)
+				if(row != srcRow)
+					if (!gameBoard[row][column].has_value())
+						++freeSpaces;
+
+		if (freeSpaces == 0) {
+			std::cout << "There are no free spaces to move the cards to.\n";
+			return;
+		}
+
+		for (int row = 0; row < gameBoard.size(); ++row)
+			for (int column = 0; column < gameBoard[row].size(); ++column)
+				if (row == srcRow)
+					if (!gameBoard[row][column].has_value()) {
+						gameBoard[row][column] = Tile();
+						//gameBoard[row][column].value().SetTileBlocked(true);
+					}
+		break;
+	}
+	case rowOrColumn::column :
+		//TO DO: opponent can't play cards on the column
+		break;
+	}
+
+	bool freeTile = false;
+	for (auto& row : gameBoard) {
+		for (auto& tile : row) {
+			//TO DO: if not the blocked row or column
+			if (tile.value().GetTopValue().GetValue() != NULL)
+				freeTile = true;
+		}
+	}
+}
 
 void Eter::Elemental::Waterfall(Board& board)
 {
@@ -1127,14 +1171,22 @@ void Eter::Elemental::Waterfall(Board& board)
 	//Verify there are at least 3 positions occupied
 	int occupied = 0;
 	for (int row = 0; row < board.GetCurrentSize(); ++row)
-		if (gameBoard[row][col].has_value())
+		if (gameBoard[row][col].has_value()) {
+			if (gameBoard[row][col].value().GetTopValue().GetEterCard()) {
+				std::cout << "You cannot move the Eter card.\n";
+				return;
+			}
+			if (!gameBoard[row][col].value().GetTopValue().GetIsIllusion()) {
+				std::cout << "The card is an illusion card and cannot be affected.\n";
+				return;
+			}
 			occupied++;
-
+		}
+			
 	if (occupied <3)
 	{
 		std::cout << "Condition of at least 3 positions of the column to be occupied is not valid.\n";
 		return;
-
 	}
 
 	// Find the bottom-most occupied tile
@@ -1160,7 +1212,6 @@ void Eter::Elemental::Waterfall(Board& board)
 	}
 
 	std::cout << "Waterfall power applied successfully! Cards in column " << col << " have been merged into stacks moving downward.\n";
-	
 }
 
 
@@ -1327,4 +1378,72 @@ void Eter::Elemental::Storm(Board& board) //Remove from play any stack of minimu
 
 }
 
+void Eter::to_json(nlohmann::json& j, const Elemental& elemental)
+{
+	//there was a problem with the json library, 
+	// it was not able to serialize the enum type so i have to do this ugly workaround"
 
+	j = nlohmann::json{ 
+		{"ElementalCardUsed", elemental.GetElementalCardUsed()},
+		{"nameCard", elemental.toSringElementalCardName(elemental.GetNameCard())},
+		{"username", elemental.GetUsername()} 
+	};
+}
+
+void Eter::from_json(const nlohmann::json& j, Elemental& e)
+{
+	std::string nameCard = j.at("nameCard");
+	Eter::ElementalCardName cardName;
+	if (nameCard == "Controlled Explosion")
+		cardName = Eter::ElementalCardName::CONTROLLED_EXPLOSION;
+	else if (nameCard == "Destruction")
+		cardName = Eter::ElementalCardName::DESTRUCTION;
+	else if (nameCard == "Flame")
+		cardName = Eter::ElementalCardName::FLAME;
+	else if (nameCard == "Fire")
+		cardName = Eter::ElementalCardName::FIRE;
+	else if (nameCard == "Ash")
+		cardName = Eter::ElementalCardName::ASH;
+	else if (nameCard == "Spark")
+		cardName = Eter::ElementalCardName::SPARK;
+	else if (nameCard == "Squall")
+		cardName = Eter::ElementalCardName::SQUALL;
+	else if (nameCard == "Gale")
+		cardName = Eter::ElementalCardName::GALE;
+	else if (nameCard == "Hurricane")
+		cardName = Eter::ElementalCardName::HURRICANE;
+	else if (nameCard == "Gust")
+		cardName = Eter::ElementalCardName::GUST;
+	else if (nameCard == "Mirage")
+		cardName = Eter::ElementalCardName::MIRAGE;
+	else if (nameCard == "Storm")
+		cardName = Eter::ElementalCardName::STORM;
+	else if (nameCard == "Tide")
+		cardName = Eter::ElementalCardName::TIDE;
+	else if (nameCard == "Mist")
+		cardName = Eter::ElementalCardName::MIST;
+	else if (nameCard == "Wave")
+		cardName = Eter::ElementalCardName::WAVE;
+	else if (nameCard == "Whirlpool")
+		cardName = Eter::ElementalCardName::WHIRLPOOL;
+	else if (nameCard == "Blizzard")
+		cardName = Eter::ElementalCardName::BLIZZARD;
+	else if (nameCard == "Waterfall")
+		cardName = Eter::ElementalCardName::WATERFALL;
+	else if (nameCard == "Support")
+		cardName = Eter::ElementalCardName::SUPPORT;
+	else if (nameCard == "Earthquake")
+		cardName = Eter::ElementalCardName::EARTHQUAKE;
+	else if (nameCard == "Crumble")
+		cardName = Eter::ElementalCardName::CRUMBLE;
+	else if (nameCard == "Border")
+		cardName = Eter::ElementalCardName::BORDER;
+	else if (nameCard == "Avalanche")
+		cardName = Eter::ElementalCardName::AVALANCHE;
+	else if (nameCard == "Rock")
+		cardName = Eter::ElementalCardName::ROCK;
+
+	e.SetElementalCardUsed(j.at("ElementalCardUsed"));
+	e.SetNameCard(cardName);
+	e.SetUsername(j.at("username"));
+}

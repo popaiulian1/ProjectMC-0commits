@@ -24,7 +24,7 @@ Eter::ElementalBattleMode::ElementalBattleMode(ElementalBattleMode && other) noe
 	other.SetPlayer1(Player());
 	other.SetPlayer2(Player());
 	other.SetBoard(Board());
-	other.SetGameType(GameType::Practice);
+	other.SetGameType(GameType::Elemental);
 	other.m_elementCard1 = Elemental();
 	other.m_elementCard2 = Elemental();
 }
@@ -85,10 +85,10 @@ void Eter::ElementalBattleMode::StartGame()
 	std::cout << "This is Elemental Battle Mode" << std::endl;
 	std::cout << "_____________________________\n";
 
-	if (GetGameType() != Eter::GameType::Duel)
-		SetGameType(Eter::GameType::Duel);
+	if (GetGameType() != Eter::GameType::Elemental)
+		SetGameType(Eter::GameType::Elemental);
 
-	SetBoard(Board(Eter::GameType::Duel));
+	SetBoard(Board(Eter::GameType::Elemental));
 	auto GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
@@ -183,6 +183,17 @@ void Eter::ElementalBattleMode::PlayGame(){
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 	while (m_rounds <= 3) {
+
+		if (m_currentPlayer->GetPieces().size() == 0)
+		{
+			std::cout << "The game is over!\n" << m_currentPlayer->GetUserName() << " has no more pieces!";
+			m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
+			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+			++m_rounds;
+			StartGame();
+			break;
+		}
+
 		m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
 		GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName()); // Print the board
 		std::cout << m_currentPlayer->GetUserName() << ", it's your turn.\n";
@@ -193,7 +204,9 @@ void Eter::ElementalBattleMode::PlayGame(){
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
+		std::cout << "d. Play elemental\n";
 		std::cout << "e. Play eter card\n";
+		std::cout << "f. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -231,6 +244,10 @@ void Eter::ElementalBattleMode::PlayGame(){
 			else
 				std::cout << "You have already played your eter card.\n";
 
+			break;
+		}
+		case 'f': {
+			ExportToJsonElemental();
 			break;
 		}
 		default: {
@@ -464,11 +481,11 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 	case Eter::ElementalCardName::WHIRLPOOL:
 		elemental.Whirlpool(GameBoard);
 		break;
-	case Eter::ElementalCardName::BLIZZARD:
-		std::cout << "BLIZZARD";
+	case Eter::ElementalCardName::BLIZZARD: 
+		elemental.Blizzard(GameBoard);
 		break;
 	case Eter::ElementalCardName::WATERFALL:
-		std::cout << "WATERFALL";
+		elemental.Waterfall(GameBoard);
 		break;
 	case Eter::ElementalCardName::SUPPORT:
 		std::cout << "SUPPORT";
@@ -486,11 +503,77 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		std::cout << "AVALANCHE";
 		break;
 	case Eter::ElementalCardName::ROCK:
-		std::cout << "ROCK";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			elemental.Rock(GameBoard, Player1, Player2);
+		else
+			elemental.Rock(GameBoard, Player2, Player1);
 		break;
 	default:
 		std::cout << "Invalid option. Please choose a valid option.\n";
 		break;
+	}
+}
+
+void Eter::ElementalBattleMode::CreateFromJsonElemental(const nlohmann::json& gameInfo)
+{
+	auto& m_board = this->GetBoardReference();
+	auto& m_player1 = this->GetPlayer1Reference();
+	auto& m_player2 = this->GetPlayer2Reference();
+
+	//create board
+	m_board = gameInfo.at("boardInfo").get<Board>();
+
+	//create players
+	nlohmann::json playerInfo = gameInfo.at("playerInfo");
+	m_player1 = playerInfo.at("player1").get<Player>();
+	m_player2 = playerInfo.at("player2").get<Player>();
+
+	//create game info
+	nlohmann::json gameInfoJson = gameInfo.at("gameInfo");
+	SetGameType(gameInfoJson.at("gameType").get<GameType>());
+	m_rounds = gameInfoJson.at("rounds").get<size_t>();
+	SetBluePlayerName(gameInfoJson.at("bluePlayerName").get<std::string>());
+	m_elementCard1 = gameInfoJson.at("elementCard1").get<Elemental>();
+	m_elementCard2 = gameInfoJson.at("elementCard2").get<Elemental>();
+
+	m_elementCard1.SetBoardForElemental(m_board);
+	m_elementCard2.SetBoardForElemental(m_board);
+
+	if (gameInfoJson.at("currentPlayer").get<Player>().GetUserName() == m_player1.GetUserName())
+	{
+		m_currentPlayer = &m_player2;
+	}
+	else
+	{
+		m_currentPlayer = &m_player1;
+	}
+	PlayGame();
+}
+
+void Eter::ElementalBattleMode::ExportToJsonElemental()
+{
+	std::string filename = Eter::GenerateSaveFilename("elemental");
+	std::ofstream file("./SaveGames/" + filename);
+
+	if (file.is_open()) {
+		nlohmann::json j_game;
+		j_game["boardInfo"] = this->GetBoardReference();
+		j_game["playerInfo"] = { {"player1", this->GetPlayer1()}, {"player2", this->GetPlayer2()} };
+		j_game["gameInfo"] = {
+			{"gameType", GetGameType()},
+			{"rounds", m_rounds},
+			{"bluePlayerName", GetBluePlayerName()},
+			{"currentPlayer", *m_currentPlayer},
+			{"firstMove", firstMove},
+			{"elementCard1", m_elementCard1},
+			{"elementCard2", m_elementCard2}
+		};
+		file << j_game.dump(4);
+		file.close();
+		std::cout << "Game saved to " << filename << std::endl;
+	}
+	else {
+		std::cerr << "Error opening file " << filename << std::endl;
 	}
 }
 

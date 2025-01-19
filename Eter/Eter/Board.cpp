@@ -14,6 +14,10 @@ Eter::Board::Board(const GameType& gameType)
 	{
 		m_maxSize = kBOARD_SIZE_DUEL;
 	}
+	else if (gameType == GameType::Elemental) 
+	{
+		m_maxSize = kBOARD_SIZE_DUEL;
+	}
 	else
 	{
 		throw std::invalid_argument("Invalid game type");
@@ -357,6 +361,7 @@ void Eter::to_json(nlohmann::json& j, const Board& b)
 void Eter::from_json(const nlohmann::json& j, Board& b)
 {
 	try {
+
 		BoardMatrix boardMatrix;
 
 		for (const auto& row : j.at("board")) {

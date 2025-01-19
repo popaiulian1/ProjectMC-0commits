@@ -147,6 +147,7 @@
     <ClInclude Include="Tile.h" />
     <ClInclude Include="WizardDuelMode.h" />
     <ClInclude Include="Wizards.h" />
+    <ClInclude Include="WizzardAndElementalMode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="WizardDuelMode.cpp" />
     <ClCompile Include="Wizards.cpp" />
+    <ClCompile Include="WizzardAndElementalMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="boardSave.json" />

@@ -43,6 +43,7 @@ namespace Eter {
 		Elemental(const Elemental& other);
 		Elemental(Elemental&& other) = default;
 		Elemental& operator=(const Elemental& other) = default;
+		Elemental& operator=(Elemental&& other) noexcept = default;
 		~Elemental() = default;
 
 
@@ -77,11 +78,11 @@ namespace Eter {
 		void Mist(Player& player);
 		void Wave(Board& board, Player& player);
 		void Whirlpool(Board& board);
-		//void Blizzard(Board& board, int row, int column, Player& opponent); //TO DO
+		void Blizzard(Board& board); //TO DO
 		void Waterfall(Board& board);
 		//void Support(); // TO DO
 		void Earthquake(Board& board);
-		//void Crumble(); // TO DO
+		void Crumble(); // TO DO
 		//void Border(); // TO DO
 		//void Avalanche(Board& board); // TO DO
 		void Rock(Board& board, Player& player, Player& opponent);
@@ -95,9 +96,9 @@ namespace Eter {
 		bool isRowFull(const Board& board, int rowIndex);
 		bool isColumnFull(const Board& board, int colIndex);
 		bool neighboringCardsStacs(int rowIndex1, int colIndex1, int rowIndex2, int colIndex2);
-		const std::string toSringElementalCardName(ElementalCardName nameCard);
+		const std::string toSringElementalCardName(ElementalCardName nameCard) const;
 
-
+		
 
 	private:
 		Board m_board;
@@ -105,6 +106,9 @@ namespace Eter {
 		ElementalCardName m_nameCard;
 		std::string m_username;
 	};
+
+	void to_json(nlohmann::json& j, const Elemental& e);
+	void from_json(const nlohmann::json& j, Elemental& e);
 }
 
 

@@ -53,6 +53,11 @@ void Eter::Tile::SetAsPit()
 	}*/
 }
 
+//void Eter::Tile::SetTileBlocked(bool isBlocked)
+//{
+//	m_isTileBlocked = isBlocked;
+//}
+
 void Eter::Tile::RemoveStack()
 {
 	while (!m_value.empty()) {
@@ -69,6 +74,11 @@ bool Eter::Tile::IsPit() const
 {
 	return m_isPit;
 }
+
+//bool Eter::Tile::IsTileBlocked() const
+//{
+//	return m_isTileBlocked;
+//}
 
 
 std::ostream& Eter::operator<<(std::ostream& os, const Tile& tile) {

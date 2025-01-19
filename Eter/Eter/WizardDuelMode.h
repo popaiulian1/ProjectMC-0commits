@@ -5,10 +5,10 @@
 #include <regex>
 
 namespace Eter {
-	class WizardDuelMode : public Eter::Game, public Eter::Wizards
+	class WizardDuelMode : virtual public Eter::Game, public Eter::Wizards
 	{
 	public:
-	#pragma region Constructors
+		// Constructors
 		WizardDuelMode() : Game(), Wizards() {};
 		WizardDuelMode(
 			const Player& player1,
@@ -22,37 +22,38 @@ namespace Eter {
 		WizardDuelMode(WizardDuelMode&& other) noexcept;
 		WizardDuelMode(const WizardDuelMode& other);
 		WizardDuelMode& operator=(const WizardDuelMode& other);
-	#pragma endregion Constructors
+	
 
-	#pragma region Getters
+		// Getters
 		Wizards GetWizardPlayer1() const;
 		Wizards GetWizardPlayer2() const;
-	#pragma endregion Getters
 
-	#pragma region Setters
+		// Setters
 		void SetWizardPlayer1(const Wizards& wizard);
 		void SetWizardPlayer2(const Wizards& wizard);
-	#pragma endregion Setters
+	
 
-	#pragma region Methods
+		// Methods
 		void StartGame() override;
 		void PlayGame() override;
 		void Illusion(Player& player) override;
 		void UsernameHandling();
 		void InitializeWizzardDuelGame();
-		void SetWizzardType();
+		virtual void SetWizzardType();
 		void PlayEterCard(Player& Player);
-		void HandleWizzardType();
-	#pragma endregion Methods
+		virtual void HandleWizzardType();
+		void CreateFromJsonWizard(const nlohmann::json& gameInfo);
+		void ExportToJsonWizard();
+		int Random(const std::pair<int, int>& distance);
+	
 
 	private:
-	#pragma region Methods
-		int Random(const std::pair<int, int>& distance);
+		// Methods
 		void addBorderToMatrix(Eter::BoardMatrix& board);
 		bool checkAdjacent(const Eter::Board::Position& pos, const Eter::Piece& pieceToBeAdded);
-	#pragma endregion Methods
+	
 
-	#pragma region Variables
+		// Variables
 		static const size_t kDECK_SIZE_DUEL{ 10 }; //define the size of the duel deck
 		Wizards m_wizardPlayer1;
 		Wizards m_wizardPlayer2;
@@ -60,7 +61,7 @@ namespace Eter {
 		Player* m_currentPlayer = nullptr;
 		size_t m_rounds = 1;
 		bool firstMove = true;
-	#pragma endregion Variables
+	
 	};
 
 }

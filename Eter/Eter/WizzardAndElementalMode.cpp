@@ -1,17 +1,13 @@
-#include "WizardDuelMode.h"
+#include "WizzardAndElementalMode.h"
 
-#pragma region Constructors
-Eter::WizardDuelMode::WizardDuelMode(
-	const Player& player1, 
-	const Player& player2, 
-	Board& board, 
-	const GameType& gameType, 
-	Wizards& wizardPlayer1,
-	Wizards& wizardPlayer2) : Game(player1, player2, board, gameType), m_wizardPlayer1(wizardPlayer1), m_wizardPlayer2(wizardPlayer2)
+Eter::WizzardAndElementalMode::WizzardAndElementalMode(const Player& player1, const Player& player2, Board& board, const GameType& gameType, Wizards& wizardPlayer1, Wizards& wizardPlayer2, Elemental& m_elementCard1, Elemental& m_elementCard2) : 
+	Game(player1, player2, board, gameType),
+	WizardDuelMode(player1, player2, board, gameType, wizardPlayer1, wizardPlayer2), 
+	ElementalBattleMode(player1, player2, board, m_elementCard1, m_elementCard2, gameType)
 {
 }
 
-Eter::WizardDuelMode::WizardDuelMode(WizardDuelMode&& other) noexcept
+Eter::WizzardAndElementalMode::WizzardAndElementalMode(WizzardAndElementalMode&& other) noexcept
 {
 	SetPlayer1(other.GetPlayer1());
 	SetPlayer2(other.GetPlayer2());
@@ -19,6 +15,8 @@ Eter::WizardDuelMode::WizardDuelMode(WizardDuelMode&& other) noexcept
 	SetGameType(other.GetGameType());
 	m_wizardPlayer1 = std::move(other.m_wizardPlayer1);
 	m_wizardPlayer2 = std::move(other.m_wizardPlayer2);
+	m_elementCard1 = std::move(other.m_elementCard1);
+	m_elementCard2 = std::move(other.m_elementCard2);
 
 	other.SetPlayer1(Player());
 	other.SetPlayer2(Player());
@@ -26,9 +24,11 @@ Eter::WizardDuelMode::WizardDuelMode(WizardDuelMode&& other) noexcept
 	other.SetGameType(GameType::Duel);
 	other.m_wizardPlayer1 = Wizards();
 	other.m_wizardPlayer2 = Wizards();
+	other.m_elementCard1 = Elemental();
+	other.m_elementCard2 = Elemental();
 }
 
-Eter::WizardDuelMode::WizardDuelMode(const WizardDuelMode& other)
+Eter::WizzardAndElementalMode::WizzardAndElementalMode(const WizzardAndElementalMode& other)
 {
 	SetPlayer1(other.GetPlayer1());
 	SetPlayer2(other.GetPlayer2());
@@ -36,9 +36,11 @@ Eter::WizardDuelMode::WizardDuelMode(const WizardDuelMode& other)
 	SetGameType(other.GetGameType());
 	m_wizardPlayer1 = other.m_wizardPlayer1;
 	m_wizardPlayer2 = other.m_wizardPlayer2;
+	m_elementCard1 = other.m_elementCard1;
+	m_elementCard2 = other.m_elementCard2;
 }
 
-Eter::WizardDuelMode& Eter::WizardDuelMode::operator=(const WizardDuelMode& other)
+Eter::WizzardAndElementalMode& Eter::WizzardAndElementalMode::operator=(const WizzardAndElementalMode& other)
 {
 	if (this != &other)
 	{
@@ -48,214 +50,38 @@ Eter::WizardDuelMode& Eter::WizardDuelMode::operator=(const WizardDuelMode& othe
 		SetGameType(other.GetGameType());
 		m_wizardPlayer1 = other.m_wizardPlayer1;
 		m_wizardPlayer2 = other.m_wizardPlayer2;
+		m_elementCard1 = other.m_elementCard1;
+		m_elementCard2 = other.m_elementCard2;
 	}
 	return *this;
 }
-#pragma endregion Constructors
 
-#pragma region Getters
-Eter::Wizards Eter::WizardDuelMode::GetWizardPlayer1() const
-{
-	return m_wizardPlayer1;
-}
-Eter::Wizards Eter::WizardDuelMode::GetWizardPlayer2() const
-{
-	return m_wizardPlayer2;
-}
-#pragma endregion Getters
 
-#pragma region Setters
-void Eter::WizardDuelMode::SetWizardPlayer1(const Wizards& wizard)
+void Eter::WizzardAndElementalMode::StartGame()
 {
-	m_wizardPlayer1 = wizard;
-}
-
-void Eter::WizardDuelMode::SetWizardPlayer2(const Wizards& wizard)
-{
-	m_wizardPlayer2 = wizard;
-}
-#pragma endregion Setters
-
-#pragma region Methods
-void Eter::WizardDuelMode::StartGame()
-{
-	std::cout << "This is the Mage Duel Mode\n";
+	std::cout << "This is the Mage and Elemental Duel Mode\n";
 	std::cout << "_____________________________\n";
 
-	if(GetGameType() != Eter::GameType::Duel)
+	if (GetGameType() != Eter::GameType::Duel)
 		SetGameType(Eter::GameType::Duel);
-	
+
 	SetBoard(Board(Eter::GameType::Duel));
+
 	auto GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
-	
-	UsernameHandling();
-	InitializeWizzardDuelGame();
+
+	WizardDuelMode::UsernameHandling();
+	ElementalBattleMode::InitializeElementalBattleGame();
+	ElementalBattleMode::SetElementalType();
 	SetWizzardType();
 
 	firstMove = true;
 	PlayGame();
 }
 
-void Eter::WizardDuelMode::UsernameHandling()
+void Eter::WizzardAndElementalMode::PlayGame()
 {
-	std::string UsernamePlayer1;
-	std::string UsernamePlayer2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	auto& Player1 = this->GetPlayer1Reference();
-	auto& Player2 = this->GetPlayer2Reference();
-	if (Player1.GetUserName() == "") {
-		std::cout << "Username of the first player is: ";
-		std::getline(std::cin, UsernamePlayer1);
-		Player1.SetUserName(UsernamePlayer1);
-		this->SetBluePlayerName(Player1.GetUserName());
-	}
-
-	if (Player2.GetUserName() == "") {
-		std::cout << "Username of the second player is: ";
-		std::getline(std::cin, UsernamePlayer2);
-		Player2.SetUserName(UsernamePlayer2);
-	}
-}
-
-void Eter::WizardDuelMode::InitializeWizzardDuelGame()
-{
-	auto& Player1 = this->GetPlayer1Reference();
-	auto& Player2 = this->GetPlayer2Reference();
-	std::vector<char> Values = { '1', '1', '1', '2', '2', '2', '3', '3', '3', '4' };
-	std::vector<Eter::Piece> CardsPractice;
-
-	CardsPractice.resize(kDECK_SIZE_DUEL);
-
-	int index = 0;
-	bool EterCard = false;
-
-	for (auto& card : CardsPractice) {
-		card.SetValue(Values[index++]);
-		card.SetIsPlaced(false);
-		card.SetUserName("");
-		card.SetIsIllusion(false);
-		if (!EterCard) {
-			card.SetEterCard(true);
-			EterCard = true;
-		}
-		else
-			card.SetEterCard(false);
-	}
-
-	Player1.SetPieces(CardsPractice);
-	Player2.SetPieces(CardsPractice);
-	Player1.SetIllusionPlayed(false);
-	Player2.SetIllusionPlayed(false);
-	Player1.SetScore(0);
-	Player2.SetScore(0);
-	Player1.SetGamesWon(0);
-	Player2.SetGamesWon(0);
-}
-
-void Eter::WizardDuelMode::SetWizzardType()
-{
-	auto& Player1 = this->GetPlayer1Reference();
-	auto& Player2 = this->GetPlayer2Reference();
-
-	int mageTypePlayer1 = Random(std::make_pair(0, 3));
-	int mageTypePlayer2 = Random(std::make_pair(0, 3));
-
-	while (mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));
-
-	m_wizardPlayer1.SetUserName(Player1.GetUserName());
-	m_wizardPlayer2.SetUserName(Player2.GetUserName());
-	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
-	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
-}
-
-int Eter::WizardDuelMode::Random(const std::pair<int, int>& distance)
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(distance.first, distance.second);
-	int random_number = dis(gen);
-	return random_number;
-}
-
-void Eter::WizardDuelMode::CreateFromJsonWizard(const nlohmann::json& gameInfo)
-{
-	auto& m_board = this->GetBoardReference();
-	auto& m_player1 = this->GetPlayer1Reference();
-	auto& m_player2 = this->GetPlayer2Reference();
-
-	//create board
-	m_board = gameInfo.at("boardInfo").get<Board>();
-
-	//create players
-	nlohmann::json playerInfo = gameInfo.at("playerInfo");
-	m_player1 = playerInfo.at("player1").get<Eter::Player>();
-	m_player2 = playerInfo.at("player2").get<Eter::Player>();
-
-	//create game info
-	nlohmann::json gameInfoJson = gameInfo.at("gameInfo");
-	SetGameType(gameInfoJson.at("gameType").get<GameType>());
-	m_rounds = gameInfoJson.at("rounds").get<size_t>();
-	SetBluePlayerName(gameInfoJson.at("bluePlayerName").get<std::string>());
-	m_wizardPlayer1 = gameInfoJson.at("wizardPlayer1").get<Wizards>();
-	m_wizardPlayer2 = gameInfoJson.at("wizardPlayer2").get<Wizards>();
-
-	m_wizardPlayer1.SetBoardForMage(&m_board);
-	m_wizardPlayer2.SetBoardForMage(&m_board);
-
-	if (gameInfoJson.at("currentWizard").get<Wizards>().GetUserName() == m_player1.GetUserName())
-	{
-		m_currentPlayer = &m_player2;
-	}
-	else
-	{
-		m_currentPlayer = &m_player1;
-	}
-
-	if (gameInfoJson.at("currentPlayer").get<Player>().GetUserName() == m_player1.GetUserName())
-	{
-		m_currentPlayer = &m_player2;
-	}
-	else
-	{
-		m_currentPlayer = &m_player1;
-	}
-	firstMove = gameInfoJson.at("firstMove").get<bool>();
-	PlayGame();
-}
-
-void Eter::WizardDuelMode::ExportToJsonWizard()
-{
-	std::string filename = Eter::GenerateSaveFilename("wizard");
-	std::ofstream file("./SaveGames/" + filename);
-
-	if (file.is_open()) {
-		nlohmann::json j_game;
-		j_game["boardInfo"] = this->GetBoardReference();
-		j_game["playerInfo"] = { {"player1", this->GetPlayer1()}, {"player2", this->GetPlayer2()} };
-		j_game["gameInfo"] = {
-			{"gameType", GetGameType()},
-			{"rounds", m_rounds},
-			{"bluePlayerName", GetBluePlayerName()},
-			{"currentPlayer", *m_currentPlayer},
-			{"currentWizard", *m_currentWizard},
-			{"firstMove", firstMove},
-			{"wizardPlayer1", m_wizardPlayer1},
-			{"wizardPlayer2", m_wizardPlayer2}
-		};
-		file << j_game.dump(4);
-		file.close();
-		std::cout << "Game saved to " << filename << std::endl;
-	}
-	else {
-		std::cerr << "Error opening file " << filename << std::endl;
-	}
-}
-
-void Eter::WizardDuelMode::PlayGame()
-{ 
 	auto& GameBoard = this->GetBoardReference();
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
@@ -283,8 +109,9 @@ void Eter::WizardDuelMode::PlayGame()
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
 		std::cout << "d. Play mage\n";
-		std::cout << "e. Play eter card\n";
-		std::cout << "f. Save Game\n";
+		std::cout << "e. Play Elemental\n";
+		std::cout << "f. Play eter card\n";
+		//std::cout << "f. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -316,17 +143,21 @@ void Eter::WizardDuelMode::PlayGame()
 			HandleWizzardType();
 			break;
 		}
-		case 'e':{
+		case 'e': {
+			HandleElementalType();
+			break;
+		}
+		case 'f': {
 			if (m_currentPlayer->GetEterCardPlayed() == false)
 				PlayEterCard(*m_currentPlayer);
 			else
 				std::cout << "You have already played your eter card.\n";
 			break;
 		}
-		case 'f': {
+		/*case 'f': {
 			ExportToJsonWizard();
 			break;
-		}
+		}*/
 		default: {
 			std::cout << "Invalid option. Please choose a valid option.\n";
 			break;
@@ -343,15 +174,14 @@ void Eter::WizardDuelMode::PlayGame()
 	}
 }
 
-//It does not display the illusion on this game mode (i'll check the problem tomorrow)... he never did.... :( but i did it now 
-void Eter::WizardDuelMode::Illusion(Player& player)
+void Eter::WizzardAndElementalMode::Illusion(Player& player)
 {
 	auto& GameBoard = this->GetBoardReference();
 	const std::pair<int, int>& Position = player.Play(firstMove);
 	int row = Position.first, column = Position.second;
 	bool canPlace = false;
 
-	if (row < 0 || column < 0 || row >= GameBoard.GetCurrentSize()|| column >= GameBoard.GetBoardReference()[row].size())
+	if (row < 0 || column < 0 || row >= GameBoard.GetCurrentSize() || column >= GameBoard.GetBoardReference()[row].size())
 	{
 		canPlace = true;
 	}
@@ -373,8 +203,7 @@ void Eter::WizardDuelMode::Illusion(Player& player)
 	}
 }
 
-//Eter card is not impacted by Mage or Elemental Powers 
-void Eter::WizardDuelMode::PlayEterCard(Player& player)
+void Eter::WizzardAndElementalMode::PlayEterCard(Player& player)
 {
 	auto& pieces = player.GetPiecesReference();
 	auto& GameBoard = this->GetBoardReference();
@@ -400,12 +229,12 @@ void Eter::WizardDuelMode::PlayEterCard(Player& player)
 		column < 0 ? column = 0 : column;
 		GameBoard.GetBoardReference()[row][column] = Tile(Piece('1', true, player.GetUserName(), false, true));
 		GameBoard.GetBoardReference()[row][column].value().GetTopValueRef().SetEterCard(true);
-	}		
-	else 
+	}
+	else
 		std::cout << "You cannot place your eter card there.\n";
 }
 
-void Eter::WizardDuelMode::HandleWizzardType()
+void Eter::WizzardAndElementalMode::HandleWizzardType()
 {
 	auto& GameBoard = this->GetBoardReference();
 	m_currentWizard->SetBoardForMage(&GameBoard);
@@ -641,6 +470,19 @@ void Eter::WizardDuelMode::HandleWizzardType()
 	}
 }
 
-#pragma endregion Methods
+void Eter::WizzardAndElementalMode::SetWizzardType()
+{
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
 
+	int mageTypePlayer1 = WizardDuelMode::Random(std::make_pair(0, 3));
+	int mageTypePlayer2 = WizardDuelMode::Random(std::make_pair(0, 3));
 
+	while (mageTypePlayer2 == mageTypePlayer1)
+		mageTypePlayer2 = WizardDuelMode::Random(std::make_pair(0, 3));
+
+	m_wizardPlayer1.SetUserName(Player1.GetUserName());
+	m_wizardPlayer2.SetUserName(Player2.GetUserName());
+	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
+	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
+}

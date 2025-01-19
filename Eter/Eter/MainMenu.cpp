@@ -25,6 +25,10 @@ void MainMenu::Start()
 			Eter::ElementalBattleMode game;
 			game.StartGame();
 		}
+		else if (chooseGameType == 4) {
+			Eter::WizzardAndElementalMode game;
+			game.StartGame();
+		}
 		else {
 			std::cout << "\n";
 			Start();
@@ -71,6 +75,7 @@ void MainMenu::PrintGameTypeMenu()
 	std::cout << "1. Practice Mode\n";
 	std::cout << "2. Wizard Duel Mode\n";
 	std::cout << "3. Elemental Duel Mode\n";
+	std::cout << "4. Wizard and Elemental Mode\n";
 	std::cout << "0. Back\n";
 }
 
@@ -104,11 +109,11 @@ void MainMenu::StartPractice(const nlohmann::json& gameInfo)
 void MainMenu::StartWizardDuel(const nlohmann::json& gameInfo)
 {
 	Eter::WizardDuelMode game;
-	//game.CreateFromJson(gameInfo);
+	game.CreateFromJsonWizard(gameInfo);
 }
 
 void MainMenu::StartElementalDuel(const nlohmann::json& gameInfo)
 {
 	Eter::ElementalBattleMode game;
-	//game.CreateFromJson(gameInfo);
+	game.CreateFromJsonElemental(gameInfo);
 }

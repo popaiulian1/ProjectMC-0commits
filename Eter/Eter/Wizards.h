@@ -31,11 +31,16 @@ namespace Eter {
         const Eter::MageType& GetMageType() const;
 		const std::string toStringMageType(MageType mageType) const;
 		const Board* GetBoardWizard() const;
+		const std::string& GetName() const;
+		const int& GetEtherCards() const;
+		const bool& GetMagicPowerUsed() const;
 
         //Setters
         void SetMageType(const Eter::MageType& type);
         void SetUserName(const std::string& username);
         void SetBoardForMage(Board* board);
+		void SetEtherCards(int etherCards);
+		void SetMagicPowerUsed(bool magicPowerUsed);
 
         // Methods for each MageType, every MageType has two powers, the power will be determined by powerindex
         void fireMasterPower(int powerIndex, int row, int col);
@@ -54,9 +59,6 @@ namespace Eter {
 		void moveOpponentStack(int srcRow, int srcCol, int destRow, int destCol);
         void moveEdgeRowCol();  
 
-
-
-
     private:
         std::string m_name;
         MageType m_mageType;
@@ -66,4 +68,7 @@ namespace Eter {
         std::string m_username;
 
     };
+
+	void to_json(nlohmann::json& j, const Wizards& w);
+	void from_json(const nlohmann::json& j, Wizards& w);
 }

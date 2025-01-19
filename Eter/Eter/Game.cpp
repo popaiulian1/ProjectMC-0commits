@@ -79,6 +79,16 @@ void Eter::Game::PlayGame()
 {
 	while (m_rounds <= 3) {
 
+		if (m_currentPlayer->GetPieces().size() == 0)
+		{
+			std::cout << "The game is over!\n" << m_currentPlayer->GetUserName() << " has no more pieces!";
+			m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
+			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+			++m_rounds;
+			StartGame();
+			break;
+		}
+
 		//switch players
 		m_currentPlayer == &m_player1 ? m_currentPlayer = &m_player2 : m_currentPlayer = &m_player1;
 

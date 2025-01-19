@@ -159,14 +159,11 @@ void Eter::WizardDuelMode::SetWizzardType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int mageTypePlayer1 = Random(std::make_pair(0, 3));
+	int mageTypePlayer1 = Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	while (mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = Random(std::make_pair(0, 3));*/
-
-	int mageTypePlayer1 = 2;
-	int mageTypePlayer2 = 2;
+		mageTypePlayer2 = Random(std::make_pair(0, 3));
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
@@ -263,6 +260,17 @@ void Eter::WizardDuelMode::PlayGame()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 	while (m_rounds <= 3) {
+
+		if (m_currentPlayer->GetPieces().size() == 0)
+		{
+			std::cout << "The game is over!\n" << m_currentPlayer->GetUserName() << " has no more pieces!";
+			m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
+			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+			++m_rounds;
+			StartGame();
+			break;
+		}
+
 		m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
 		m_currentWizard == &m_wizardPlayer1 ? m_currentWizard = &m_wizardPlayer2 : m_currentWizard = &m_wizardPlayer1;
 		GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName()); // Print the board

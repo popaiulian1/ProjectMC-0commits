@@ -284,7 +284,7 @@ void Eter::WizardDuelMode::PlayGame()
 		std::cout << "c. Play explosion\n";
 		std::cout << "d. Play mage\n";
 		std::cout << "e. Play eter card\n";
-		std::cout << "f. Save Game\n";
+		std::cout << "s. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -323,7 +323,7 @@ void Eter::WizardDuelMode::PlayGame()
 				std::cout << "You have already played your eter card.\n";
 			break;
 		}
-		case 'f': {
+		case 's': {
 			ExportToJsonWizard();
 			break;
 		}

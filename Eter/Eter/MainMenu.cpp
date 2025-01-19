@@ -83,6 +83,11 @@ void MainMenu::CreateTheLoadedGame(const nlohmann::json& gameInfo)
 {
 	int gameTypeSelect;
 	gameInfo["gameInfo"].at("gameType").get_to(gameTypeSelect);
+	if (gameTypeSelect == 1 && gameInfo["gameInfo"].contains("elementCard1"))
+	{
+		StartWizardAndElemental(gameInfo);
+		return;
+	}
 
 	switch (gameTypeSelect)
 	{
@@ -117,3 +122,11 @@ void MainMenu::StartElementalDuel(const nlohmann::json& gameInfo)
 	Eter::ElementalBattleMode game;
 	game.CreateFromJsonElemental(gameInfo);
 }
+
+void MainMenu::StartWizardAndElemental(const nlohmann::json& gameInfo)
+{
+	Eter::WizzardAndElementalMode game;
+	game.CreateFromJsonWizardElemental(gameInfo);
+}
+
+

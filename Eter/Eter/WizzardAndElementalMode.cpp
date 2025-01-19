@@ -109,9 +109,9 @@ void Eter::WizzardAndElementalMode::PlayGame()
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
 		std::cout << "d. Play mage\n";
-		std::cout << "e. Play Elemental\n";
-		std::cout << "f. Play eter card\n";
-		//std::cout << "f. Save Game\n";
+		std::cout << "e. Play eter card\n";
+		std::cout << "f. Play Elemental\n";
+		std::cout << "s. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -143,21 +143,21 @@ void Eter::WizzardAndElementalMode::PlayGame()
 			HandleWizzardType();
 			break;
 		}
-		case 'e': {
+		case 'f': {
 			HandleElementalType();
 			break;
 		}
-		case 'f': {
+		case 'e': {
 			if (m_currentPlayer->GetEterCardPlayed() == false)
 				PlayEterCard(*m_currentPlayer);
 			else
 				std::cout << "You have already played your eter card.\n";
 			break;
 		}
-		/*case 'f': {
-			ExportToJsonWizard();
+		case 's': {
+			ExportToJsonWizardElemental();
 			break;
-		}*/
+		}
 		default: {
 			std::cout << "Invalid option. Please choose a valid option.\n";
 			break;
@@ -485,4 +485,74 @@ void Eter::WizzardAndElementalMode::SetWizzardType()
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
 	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
 	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
+}
+
+void Eter::WizzardAndElementalMode::CreateFromJsonWizardElemental(const nlohmann::json& gameInfo)
+{
+	auto& m_board = this->GetBoardReference();
+	auto& m_player1 = this->GetPlayer1Reference();
+	auto& m_player2 = this->GetPlayer2Reference();
+
+	//create board
+	m_board = gameInfo.at("boardInfo").get<Board>();
+
+	//create players
+	nlohmann::json playerInfo = gameInfo.at("playerInfo");
+	m_player1 = playerInfo.at("player1").get<Player>();
+	m_player2 = playerInfo.at("player2").get<Player>();
+
+	//create game info
+	nlohmann::json gameInfoJson = gameInfo.at("gameInfo");
+	SetGameType(gameInfoJson.at("gameType").get<GameType>());
+	m_rounds = gameInfoJson.at("rounds").get<size_t>();
+	SetBluePlayerName(gameInfoJson.at("bluePlayerName").get<std::string>());
+	m_elementCard1 = gameInfoJson.at("elementCard1").get<Elemental>();
+	m_elementCard2 = gameInfoJson.at("elementCard2").get<Elemental>();
+	m_wizardPlayer1 = gameInfoJson.at("wizardPlayer1").get<Wizards>();
+	m_wizardPlayer2 = gameInfoJson.at("wizardPlayer2").get<Wizards>();
+
+	m_wizardPlayer1.SetBoardForMage(&m_board);
+	m_wizardPlayer2.SetBoardForMage(&m_board);
+	m_elementCard1.SetBoardForElemental(m_board);
+	m_elementCard2.SetBoardForElemental(m_board);
+
+	if (gameInfoJson.at("currentPlayer").get<Player>().GetUserName() == m_player1.GetUserName())
+	{
+		m_currentPlayer = &m_player2;
+	}
+	else
+	{
+		m_currentPlayer = &m_player1;
+	}
+	PlayGame();
+}
+
+void Eter::WizzardAndElementalMode::ExportToJsonWizardElemental()
+{
+	std::string filename = Eter::GenerateSaveFilename("wizardANDelemental");
+	std::ofstream file("./SaveGames/" + filename);
+
+	if (file.is_open()) {
+		nlohmann::json j_game;
+		j_game["boardInfo"] = this->GetBoardReference();
+		j_game["playerInfo"] = { {"player1", this->GetPlayer1()}, {"player2", this->GetPlayer2()} };
+		j_game["gameInfo"] = {
+			{"gameType", GetGameType()},
+			{"rounds", m_rounds},
+			{"bluePlayerName", GetBluePlayerName()},
+			{"currentPlayer", *m_currentPlayer},
+			{"currentWizard", *m_currentWizard},
+			{"firstMove", firstMove},
+			{"elementCard1", m_elementCard1},
+			{"elementCard2", m_elementCard2},
+			{"wizardPlayer1", m_wizardPlayer1},
+			{"wizardPlayer2", m_wizardPlayer2}
+		};
+		file << j_game.dump(4);
+		file.close();
+		std::cout << "Game saved to " << filename << std::endl;
+	}
+	else {
+		std::cerr << "Error opening file " << filename << std::endl;
+	}
 }

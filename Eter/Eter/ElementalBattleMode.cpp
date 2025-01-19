@@ -206,7 +206,7 @@ void Eter::ElementalBattleMode::PlayGame(){
 		std::cout << "c. Play explosion\n";
 		std::cout << "d. Play elemental\n";
 		std::cout << "e. Play eter card\n";
-		std::cout << "f. Save Game\n";
+		std::cout << "s. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -246,7 +246,7 @@ void Eter::ElementalBattleMode::PlayGame(){
 
 			break;
 		}
-		case 'f': {
+		case 's': {
 			ExportToJsonElemental();
 			break;
 		}

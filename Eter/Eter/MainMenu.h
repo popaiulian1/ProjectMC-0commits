@@ -16,5 +16,6 @@ public:
 	void StartPractice(const nlohmann::json& gameInfo);
 	void StartWizardDuel(const nlohmann::json& gameInfo);
 	void StartElementalDuel(const nlohmann::json& gameInfo);
+	void StartWizardAndElemental(const nlohmann::json& gameInfo);
 };
 

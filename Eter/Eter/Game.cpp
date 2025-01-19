@@ -101,7 +101,7 @@ void Eter::Game::PlayGame()
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
-		std::cout << "d. Save Game\n";
+		std::cout << "s. Save Game\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";
 		std::cin >> option;
@@ -124,7 +124,7 @@ void Eter::Game::PlayGame()
 			std::cout << "To implement";
 			break;
 		}
-		case 'd': {
+		case 's': {
 			ExportToJson();
 			break;
 		}

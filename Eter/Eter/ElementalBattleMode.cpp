@@ -381,6 +381,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 
 	case Eter::ElementalCardName::DESTRUCTION:
+		std::cout << "DESTRUCTION: Remove from play the last card played by the opponent.\n";
 		if(m_currentPlayer->GetUserName() == Player1.GetUserName())
 			elemental.Destruction(Player2, GameBoard);
 		else
@@ -388,6 +389,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 
 	case Eter::ElementalCardName::FLAME:
+		std::cout << "FLAME: Reveal an opponent’s Illusion and next place your card on any space on the playing field.\n";
 		if (m_currentPlayer->GetUserName() == Player1.GetUserName()) {
 			elemental.Flame(Player2, GameBoard);
 			GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName());
@@ -402,6 +404,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 
 	case Eter::ElementalCardName::FIRE:
+		std::cout << "FIRE: Return to their owners' hands all visible cards of the same value(at least 2 of them) chosen by you - also yours!In case of stacks remove only the top card.\n";
 		elemental.Fire(GameBoard, Player1, Player2);
 		break;
 
@@ -458,6 +461,7 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 
 	case Eter::ElementalCardName::TIDE: {
+		std::cout << "TIDE: Change positions of 2 different cards or stacks of cards. \n";
 		std::cout << "Choose position for the first tile:\n";
 		const std::pair<int, int>& PositionforTile1 = m_currentPlayer->Play(firstMove);
 
@@ -470,39 +474,56 @@ void Eter::ElementalBattleMode::ElementalSelection(Elemental elemental)
 		break;
 	}
 	case Eter::ElementalCardName::MIST: {
+		std::cout << "MIST: Play an Illusion again. You cannot have 2 Illusions at the same time.\n";
 		elemental.Mist(*m_currentPlayer);
 		if(!m_currentPlayer->GetIllusionPlayed())
 			Illusion(*m_currentPlayer);
 		break;
 	}
 	case Eter::ElementalCardName::WAVE:
+		std::cout << "WAVE: Move any card/stack to the adjacent empty space, then play a card from your hand to this now empty space.\n";
 		elemental.Wave(GameBoard, *m_currentPlayer);
 		break;
+
 	case Eter::ElementalCardName::WHIRLPOOL:
+		std::cout << "WHIRLPOOL: Move onto empty space two cards from different adjacent spaces in a straight line.The card of lower value goes to the bottom of the stack.\n";
 		elemental.Whirlpool(GameBoard);
 		break;
+
 	case Eter::ElementalCardName::BLIZZARD: 
-		elemental.Blizzard(GameBoard);
+		std::cout << "BLIZZARD: Place this card onto any space and choose a row or column that it will impact.The opponent cannot play any cards onto the chosen row / column during his next turn.Condition - your opponent must have a free space to play a card.Remove this card from play after the next opponent turn. \n";
+		//elemental.Blizzard(GameBoard);
 		break;
-	case Eter::ElementalCardName::WATERFALL:
-		elemental.Waterfall(GameBoard);
-		break;
+
 	case Eter::ElementalCardName::SUPPORT:
-		std::cout << "SUPPORT";
+		std::cout << "SUPPORT: Value of a chosen card on the board is increased by +1 (cannot be used on a '4' card).\n";
+		elemental.Support(GameBoard);
 		break;
+
 	case Eter::ElementalCardName::EARTHQUAKE:
+		std::cout << "EARTHQUAKE: Remove from play all visible ‘1’ cards.\n";
 		elemental.Earthquake(GameBoard);
 		break;
+
 	case Eter::ElementalCardName::CRUMBLE:
-		std::cout << "CRUMBLE";
+		std::cout << "CRUMBLE: Value of a card on the board is decreased by 1 (cannot be used on a ‘1’ card).\n";
+		elemental.Crumble(GameBoard);
 		break;
+
 	case Eter::ElementalCardName::BORDER:
-		std::cout << "BORDER";
+		std::cout << "BORDER: Place this card in any empty space on the playing field to establish the border of the play area.Next, play your normal card.Any player may replace the Border card with any of their cards(it does not block the space).Condition - when played, this card must define one of the borders of the playing area.\n";
 		break;
+
+	case Eter::ElementalCardName::WATERFALL:
+		std::cout << "WATERFALL Move all cards in a chosen column into one stack at the bottom of that column, placing them on top of each other, regardless of their values.The card that was visible on the top of the chosen column stays at the top of the new stack.Condition - the chosen column must contain of minimum 3 cards.\n";
+		break;
+
 	case Eter::ElementalCardName::AVALANCHE:
-		std::cout << "AVALANCHE";
+		std::cout << "AVALANCHE: Move two neighboring cards / stacs by one space horizontally or vertically.The space that the first card moves onto must be empty.\n";
 		break;
+
 	case Eter::ElementalCardName::ROCK:
+		std::cout << "Cover any Illusion card with your card, without revealing the value of the Illusion.\n";
 		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
 			elemental.Rock(GameBoard, Player1, Player2);
 		else

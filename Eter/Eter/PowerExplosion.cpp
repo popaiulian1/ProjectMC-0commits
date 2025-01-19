@@ -15,7 +15,7 @@
 //}
 //
 //
-////Getters
+//Getters
 //Eter::Player* Eter::PowerExplosion::GetTriggeringPlayer() const
 //{
 //    return m_triggeringPlayer;
@@ -35,7 +35,7 @@
 //}
 //
 //
-////Setters
+//Setters
 //void Eter::PowerExplosion::SetTriggeringPlayer(Player* triggeringPlayer)
 //{
 //    m_triggeringPlayer = triggeringPlayer;
@@ -50,7 +50,7 @@
 //}
 //
 //
-////Methods
+//Methods
 //void Eter::PowerExplosion::Trigger(Board& board, Player& player) {
 //
 //    if (m_wasUsed == true) {

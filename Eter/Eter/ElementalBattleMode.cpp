@@ -187,15 +187,15 @@ void Eter::ElementalBattleMode::PlayGame(){
 	auto& Player2 = this->GetPlayer2Reference();
 	while (m_rounds <= 3) {
 
-		if (m_currentPlayer->GetPieces().size() == 0)
-		{
-			std::cout << "The game is over!\n" << m_currentPlayer->GetUserName() << " has no more pieces!";
-			m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
-			m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
-			++m_rounds;
-			StartGame();
-			break;
-		}
+		if (m_currentPlayer != nullptr)
+			if (m_currentPlayer->GetPieces().size() == 0) {
+				std::cout << "The game is over!\n" << m_currentPlayer->GetUserName() << " has no more pieces!";
+				m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
+				m_currentPlayer->SetGamesWon(m_currentPlayer->GetGamesWon() + 1);
+				++m_rounds;
+				StartGame();
+				break;
+			}
 
 		m_currentPlayer == &Player1 ? m_currentPlayer = &Player2 : m_currentPlayer = &Player1;
 		GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName()); // Print the board

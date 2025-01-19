@@ -160,14 +160,11 @@ void Eter::ElementalBattleMode::SetElementalType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int ElementalCardName1 = Random(std::make_pair(0, 23));
+	int ElementalCardName1 = Random(std::make_pair(0, 23));
 	int ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	while(ElementalCardName2 == ElementalCardName1)
-		ElementalCardName2 = Random(std::make_pair(0, 23));*/
-
-	int ElementalCardName1 = 4;
-	int ElementalCardName2 = 11;
+		ElementalCardName2 = Random(std::make_pair(0, 23));
 
 	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
 	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
@@ -196,7 +193,6 @@ void Eter::ElementalBattleMode::PlayGame(){
 		std::cout << "a. Choose piece\n";
 		std::cout << "b. Play illusion\n";
 		std::cout << "c. Play explosion\n";
-		std::cout << "d. Play element\n";
 		std::cout << "e. Play eter card\n";
 		std::cout << "________________________________________________\n";
 		std::cout << "Choose your option: \n";

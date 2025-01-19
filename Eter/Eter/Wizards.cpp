@@ -407,7 +407,7 @@ void Eter::Wizards::createPit(int row, int col)
 	}
 
 	// Create the pit
-	gameBoard[adjustedLine][adjustedColumn].emplace(); // Create an empty Tile in-place
+	gameBoard[adjustedLine][adjustedColumn].emplace(Tile()); // Create an empty Tile in-place
 	gameBoard[adjustedLine][adjustedColumn]->SetAsPit(); // Set it as a pit
 
 	std::cout << "A pit has been created at position (" << adjustedLine << ", "<< adjustedColumn << ").\n";

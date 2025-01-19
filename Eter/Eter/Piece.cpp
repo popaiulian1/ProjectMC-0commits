@@ -133,7 +133,7 @@ void Eter::to_json(nlohmann::json& j, const Piece& p)
 void Eter::from_json(const nlohmann::json& j, Piece& p)
 {
 	if (j.is_array()) {
-		std::cout << "\n\n === PROCCESING ARRAY === \n\n";
+		//std::cout << "\n\n === PROCCESING ARRAY === \n\n";
 		for (auto piece : j) {
 			p.SetValue('0' + piece.at("value").get<int>());
 			p.SetIsPlaced(piece.at("isPlaced").get<bool>());
@@ -144,7 +144,7 @@ void Eter::from_json(const nlohmann::json& j, Piece& p)
 		}
 	}
 	else {
-		std::cout << "\n\n === PROCCESING NOT AN ARRAY === \n\n";
+		//std::cout << "\n\n === PROCCESING NOT AN ARRAY === \n\n";
 		p.SetValue('0' + j.at("value").get<int>());
 		p.SetIsPlaced(j.at("isPlaced").get<bool>());
 		p.SetUserName(j.at("username").get<std::string>());

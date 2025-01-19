@@ -167,6 +167,9 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 					else if (line.value().GetTopValue().GetEterCard() == true) {
 						std::cout << "\033[1;34m" << "E" << "\033[0m ";
 					}
+					else if (line.value().IsPit()) {
+						std::cout << "P ";
+					}
 					else {
 						std::cout << "\033[1;34m" << line.value().GetTopValue().GetValue() << "\033[0m ";
 					}
@@ -176,6 +179,9 @@ void Eter::Board::PrintBoardForFormatedOutput(const std::string& bluePlayerName)
 						std::cout << "\033[1;31m" << "I" << "\033[0m ";
 					else if (line.value().GetTopValue().GetEterCard() == true) {
 						std::cout << "\033[1;31m" << "E" << "\033[0m ";
+					}
+					else if (line.value().IsPit()) {
+						std::cout << "P ";
 					}
 					else {
 						std::cout << "\033[1;31m" << line.value().GetTopValue().GetValue() << "\033[0m ";

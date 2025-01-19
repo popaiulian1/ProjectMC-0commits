@@ -1214,6 +1214,43 @@ void Eter::Elemental::Waterfall(Board& board)
 	std::cout << "Waterfall power applied successfully! Cards in column " << col << " have been merged into stacks moving downward.\n";
 }
 
+void Eter::Elemental::Support(Player& player)
+{
+	auto& hand = player.GetPiecesReference(); 
+
+	std::vector<int> eligibleIndexes;
+	for (size_t i = 0; i < hand.size(); ++i) {
+		if (hand[i].GetValue() < 4) {
+			eligibleIndexes.push_back(i);
+		}
+	}
+
+	if (eligibleIndexes.empty()) {
+		std::cout << "No eligible cards in deck to increase their value (all are 4).\n";
+		return;
+	}
+
+	std::cout << "Choose a card to increase its value (+1):\n";
+	for (size_t i = 0; i < eligibleIndexes.size(); ++i) {
+		int index = eligibleIndexes[i];
+		std::cout << i + 1 << ". Piece Value: " << hand[index].GetValue() << "\n";
+	}
+
+	int choice;
+	std::cin >> choice;
+
+	if (choice < 1 || choice > static_cast<int>(eligibleIndexes.size())) {
+		std::cout << "Invalid choice. Operation canceled.\n";
+		return;
+	}
+
+	int chosenIndex = eligibleIndexes[choice - 1];
+	Piece& chosenPiece = hand[chosenIndex];
+	chosenPiece.SetValue(chosenPiece.GetValue() + 1);
+
+	std::cout << "Card value increased successfully! New value: " << chosenPiece.GetValue() << "\n";
+}
+
 
 //void Eter::Elemental::ControlledExplosion()
 //{

@@ -30,6 +30,9 @@ namespace Eter {
 		void PlayEterCard(Player& player);
 		void HandleWizzardType() override;
 		void SetWizzardType() override;
+		void HandleElementalType() override;
+		void SetElementalType() override;
+		void ElementalSelection(Elemental element) override;
 		void CreateFromJsonWizardElemental(const nlohmann::json& gameInfo);
 		void ExportToJsonWizardElemental();
 

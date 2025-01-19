@@ -165,6 +165,9 @@ void Eter::WizardDuelMode::SetWizzardType()
 	while (mageTypePlayer2 == mageTypePlayer1)
 		mageTypePlayer2 = Random(std::make_pair(0, 3));
 
+	/*int mageTypePlayer1 = 1;
+	int mageTypePlayer2 = 2;*/
+
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
 	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));

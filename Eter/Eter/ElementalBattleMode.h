@@ -37,9 +37,9 @@ namespace Eter {
 		void PlayEterCard(Player& player);
 		void UsernameHandling();
 		void InitializeElementalBattleGame();
-		void SetElementalType();
-		void HandleElementalType();
-		void ElementalSelection(Elemental element);
+		virtual void SetElementalType();
+		virtual void HandleElementalType();
+		virtual void ElementalSelection(Elemental element);
 
 		void CreateFromJsonElemental(const nlohmann::json& gameInfo);
 		void ExportToJsonElemental();

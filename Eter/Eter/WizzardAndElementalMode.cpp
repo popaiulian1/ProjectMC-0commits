@@ -73,7 +73,7 @@ void Eter::WizzardAndElementalMode::StartGame()
 
 	WizardDuelMode::UsernameHandling();
 	ElementalBattleMode::InitializeElementalBattleGame();
-	ElementalBattleMode::SetElementalType();
+	SetElementalType();
 	SetWizzardType();
 
 	firstMove = true;
@@ -475,18 +475,244 @@ void Eter::WizzardAndElementalMode::SetWizzardType()
 	auto& Player1 = this->GetPlayer1Reference();
 	auto& Player2 = this->GetPlayer2Reference();
 
-	/*int mageTypePlayer1 = WizardDuelMode::Random(std::make_pair(0, 3));
+	int mageTypePlayer1 = WizardDuelMode::Random(std::make_pair(0, 3));
 	int mageTypePlayer2 = WizardDuelMode::Random(std::make_pair(0, 3));
 
 	while (mageTypePlayer2 == mageTypePlayer1)
-		mageTypePlayer2 = WizardDuelMode::Random(std::make_pair(0, 3));*/
-	int mageTypePlayer1 = 1;
-	int mageTypePlayer2 = 1;
+		mageTypePlayer2 = WizardDuelMode::Random(std::make_pair(0, 3));
+
+	/*int mageTypePlayer1 = 1;
+	int mageTypePlayer2 = 2;*/
 
 	m_wizardPlayer1.SetUserName(Player1.GetUserName());
 	m_wizardPlayer2.SetUserName(Player2.GetUserName());
 	m_wizardPlayer1.SetMageType(static_cast<MageType>(mageTypePlayer1));
 	m_wizardPlayer2.SetMageType(static_cast<MageType>(mageTypePlayer2));
+}
+
+void Eter::WizzardAndElementalMode::HandleElementalType()
+{
+	static bool element1used = false;
+	static bool element2used = false;
+
+	if (element1used && element2used)
+	{
+		std::cout << "Both elements have been played.\n";
+		return;
+	}
+
+	auto& GameBoard = this->GetBoardReference();
+	m_elementCard1.SetBoardForElemental(GameBoard);
+	m_elementCard2.SetBoardForElemental(GameBoard);
+
+	std::cout << "What element would you like to use?\n";
+	std::cout << "1." << m_elementCard1.toSringElementalCardName(m_elementCard1.GetNameCard()) << std::endl;
+	std::cout << "2." << m_elementCard2.toSringElementalCardName(m_elementCard2.GetNameCard()) << std::endl;
+
+	int choice;
+	std::cin >> choice;
+
+	if ((choice == 1 && element1used) || (choice == 2 && element2used)) {
+		std::cout << "This element was played.\n";
+		return;
+	}
+
+	if (choice == 1)
+	{
+		ElementalSelection(m_elementCard1);
+		element1used = true;
+	}
+	else if (choice == 2)
+	{
+		ElementalSelection(m_elementCard2);
+		element2used = true;
+	}
+}
+
+void Eter::WizzardAndElementalMode::SetElementalType()
+{
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+
+	int ElementalCardName1 = Eter::WizardDuelMode::Random(std::make_pair(0, 23));
+	int ElementalCardName2 = Eter::WizardDuelMode::Random(std::make_pair(0, 23));
+
+	while(ElementalCardName2 == ElementalCardName1)
+		ElementalCardName2 = Eter::WizardDuelMode::Random(std::make_pair(0, 23));
+
+	/*int ElementalCardName1 = 4;
+	int ElementalCardName2 = 6;*/
+
+	m_elementCard1.SetNameCard(static_cast<ElementalCardName>(ElementalCardName1));
+	m_elementCard2.SetNameCard(static_cast<ElementalCardName>(ElementalCardName2));
+}
+
+void Eter::WizzardAndElementalMode::ElementalSelection(Elemental element)
+{
+	auto& GameBoard = this->GetBoardReference();
+	auto& Player1 = this->GetPlayer1Reference();
+	auto& Player2 = this->GetPlayer2Reference();
+	element.SetBoardForElemental(GameBoard);
+
+	switch (element.GetNameCard())
+	{
+	case Eter::ElementalCardName::CONTROLLED_EXPLOSION:
+		std::cout << "CONTROLLED_EXPLOSION";
+		break;
+
+	case Eter::ElementalCardName::DESTRUCTION:
+		std::cout << "DESTRUCTION: Remove from play the last card played by the opponent.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Destruction(Player2, GameBoard);
+		else
+			element.Destruction(Player1, GameBoard);
+		break;
+
+	case Eter::ElementalCardName::FLAME:
+		std::cout << "FLAME: Reveal an opponent’s Illusion and next place your card on any space on the playing field.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName()) {
+			element.Flame(Player2, GameBoard);
+			GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName());
+			GameBoard.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		}
+		else
+		{
+			element.Flame(Player1, GameBoard);
+			GameBoard.PrintBoardForFormatedOutput(GetBluePlayerName());
+			GameBoard.SetTileValue(m_currentPlayer->Play(firstMove), m_currentPlayer->ChoosePiece(), m_currentPlayer->GetUserName());
+		}
+		break;
+
+	case Eter::ElementalCardName::FIRE:
+		std::cout << "FIRE: Return to their owners' hands all visible cards of the same value(at least 2 of them) chosen by you - also yours!In case of stacks remove only the top card.\n";
+		element.Fire(GameBoard, Player1, Player2);
+		break;
+
+	case Eter::ElementalCardName::ASH:
+		std::cout << "ASH: Rise like a Phoenix! If one of your cards was removed from play, you can immediately play it again.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Ash(GameBoard, Player1);
+		else
+			element.Ash(GameBoard, Player2);
+		break;
+
+	case Eter::ElementalCardName::SPARK:
+		std::cout << "SPARK: Take any of your cards that is covered by an opponent's cards and play it onto a different space. In case of stacks, you can choose any of your covered cards.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Spark(GameBoard, Player1);
+		else
+			element.Spark(GameBoard, Player2);
+		break;
+
+	case Eter::ElementalCardName::SQUALL:
+		std::cout << "SQUALL: Return to the opponent's hand any one of his visible cards on the playing field.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Squall(Player2, GameBoard);
+		else
+			element.Squall(Player1, GameBoard);
+		break;
+
+	case Eter::ElementalCardName::GALE:
+		std::cout << "GALE: Remove any cards that are covered by others (yours as well) - they are returned to their owners' hands.\n";
+		element.Gale(GameBoard, Player1, Player2);
+		break;
+
+	case Eter::ElementalCardName::HURRICANE:
+		std::cout << "HURRICANE: Move any one full row / column by one card so that the first card / stack is moved off the playing field. Cards moved outside the playing field return to their owners' hands.\n";
+		element.Hurricane(GameBoard, Player1, Player2);
+		break;
+
+	case Eter::ElementalCardName::GUST:
+		std::cout << "GUST: Move any card on the playing field horizontally or vertically onto a neighboring card of a lower value. Affects individual cards not stacks.\n";
+		element.Gust(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::MIRAGE:
+		std::cout << "MIRAGE: Exchange your Illusion (face-down card) with a different card from your hand (face - down).\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Mirage(GameBoard, Player1);
+		else
+			element.Mirage(GameBoard, Player2);
+		break;
+
+	case Eter::ElementalCardName::STORM:
+		std::cout << "STORM: Remove from play any stack of minimum 2 cards.\n";
+		element.Storm(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::TIDE: {
+		std::cout << "TIDE: Change positions of 2 different cards or stacks of cards. \n";
+		std::cout << "Choose position for the first tile:\n";
+		const std::pair<int, int>& PositionforTile1 = m_currentPlayer->Play(firstMove);
+
+		std::cout << "Choose position for the second tile:\n";
+		const std::pair<int, int>& PositionforTile2 = m_currentPlayer->Play(firstMove);
+		element.Tide(PositionforTile1.first, PositionforTile1.second, PositionforTile2.first, PositionforTile2.second);
+
+		auto elementBoard = element.GetBoardForElemental();
+		GameBoard.SetBoard(elementBoard.GetBoard());
+		break;
+	}
+	case Eter::ElementalCardName::MIST: {
+		std::cout << "MIST: Play an Illusion again. You cannot have 2 Illusions at the same time.\n";
+		element.Mist(*m_currentPlayer);
+		if (!m_currentPlayer->GetIllusionPlayed())
+			Illusion(*m_currentPlayer);
+		break;
+	}
+	case Eter::ElementalCardName::WAVE:
+		std::cout << "WAVE: Move any card/stack to the adjacent empty space, then play a card from your hand to this now empty space.\n";
+		element.Wave(GameBoard, *m_currentPlayer);
+		break;
+
+	case Eter::ElementalCardName::WHIRLPOOL:
+		std::cout << "WHIRLPOOL: Move onto empty space two cards from different adjacent spaces in a straight line.The card of lower value goes to the bottom of the stack.\n";
+		element.Whirlpool(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::BLIZZARD:
+		std::cout << "BLIZZARD: Place this card onto any space and choose a row or column that it will impact.The opponent cannot play any cards onto the chosen row / column during his next turn.Condition - your opponent must have a free space to play a card.Remove this card from play after the next opponent turn. \n";
+		//elemental.Blizzard(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::SUPPORT:
+		std::cout << "SUPPORT: Value of a chosen card on the board is increased by +1 (cannot be used on a '4' card).\n";
+		element.Support(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::EARTHQUAKE:
+		std::cout << "EARTHQUAKE: Remove from play all visible ‘1’ cards.\n";
+		element.Earthquake(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::CRUMBLE:
+		std::cout << "CRUMBLE: Value of a card on the board is decreased by 1 (cannot be used on a ‘1’ card).\n";
+		element.Crumble(GameBoard);
+		break;
+
+	case Eter::ElementalCardName::BORDER:
+		std::cout << "BORDER: Place this card in any empty space on the playing field to establish the border of the play area.Next, play your normal card.Any player may replace the Border card with any of their cards(it does not block the space).Condition - when played, this card must define one of the borders of the playing area.\n";
+		break;
+
+	case Eter::ElementalCardName::WATERFALL:
+		std::cout << "WATERFALL Move all cards in a chosen column into one stack at the bottom of that column, placing them on top of each other, regardless of their values.The card that was visible on the top of the chosen column stays at the top of the new stack.Condition - the chosen column must contain of minimum 3 cards.\n";
+		break;
+
+	case Eter::ElementalCardName::AVALANCHE:
+		std::cout << "AVALANCHE: Move two neighboring cards / stacs by one space horizontally or vertically.The space that the first card moves onto must be empty.\n";
+		break;
+
+	case Eter::ElementalCardName::ROCK:
+		std::cout << "Cover any Illusion card with your card, without revealing the value of the Illusion.\n";
+		if (m_currentPlayer->GetUserName() == Player1.GetUserName())
+			element.Rock(GameBoard, Player1, Player2);
+		else
+			element.Rock(GameBoard, Player2, Player1);
+		break;
+	default:
+		std::cout << "Invalid option. Please choose a valid option.\n";
+		break;
+	}
 }
 
 void Eter::WizzardAndElementalMode::CreateFromJsonWizardElemental(const nlohmann::json& gameInfo)

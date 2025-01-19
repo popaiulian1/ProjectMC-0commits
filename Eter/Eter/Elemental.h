@@ -70,10 +70,10 @@ namespace Eter {
 		void Spark(Board& board, Player& player);
 		void Squall(Player& opponent, Board& board);
 		void Gale(Board& board, Player& player1, Player& player2);
-		void Hurricane(Board& board);
+		void Hurricane(Board& board, Player& player1, Player& player2);
 		void Gust(Board& board);
 		void Mirage(Board& board, Player& player);
-		void Storm(int row, int column);
+		void Storm(Board& board);
 		void Tide(int row1, int column1, int row2, int column2);
 		void Mist(Player& player);
 		void Wave(Board& board, Player& player);
@@ -89,10 +89,10 @@ namespace Eter {
 		
 		
 		//Methods
-		void shiftRowToLeft(Board& board, int index);
-		void shiftRowToRight(Board& board, int index);
-		void shiftColUp(Board& board, int index);
-		void shiftColDown(Board& board, int index);
+		void shiftRowToLeft(Board& board, int index, Player& player1, Player& player2);
+		void shiftRowToRight(Board& board, int index, Player& player1, Player& player2);
+		void shiftColUp(Board& board, int index, Player& player1, Player& player2);
+		void shiftColDown(Board& board, int index, Player& player1, Player& player2);
 		bool isRowFull(const Board& board, int rowIndex);
 		bool isColumnFull(const Board& board, int colIndex);
 		bool neighboringCardsStacs(int rowIndex1, int colIndex1, int rowIndex2, int colIndex2);

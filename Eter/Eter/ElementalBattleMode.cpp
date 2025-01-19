@@ -547,6 +547,7 @@ void Eter::ElementalBattleMode::CreateFromJsonElemental(const nlohmann::json& ga
 	{
 		m_currentPlayer = &m_player1;
 	}
+	firstMove = gameInfoJson.at("firstMove").get<bool>();
 	PlayGame();
 }
 

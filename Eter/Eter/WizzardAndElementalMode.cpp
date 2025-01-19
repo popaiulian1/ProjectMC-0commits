@@ -524,6 +524,7 @@ void Eter::WizzardAndElementalMode::CreateFromJsonWizardElemental(const nlohmann
 	{
 		m_currentPlayer = &m_player1;
 	}
+	firstMove = gameInfoJson.at("firstMove").get<bool>();
 	PlayGame();
 }
 
